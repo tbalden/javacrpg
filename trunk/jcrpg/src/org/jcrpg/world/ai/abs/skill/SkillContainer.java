@@ -196,7 +196,9 @@ public class SkillContainer {
 	public SkillInstance getHighestLevelHelperSkill(Class<? extends SkillBase> skill, String tagWord)
 	{
 		SkillInstance highestLevel = null;
-		for (Class<? extends SkillBase> s:getSkillsOfType(HelperSkill.class))
+		Collection<Class<? extends SkillBase>> list = getSkillsOfType(HelperSkill.class);
+		if (list!=null)
+		for (Class<? extends SkillBase> s:list)
 		{
 			if (((HelperSkill)SkillGroups.skillBaseInstances.get(s)).helpsForTag(skill, tagWord))
 			{

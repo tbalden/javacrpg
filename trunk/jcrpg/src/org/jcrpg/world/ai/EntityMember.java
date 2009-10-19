@@ -53,7 +53,7 @@ import org.jcrpg.world.object.InventoryListElement;
  */
 public class EntityMember extends DescriptionBase {
 	public String visibleTypeId;
-	protected SkillContainer memberSkills = new SkillContainer();
+	private SkillContainer memberSkills = new SkillContainer();
 	public AttributeRatios commonAttributeRatios = new AttributeRatios();
 	public ResistanceRatios commonResistenceRatios = new ResistanceRatios();
 	public float[] scale = new float[]{1,1,1};
@@ -162,6 +162,13 @@ public class EntityMember extends DescriptionBase {
 	}
 		
 	
+	/**
+	 * 
+	 * @param selfData self info.
+	 * @param info target info
+	 * @param instance The member instance who is deciding.
+	 * @return
+	 */
 	public TurnActMemberChoice getTurnActMemberChoice(EncounterUnitData selfData, EncounterInfo info, EntityMemberInstance instance)
 	{
 		if (info.playerIfPresent!=null)
@@ -220,18 +227,18 @@ public class EntityMember extends DescriptionBase {
 						{
 							if (selfData.getRelationLevel(choice.target)<=EntityScaledRelationType.NEUTRAL)
 							{
-								for (Class<?extends SkillBase> sb:memberSkills.skills.keySet())
+								for (Class<?extends SkillBase> sb:instance.getSkills().skills.keySet())
 								{
 									//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("--_ "+sb);
 								}
 								int lineUpDistance = instance.encounterData.getCurrentLine()+choice.targetMember.encounterData.getCurrentLine();
-								Collection<Class<?extends SkillBase>> skills = memberSkills.getTurnActSkillsOrderedBySkillLevel(info.getPhase(),null,lineUpDistance);
+								Collection<Class<?extends SkillBase>> skills = instance.getSkills().getTurnActSkillsOrderedBySkillLevel(info.getPhase(),null,lineUpDistance);
 								//boolean found = false;
 								if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("FOUND TURN ACT SKILLS: "+skills);
 								if (skills!=null)
 								for (Class<? extends SkillBase> s:skills)
 								{
-									SkillInstance i = memberSkills.skills.get(s);
+									SkillInstance i = instance.getSkills().skills.get(s);
 									SkillBase base = SkillGroups.skillBaseInstances.get(s);
 									if (base.needsInventoryItem)
 									{

@@ -88,6 +88,19 @@ public class ImpactUnit
 		return false;
 	}
 	
-	
+	public int[] getGreatestDamageTypeAndValue()
+	{
+		int currentMax = 0;
+		int currentType = -1;
+		for (int i=0; i<orderedImpactPoints.length; i++)
+		{
+			if (currentMax>orderedImpactPoints[i])
+			{
+				currentMax = orderedImpactPoints[i];
+				currentType = i;
+			}
+		}
+		return new int[]{currentType,currentMax};
+	}
 	
 }

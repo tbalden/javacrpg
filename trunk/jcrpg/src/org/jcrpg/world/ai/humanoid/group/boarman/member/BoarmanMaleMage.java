@@ -28,7 +28,7 @@ public class BoarmanMaleMage extends BoarmanBaseMember {
 	public BoarmanMaleMage(String visibleTypeId, AudioDescription audioDescription) {
 		super(visibleTypeId, audioDescription);
 		addProfessionInitially(new Mage());
-		memberSkills.setSkillValue(Elementarism.class, 10);
+		//memberSkills.setSkillValue(Elementarism.class, 10);
 		genderType = EntityDescription.GENDER_MALE;
 	}
 

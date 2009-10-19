@@ -50,7 +50,7 @@ public class EyeBat extends MythicBaseMember {
 	public EyeBat(String visibleTypeId, AudioDescription audioDescription) {
 		super(visibleTypeId, HumanoidBody.class, audioDescription);
 		addProfessionInitially(new MonsterNormal());
-		memberSkills.setSkillValue(Elementarism.class, 10);
+		getMemberSkills().setSkillValue(Elementarism.class, 10);
 		genderType = EntityDescription.GENDER_NEUTRAL;
 	}
 	@Override

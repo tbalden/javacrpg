@@ -138,6 +138,9 @@ public class J3DStandingEngine {
 	HashMap<Long, RenderedCube> hmCurrentCubes_FARVIEW = new HashMap<Long, RenderedCube>();
 	ArrayList<RenderedCube> alCurrentCubes_FARVIEW = new ArrayList<RenderedCube>();
 	
+	/**
+	 * continuous rendering's running threads array. should contain 1 at normal load.
+	 */
 	public ArrayList<RenderedAreaThread> runningThreads = new ArrayList<RenderedAreaThread>();
 	
 	public class RenderedAreaThread extends Thread

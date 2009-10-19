@@ -28,7 +28,6 @@ import org.jcrpg.game.logic.EvaluatorBase;
 import org.jcrpg.game.logic.Impact;
 import org.jcrpg.game.logic.PlayerActChoiceInfo;
 import org.jcrpg.threed.J3DCore;
-import org.jcrpg.threed.input.action.CKeyAction;
 import org.jcrpg.threed.jme.tool.CameraProgram;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
@@ -570,14 +569,27 @@ public class EncounterLogic {
 			{
 				String sound = null;
 				if (!choice.target.destroyed && choice.isDestructive())
-				{											
-					sound = choice.target.getSound(AudioDescription.T_PAIN);
+				{					
+					int greatestImpactType = impact.getGreatestTargetImpactType();
+					//System.out.println("----------- GREATEST IMPACT TYPE = "+greatestImpactType+" "+choice.target.isDead());
+					if (greatestImpactType!=-1 && (choice.targetMember!=null && choice.targetMember.memberState.isSeriouslyWoundedFor(greatestImpactType) || choice.target.isSeriouslyWeakFor(greatestImpactType)))
+					{
+						sound = choice.target.getSound(AudioDescription.T_BRUISED_TYPES[greatestImpactType]);
+						if (sound == null)
+						{
+							sound = choice.target.getSound(AudioDescription.T_BRUISED);
+						}
+					} 
+					if (sound == null)
+					{
+						sound = choice.target.getSound(AudioDescription.T_PAIN);
+					}
 				}
 				if (!choice.target.destroyed && choice.isConstructive())
 				{
 					sound = choice.target.getSound(AudioDescription.T_JOY);
 				}
-				if (choice.target.destroyed)
+				if (choice.target.destroyed || choice.target.isDead())
 				{
 					sound = choice.target.getSound(AudioDescription.T_DEATH);
 				}
@@ -591,7 +603,9 @@ public class EncounterLogic {
 					if (impact.soundsToPlay!=null && impact.soundsToPlay.size()>0)
 					{
 						sound = impact.soundsToPlay.get(0); // TODO more sounds?
-						gameLogic.core.audioServer.playLoading(sound, "ai", choice.target.description.getAudioDesc().pitchModifier);
+						float pitch = 1.0f;
+						try { pitch = choice.target.description.getAudioDesc().pitchModifier; } catch (Exception ex){}
+						gameLogic.core.audioServer.playLoading(sound, "ai", pitch);
 					}
 				}
 			}

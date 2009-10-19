@@ -43,6 +43,13 @@ public class AudioDescription {
 	 * near death
 	 */
 	public String[] BRUISED= null; 
+	public String[] BRUISED_HEALTH = null; 
+	public String[] BRUISED_STAMINA= null; 
+	public String[] BRUISED_MORALE= null; 
+	public String[] BRUISED_SANITY= null; 
+	public String[] BRUISED_MANA= null; 
+	
+	
 	
 	public static final String T_ENCOUNTER = "ENCOUNTER";
 	public static final String T_ATTACK = "ATTACK";
@@ -54,6 +61,8 @@ public class AudioDescription {
 	public static final String T_LEVELING = "LEVELING";
 	public static final String T_TIRED = "TIRED";
 	public static final String T_BRUISED = "BRUISED";
+	public static final String[] T_BRUISED_TYPES = // following order of EntityMemberState points
+		new String[]{"BRUISED_HEALTH","BRUISED_STAMINA","BRUISED_MORALE","BRUISED_SANITY","BRUISED_MANA",};
 	
 	public String getSound(String type)
 	{

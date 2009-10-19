@@ -47,7 +47,11 @@ Journal window will be needed!
 ----
 Before next release:
 
-[ ] check spells + shaders
+
+[ ] use more of the sounds that are available (need heal)
+	[X] need heal
+	
+[ ] check continuous load + after combat bug
 
 [X] integrate Anatipions
 
@@ -60,6 +64,8 @@ Before next release:
 
 	[X] animations by tidbit - contact Zphr with problem. rootbone?
 	[X] entity icons for beings
+
+[X] check spells + shaders
 
 [X] test water cube side size..changed size of cube_edge
 [X] add normal map for ground.
