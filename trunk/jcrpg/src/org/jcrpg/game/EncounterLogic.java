@@ -460,7 +460,7 @@ public class EncounterLogic {
 			String sound = choice.member.getSound(AudioDescription.T_ATTACK);
 			if (sound!=null)
 			{
-				gameLogic.core.audioServer.playLoading(sound, "ai");
+				gameLogic.core.audioServer.playLoading(sound, "ai", choice.member.description.getAudioDesc().pitchModifier);
 			}
 		}
 		if (choice.skillActForm!=null)
@@ -583,15 +583,15 @@ public class EncounterLogic {
 				}
 				if (sound!=null)
 				{
-					gameLogic.core.audioServer.playLoading(sound, "ai");
+					gameLogic.core.audioServer.playLoading(sound, "ai", choice.target.description.getAudioDesc().pitchModifier);
 				} else
 				{
 					// party group might be effected in this case, check for
 					// collected sounds in impact
 					if (impact.soundsToPlay!=null && impact.soundsToPlay.size()>0)
 					{
-						sound = impact.soundsToPlay.get(0);
-						gameLogic.core.audioServer.playLoading(sound, "ai");
+						sound = impact.soundsToPlay.get(0); // TODO more sounds?
+						gameLogic.core.audioServer.playLoading(sound, "ai", choice.target.description.getAudioDesc().pitchModifier);
 					}
 				}
 			}

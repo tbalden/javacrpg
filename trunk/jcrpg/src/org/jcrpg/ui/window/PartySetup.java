@@ -1122,7 +1122,7 @@ public class PartySetup extends PagedInputWindow {
 		String snd = desc.getSound(AudioDescription.T_ATTACK);
 		if (snd==null) snd = desc.getSound(AudioDescription.T_JOY);
 		if (snd!=null)
-			J3DCore.getInstance().audioServer.playLoading(snd,"ai");
+			J3DCore.getInstance().audioServer.playLoading(snd,"ai",desc.pitchModifier);
 	}
 
 	@Override

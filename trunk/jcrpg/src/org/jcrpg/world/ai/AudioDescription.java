@@ -25,6 +25,8 @@ public class AudioDescription {
 	
 	public String formattedName = null;
 	
+	public float pitchModifier = 1.0f;
+	
 	public String[] ENCOUNTER = null;
 	public String[] ATTACK = null;
 	public String[] FRIENDLY = null;
