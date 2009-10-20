@@ -1733,7 +1733,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					gameState.getNormalPositions().viewPositionX, gameState
 							.getNormalPositions().viewPositionY, gameState
 							.getNormalPositions().viewPositionZ);
-			gameState.updateEntityIcons();
+			//gameState.updateEntityIcons();
 			gameState.checkAndHandleEnterLeave();
 			
 			handleStaticTriggerSides(enteredCube, renderedEnteredCube, leftCube, renderedLeftCube);

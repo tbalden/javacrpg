@@ -458,6 +458,20 @@ public class Characters extends InputWindow {
 		}		
 	}
 	
+	public void zoomOnCharacter(EntityMemberInstance member)
+	{
+		int counter = 0;
+		for (EntityMemberInstance p:hud.core.gameState.player.orderedParty)
+		{
+			if (p==member)
+			{
+				ZoomingQuad q= pictureQuads.get(counter);				
+				q.startZoomCycle();
+			}
+			counter++;
+		}		
+	}
+	
 	ColorRGBA targetColor = new ColorRGBA(0.9f,0.5f,0.5f,1f);
 
 	public void targetCharacter(EntityMemberInstance member, boolean highlightOn)

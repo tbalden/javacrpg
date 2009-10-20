@@ -49,12 +49,14 @@ public class AudioDescription {
 	public String[] BRUISED_SANITY= null; 
 	public String[] BRUISED_MANA= null; 
 	
+	public String[] DANGER = null;
 	
 	
 	public static final String T_ENCOUNTER = "ENCOUNTER";
 	public static final String T_ATTACK = "ATTACK";
 	public static final String T_FRIENDLY = "FRIENDLY";
 	public static final String T_PAIN = "PAIN";
+	public static final String T_DANGER = "DANGER";
 	public static final String T_JOY = "JOY";
 	public static final String T_DEATH = "DEATH";
 	public static final String T_ENVIRONMENTAL = "ENVIRONMENTAL";

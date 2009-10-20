@@ -38,6 +38,7 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
+import org.jcrpg.world.ai.EntityScaledRelationType;
 import org.jcrpg.world.ai.GroupingMemberProps;
 import org.jcrpg.world.ai.PerceptedEntityData;
 import org.jcrpg.world.ai.PersistentMemberInstance;
@@ -412,6 +413,8 @@ public class GameStateContainer {
 		WorldTypeDesc playerDesc = ecology.getEntityFragmentWorldTypeDesc(player.theFragment);
 		Vector3f vParty = new Vector3f(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
 
+		boolean needDangerSense = false;
+		
 		if (player.theFragment.perceptedEntities!=null)
 		{
 			for (PerceptedEntityData data:player.theFragment.perceptedEntities)
@@ -421,6 +424,11 @@ public class GameStateContainer {
 				
 				EntityFragment i = data.fragment;
 				if (i==player.theFragment) continue;
+				
+				if (i.getRelationLevel(player.theFragment)<=EntityScaledRelationType.NEUTRAL)
+				{ // neutral or worse, danger sense ok
+					needDangerSense = true;
+				}
 				EntityOMeterData eData = new EntityOMeterData();
 				eData.kind = data.kind;
 				eData.realKind = data.fragment.getName();
@@ -431,6 +439,12 @@ public class GameStateContainer {
 				map.put(i.instance.description.getEntityIconPic(),eData);
 			}
 		}
+		
+		if (needDangerSense)
+		{
+			J3DCore.getInstance().audioServer.playSoundForRandomMember(player, AudioDescription.T_DANGER);
+		}
+		
 		/*
 		if (true==false)
 		if (list!=null)

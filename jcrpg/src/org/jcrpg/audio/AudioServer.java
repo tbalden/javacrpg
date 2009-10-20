@@ -26,6 +26,8 @@ import java.util.logging.Level;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.ai.PersistentMemberInstance;
+import org.jcrpg.world.ai.player.PartyInstance;
 
 import com.jme.math.FastMath;
 import com.jmex.audio.AudioSystem;
@@ -1009,6 +1011,41 @@ public class AudioServer implements Runnable {
 			npex.printStackTrace();
 		
 		}
+	}
+
+	
+	public void playSoundForRandomMember(PartyInstance party, String type)
+	{
+		int outCount = 0;
+		while (true)
+		{
+			outCount++;
+			int m = FastMath.rand.nextInt(party.fixMembers.size());
+			int counter = 0;
+			String sound = null;
+			float pitch = 1.0f;
+			PersistentMemberInstance theOne = null;
+			for (PersistentMemberInstance member :party.fixMembers.values())
+			{
+				if (counter++>=m)
+				{
+					if (!member.isDead())
+					{
+						sound = member.getSound(type);
+						pitch = member.description.getAudioDesc().pitchModifier;
+						if (sound!=null) {theOne = member; break;}
+					}
+				}
+			}
+			if (sound!=null)
+			{
+				playLoading(sound, "ai", pitch);
+				J3DCore.getInstance().uiBase.hud.characters.zoomOnCharacter(theOne);
+				break;
+			}
+			if (outCount>15) break;
+		}
+	
 	}
 	
 }
