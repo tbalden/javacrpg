@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.fauna.reptile.lizard.green;
 
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Aggressive;
@@ -49,6 +50,8 @@ public class Lizards extends AnimalEntityDescription {
 	public static NormalAnimalFemale GREENLIZARD_TYPE_FEMALE = new NormalAnimalFemale("GREENLIZ_MALE",LizardBody.class,audio);
 	//public static WeakAnimalChild FOX_TYPE_CHILD = new WeakAnimalChild("FOX_CHILD",LizardBody.class,audio);
 
+	
+	
 	static 
 	{
 		GREENLIZARD_TYPE_FEMALE.addProfessionInitially(new MonsterNormal());
@@ -56,8 +59,25 @@ public class Lizards extends AnimalEntityDescription {
 	}
     public static MovingModel greenLizard = new MovingModel("models/fauna/lizard_exp.obj",null,null,null,false);
 	//public static MovingModel greenLizard = new MovingModel("models/monster/eyebat/eyebat.obj",null,null,null,false);
-	public static RenderedMovingUnit greenLizard_unit = new RenderedMovingUnit(new Model[]{greenLizard});
 
+	static {
+		MovingModelAnimDescription desc = new MovingModelAnimDescription();
+		desc.IDLE = "./data/models/fauna/lizard/lizard1_idle.md5anim";		
+		desc.IDLE_COMBAT = "./data/models/fauna/lizard/lizard1_idle.md5anim";
+		desc.WALK = "./data/models/fauna/lizard/lizard1_idle.md5anim";
+		desc.ATTACK_LOWER = "./data/models/fauna/lizard/lizard1_attack.md5anim";
+		desc.ATTACK_UPPER = "./data/models/fauna/lizard/lizard1_attack.md5anim";
+		desc.DEFEND_LOWER = "./data/models/fauna/lizard/lizard1_hit.md5anim";
+		desc.DEFEND_UPPER = "./data/models/fauna/lizard/lizard1_hit.md5anim";
+		desc.PAIN = "./data/models/fauna/lizard/lizard1_hit.md5anim";
+		desc.DEATH_NORMAL = "./data/models/fauna/lizard/lizard1_hit.md5anim";
+		desc.DEAD = "./data/models/fauna/lizard/lizard1_hit.md5anim";
+		greenLizard = new MovingModel("./data/models/fauna/lizard/lizard1.md5mesh",desc,null,null,false);
+		greenLizard.genericScale = 0.5f;
+		greenLizard.disposition = new float[] {0f,+0f,-0.5f};
+	}
+
+	public static RenderedMovingUnit greenLizard_unit = new RenderedMovingUnit(new Model[]{greenLizard});
 	
 	static
 	{
