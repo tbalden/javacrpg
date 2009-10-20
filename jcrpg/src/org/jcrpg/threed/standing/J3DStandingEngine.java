@@ -32,8 +32,10 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.ModelLoader;
 import org.jcrpg.threed.ModelPool;
 import org.jcrpg.threed.NodePlaceholder;
+import org.jcrpg.threed.ParallelLoadingHelper;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.PooledSharedNode;
+import org.jcrpg.threed.RenderedAreaThread;
 import org.jcrpg.threed.ModelLoader.BillboardNodePooled;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.ModelGeometryBatch;
@@ -55,7 +57,6 @@ import org.jcrpg.threed.scene.side.RenderedHashRotatedSide;
 import org.jcrpg.threed.scene.side.RenderedSide;
 import org.jcrpg.threed.scene.side.RenderedTopSide;
 import org.jcrpg.ui.UIBase;
-import org.jcrpg.ui.Window;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.Boundaries;
@@ -132,73 +133,21 @@ public class J3DStandingEngine {
 	}
 
 	HashMap<Long, RenderedCube> hmCurrentCubes = new HashMap<Long, RenderedCube>();
-	HashMap<Long, RenderedCube> hmCurrentCubesForSafeRender = new HashMap<Long, RenderedCube>();
 	ArrayList<RenderedCube> alCurrentCubes = new ArrayList<RenderedCube>();
 	
 	HashMap<Long, RenderedCube> hmCurrentCubes_FARVIEW = new HashMap<Long, RenderedCube>();
 	ArrayList<RenderedCube> alCurrentCubes_FARVIEW = new ArrayList<RenderedCube>();
 	
-	/**
-	 * continuous rendering's running threads array. should contain 1 at normal load.
-	 */
-	public ArrayList<RenderedAreaThread> runningThreads = new ArrayList<RenderedAreaThread>();
+	public ParallelLoadingHelper parallelLoadingHelper = new ParallelLoadingHelper();
 	
-	public class RenderedAreaThread extends Thread
-	{
-		
-		J3DStandingEngine engine = null;
-		World world;
-		int x,y,z;
-		int rX,rY,rZ;
-		@SuppressWarnings("unchecked")
-		public RenderedAreaThread(J3DStandingEngine engine, World world, int rX, int rY, int rZ, int x, int y, int z)
-		{
-			if (J3DCore.LOGGING()) logger.fine("NEW RENDER: "+x+" "+y+" "+z);
-			if (J3DCore.LOGGING()) logger.finest("LAST RENDER: "+lastRenderX+" "+lastRenderY+" "+lastRenderZ);
-			this.engine = engine;
-			this.world = world;
-			this.x = x;
-			this.y = y;
-			this.z = z;
-			this.rX = rX;
-			this.rY = rY;
-			this.rZ = rZ;
-			hmCurrentCubesForSafeRender = (HashMap<Long, RenderedCube>)hmCurrentCubes.clone();
-			if (!loadRenderedAreaParallel)
-			{
-				uiBase.hud.sr.setVisibility(true, "LOAD");
-			}
-			setPriority(1);
-		}
-
-		@Override
-		public void run() {
-			if (loadRenderedAreaParallel) return;
-			loadRenderedAreaParallel = true;
-			engine.areaResult = null;			
-			areaResult = render(rX,rY,rZ,
-					x, y, z, false,true);
-			if (!halt)
-			{
-				engine.areaResult = areaResult;
-			} else
-			{
-				loadRenderedAreaParallel = false;
-				halt = false;
-			}
-		}
-		
-		public boolean halt = false;
-	}
 	
-	public boolean loadRenderedAreaParallel = false;
-	public HashSet<RenderedCube>[] areaResult = null;
 	
 	
 	public int numberOfProcesses = 0;
 	
 	/**
 	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
+	 * @param safeMode Parallel rendering should call it with that parameter.
 	 */
 	@SuppressWarnings("unchecked")
 	public HashSet<RenderedCube>[] render(int renderPosX, int renderPosY, int renderPostZ, int viewPositionX, int viewPositionY, int viewPositionZ, boolean rerender,boolean safeMode)
@@ -210,7 +159,7 @@ public class J3DStandingEngine {
 		//modelLoader.setLockForSharedNodes(false);
     	//loadingText(0,true);
 		HashMap<Long, RenderedCube> hmCurrentCubesForSafeRenderLocal = null;
-		hmCurrentCubesForSafeRenderLocal = safeMode?hmCurrentCubesForSafeRender:hmCurrentCubes;
+		hmCurrentCubesForSafeRenderLocal = safeMode?parallelLoadingHelper.getBackupCurrentCubes():hmCurrentCubes;
 		
 		if (!safeMode)
 		{
@@ -606,6 +555,20 @@ public class J3DStandingEngine {
 	
 	public boolean threadRendering = false;
 	
+	public boolean needsIterativeRendering()
+	{
+		return threadRendering;
+	}
+	public void iterativeRenderingStarted()
+	{
+		threadRendering = false;
+		updateAfterRenderNeeded = true;
+	}
+	public boolean isForcedNonIterativeRenderNeeded()
+	{
+		return !threadRendering && !updateAfterRenderNeeded && newRenderPending;
+	}
+	
 	int currentConditionalNode = 0;
 	
 	public boolean updateAfterRenderNeeded = false;
@@ -636,6 +599,7 @@ public class J3DStandingEngine {
 	 * rendering step by step the needed things for the view point - 
 	 * gradually done, j3dcore should call this between draws until
 	 * finished.
+	 * @return True if finished.
 	 */
 	public boolean renderToViewPortStepByStep()
 	{
@@ -1585,7 +1549,7 @@ public class J3DStandingEngine {
 			Vector3f currLoc = new Vector3f(core.gameState.getCurrentRenderPositions().relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeZ*J3DCore.CUBE_EDGE_SIZE);
 			int mulWalkDist = 1;
 			
-			if (J3DCore.SETTINGS.CONTINUOUS_LOAD && !rerender && !loadRenderedAreaParallel)
+			if (J3DCore.SETTINGS.CONTINUOUS_LOAD && !rerender && !parallelLoadingHelper.isParallelRenderingRunning())
 			{
 				if ( lastLoc.distance(currLoc)*mulWalkDist * 1.5f > ((J3DCore.SETTINGS.RENDER_DISTANCE_CALC)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.SETTINGS.VIEW_DISTANCE) // TODO this is ugly calc 1.5f * !!!
 				{
@@ -1597,19 +1561,19 @@ public class J3DStandingEngine {
 							core.gameState.getCurrentRenderPositions().viewPositionY,
 							core.gameState.getCurrentRenderPositions().viewPositionZ
 							);
-					runningThreads.add(t);
+					parallelLoadingHelper.runningThreads.add(t);
 					t.start();
 				}
 			}
 			
-			if (areaResult!=null) // continuous load ready 
+			if (parallelLoadingHelper.areaResult!=null) // continuous load ready 
 			{
 				uiBase.hud.sr.setVisibility(false, "LOAD");
-				hmCurrentCubes = hmCurrentCubesForSafeRender;
+				hmCurrentCubes = parallelLoadingHelper.getBackupCurrentCubes();
 				long t0 = System.currentTimeMillis();
-				HashSet<RenderedCube>[] detacheable = areaResult;
-				areaResult = null;
-				loadRenderedAreaParallel = false;
+				HashSet<RenderedCube>[] detacheable = parallelLoadingHelper.areaResult;
+				parallelLoadingHelper.areaResult = null;
+				parallelLoadingHelper.endParallelRendering();
 
 				if (true)  {
 					
@@ -1679,20 +1643,8 @@ public class J3DStandingEngine {
 			{
 				
 				logger.fine("++++++ RERENDER : "+rerender+" DIST: "+lastLoc.distance(currLoc)*mulWalkDist);
-				for (RenderedAreaThread t:runningThreads)
-				{
-					t.halt = true;
-					if (t.isAlive())
-					{
-						
-						if (renderedArea.isInProcess) 
-						{
-							renderedArea.haltCurrentProcess = true;
-						}
-					}
-				}
-				loadRenderedAreaParallel = false;
-				runningThreads.clear();
+				parallelLoadingHelper.haltAllRender();
+
 				while (renderedArea.numberOfProcesses>0 && numberOfProcesses>0)
 				{
 					Jcrpg.LOGGER.info("WAITING FOR RENDER THREADS TO STOP...");
@@ -1703,6 +1655,7 @@ public class J3DStandingEngine {
 						
 					}
 				}
+				
 				nonDrawingRender = true;
 				GeometryBatchMesh.GLOBAL_CAN_COMMIT = false;
 				if (rerenderWithRemove)
@@ -2282,13 +2235,18 @@ public class J3DStandingEngine {
 		
 	}
 	
+	public void backupCurrentCubesForSafeRender()
+	{
+		parallelLoadingHelper.backupCurrentCubesForSafeRender(hmCurrentCubes);
+	}
+	
 	public void clearAll()
 	{
 		world = null;
 		
 		hmCurrentCubes.clear();
 		hmCurrentCubes_FARVIEW.clear();
-		hmCurrentCubesForSafeRender.clear();
+		parallelLoadingHelper.getBackupCurrentCubes().clear();
 		alCurrentCubes.clear();
 		alCurrentCubes_FARVIEW.clear();
 		inFarViewPort.clear();
@@ -2305,9 +2263,9 @@ public class J3DStandingEngine {
 		{
 			core.getGroundParentNode().attachChild(extRootNode);
 			core.getGroundParentNode().attachChild(intRootNode);
-			core.getGroundParentNode().updateRenderState();
 			extRootNode.setCullHint(CullHint.Dynamic);
 			intRootNode.setCullHint(CullHint.Dynamic);
+			core.getGroundParentNode().updateRenderState();
 			/*Cube c = core.gameState.world.getCube(-1, core.gameState.getCurrentRenderPositions().viewPositionX, core.gameState.getCurrentRenderPositions().viewPositionY,
 					core.gameState.getCurrentRenderPositions().viewPositionZ, false);
 			if (c != null) {

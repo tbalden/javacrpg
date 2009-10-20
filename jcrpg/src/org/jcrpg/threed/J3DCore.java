@@ -21,7 +21,6 @@ package org.jcrpg.threed;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
@@ -74,7 +73,6 @@ import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.BusyPaneWindow;
-import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.LoadMenu;
 import org.jcrpg.ui.window.MainMenu;
 import org.jcrpg.ui.window.Map;
@@ -85,7 +83,6 @@ import org.jcrpg.ui.window.SaveMenu;
 import org.jcrpg.ui.window.debug.CacheStateInfo;
 import org.jcrpg.ui.window.element.ChoiceDescription;
 import org.jcrpg.ui.window.element.TextLabel;
-import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.interaction.BehaviorWindow;
 import org.jcrpg.ui.window.interaction.EncounterWindow;
 import org.jcrpg.ui.window.interaction.LockInspectionWindow;
@@ -2920,11 +2917,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		if (!noThreadedRenderCheck)
 		{
-			if (sEngine!=null && sEngine.areaResult!=null)
+			if (sEngine!=null && sEngine.parallelLoadingHelper.areaResult!=null)
 			{
 				sEngine.renderToViewPort();
 			} 
-			if (eEngine!=null && eEngine.areaResult!=null)
+			if (eEngine!=null && eEngine.parallelLoadingHelper.areaResult!=null)
 			{
 				eEngine.renderToViewPort();
 			} 
@@ -2932,33 +2929,31 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			// 'parallel' render related checks..
 			
 			// checking for pending full renderToViewPorts
-			if (sEngine!=null && !sEngine.threadRendering && !sEngine.updateAfterRenderNeeded && sEngine.newRenderPending)
+			if (sEngine!=null && sEngine.isForcedNonIterativeRenderNeeded())
 			{
 				sEngine.renderToViewPort();
 			}
-			if (eEngine!=null && !eEngine.threadRendering && !eEngine.updateAfterRenderNeeded && eEngine.newRenderPending)
+			if (eEngine!=null && eEngine.isForcedNonIterativeRenderNeeded())
 			{
 				eEngine.renderToViewPort();
 			}
 			
 			// checking for threadRendering step by step
 			//long time = 0;
-			if (sEngine!=null && sEngine.threadRendering)
+			if (sEngine!=null && sEngine.needsIterativeRendering())
 			{
 				//time = System.currentTimeMillis();	
 				if (sEngine.renderToViewPortStepByStep())
 				{
-					sEngine.threadRendering = false;
-					sEngine.updateAfterRenderNeeded = true;
+					sEngine.iterativeRenderingStarted();
 				}
 				//System.out.println("* THREAD RENDER T: "+(time-System.currentTimeMillis()));
 			}
-			if (eEngine!=null && eEngine.threadRendering)
+			if (eEngine!=null && eEngine.needsIterativeRendering())
 			{
 				if (eEngine.renderToViewPortStepByStep())
 				{
-					eEngine.threadRendering = false;
-					eEngine.updateAfterRenderNeeded = true;
+					eEngine.iterativeRenderingStarted();
 				}
 			}
 	
@@ -3016,9 +3011,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					label.activate();
 				}
 			}
-			// turn has come.
-			if (J3DCore.SETTINGS.CONTINUOUS_LOAD && sEngine!=null && sEngine.runningThreads.size()==0)
+			if (sEngine!=null && !sEngine.parallelLoadingHelper.isParallelRenderingRunning())
 			{
+				// check only if no parallel rendering is being done.
+				
+				// turn has come.
 				if (gameState.engine.turnComes()) {
 					pause = true;
 					gameState.ecology.doTurn();
