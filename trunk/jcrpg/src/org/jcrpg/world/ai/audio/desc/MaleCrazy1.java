@@ -31,6 +31,7 @@ public class MaleCrazy1 extends AudioDescription {
 		JOY = new String[]{base+"healjoy1",base+"healjoy2"};
 		DEATH = new String[]{base+"death1",base+"death2"};
 		ENCOUNTER = new String[]{base+"greeting1",base+"greeting2",};
+		DANGER = new String[]{base+"dangersensing1",base+"dangersensing2",};
 		LEVELING = new String[] {base+"leveling1",base+"leveling2"};
 		TIRED = new String[] {base+"tired1",base+"tired2"};
 		BRUISED = new String[] {base+"needheal1",base+"needheal2",};

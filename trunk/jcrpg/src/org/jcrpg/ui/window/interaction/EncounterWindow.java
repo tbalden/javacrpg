@@ -32,6 +32,7 @@ import org.jcrpg.ui.window.element.input.ListMultiSelect;
 import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
+import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EncounterUnitData;
@@ -383,4 +384,19 @@ public class EncounterWindow extends PagedInputWindow {
 		}
 		return false;
 	}
+
+	
+	public void playGreetingsSound()
+	{
+		core.audioServer.playSoundForRandomMember(party, AudioDescription.T_ENCOUNTER);
+	}
+
+	@Override
+	public void show() {
+		super.show();
+		playGreetingsSound();
+	}
+	
+	
+	
 }

@@ -44,13 +44,15 @@ Journal window will be needed!
 [ ] tweak DOF to support near blur?
 [ ] add list of tasks to forum (text validation, sounds)
 
+
 ----
 Before next release:
 
 
-[ ] use more of the sounds that are available (need heal)
+[X] use more of the sounds that are available (need heal)
 	[X] need heal
-	[ ] random greetings sounds for encounters?
+	[X] random greetings sounds for encounters?
+	[X] danger sounds for perception (aggressive beings?)
 	
 [ ] check continuous load + after combat bug
 
@@ -65,6 +67,8 @@ Before next release:
 
 	[X] animations by tidbit - contact Zphr with problem. rootbone?
 	[X] entity icons for beings
+
+[X] integrate lizard animation
 
 [X] check spells + shaders
 
