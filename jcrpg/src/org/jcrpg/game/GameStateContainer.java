@@ -38,11 +38,14 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
+import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EntityScaledRelationType;
 import org.jcrpg.world.ai.GroupingMemberProps;
 import org.jcrpg.world.ai.PerceptedEntityData;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
+import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.Geography;
@@ -406,7 +409,7 @@ public class GameStateContainer {
 	/**
 	 * Updates entityIcons hud part with the nearby entity icons.
 	 */
-	public void updateEntityIcons()
+	public void updatePerceptionRelated()
 	{
 		TreeMap<String, EntityOMeterData> map = new TreeMap<String, EntityOMeterData>();
 		Collection<Object> list = ecology.getEntities(player.world, player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
@@ -415,6 +418,9 @@ public class GameStateContainer {
 
 		boolean needDangerSense = false;
 		
+		
+		ArrayList<PerceptedVisibleForm> lifeForms = new ArrayList<PerceptedVisibleForm>();
+		
 		if (player.theFragment.perceptedEntities!=null)
 		{
 			for (PerceptedEntityData data:player.theFragment.perceptedEntities)
@@ -422,8 +428,15 @@ public class GameStateContainer {
 				if (!data.percepted) continue;
 				System.out.println("--------###] "+data);
 				
-				EntityFragment i = data.fragment;
+				EntityFragment i = data.unit.getFragment();
+				EncounterUnit unit = data.unit;
+				unit.getDescription().getEntityIconPic();
 				if (i==player.theFragment) continue;
+				
+				// gathering visible lifeforms
+				
+				ArrayList<PerceptedVisibleForm> forms = data.getPerceptedForms();
+				lifeForms.addAll(forms);
 				
 				if (i.getRelationLevel(player.theFragment)<=EntityScaledRelationType.NEUTRAL)
 				{ // neutral or worse, danger sense ok
@@ -431,8 +444,8 @@ public class GameStateContainer {
 				}
 				EntityOMeterData eData = new EntityOMeterData();
 				eData.kind = data.kind;
-				eData.realKind = data.fragment.getName();
-				eData.picture = data.kindKnown?i.instance.description.getEntityIconPic():"unknown";
+				eData.realKind = data.unit.getName();
+				eData.picture = data.kindKnown?unit.getDescription().getEntityIconPic():"unknown";
 				Vector3f point = new Vector3f(i.roamingBoundary.posX,i.roamingBoundary.posY,i.roamingBoundary.posZ);//new Vector3f(commonRadius[1][0],commonRadius[1][1],commonRadius[1][2]);
 				eData.dist =  data.getUpdatedDist();
 				eData.angle = data.distanceKnown?vParty.subtract(point).normalize().angleBetween(new Vector3f(1f,0,1f))*114.6f:null;
@@ -444,6 +457,8 @@ public class GameStateContainer {
 		{
 			J3DCore.getInstance().audioServer.playSoundForRandomMember(player, AudioDescription.T_DANGER);
 		}
+		
+		if (J3DCore.getInstance().pEngine!=null) J3DCore.getInstance().pEngine.renderPercepted(lifeForms);
 		
 		/*
 		if (true==false)

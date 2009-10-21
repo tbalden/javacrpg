@@ -18,14 +18,18 @@
 
 package org.jcrpg.world.ai;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
 
 import com.jme.math.Vector3f;
 
 public class PerceptedEntityData {
 	public EntityFragment source = null;
 
-	public EntityFragment fragment = null;
+	public EncounterUnit unit = null;
+	public int[] groupIds = null;
 	public boolean percepted = false, distanceKnown = false, kindKnown = false, groupSizeKnown = false;
 
 	public Float distance = null;
@@ -36,13 +40,13 @@ public class PerceptedEntityData {
 	{
 		if (distanceKnown)
 		{
-			Vector3f point = fragment.getRoamingPosition();//new Vector3f(commonRadius[1][0],commonRadius[1][1],commonRadius[1][2]);
+			Vector3f point = unit.getFragment().getRoamingPosition();//new Vector3f(commonRadius[1][0],commonRadius[1][1],commonRadius[1][2]);
 			distance =  source.getRoamingPosition().distance(point);
 		}
 		return distance;
 	}
 	
-	public void updateToResultRatio(float result, float resultIdentification, Vector3f sourcePos, EntityFragment target)
+	public void updateToResultRatio(float result, float resultIdentification, Vector3f sourcePos, EncounterUnit target)
 	{
 		if (result > 0.1f)
 		{
@@ -63,7 +67,8 @@ public class PerceptedEntityData {
 
 		if (distanceKnown)
 		{
-			Vector3f point = target.getRoamingPosition();//new Vector3f(commonRadius[1][0],commonRadius[1][1],commonRadius[1][2]);
+			// TODO get Persistent coordinates instead!
+			Vector3f point = target.getFragment().getRoamingPosition();//new Vector3f(commonRadius[1][0],commonRadius[1][1],commonRadius[1][2]);
 			distance =  sourcePos.distance(point);
 		} else
 		{
@@ -109,7 +114,13 @@ public class PerceptedEntityData {
 	
 	public String toString()
 	{
-		return "Ped: "+fragment.getName()+" -- perc "+percepted + " kind "+kindKnown+" size "+groupSizeKnown+" dist "+distanceKnown;
+		return "Ped: "+unit.getName()+" -- perc "+percepted + " kind "+kindKnown+" size "+groupSizeKnown+" dist "+distanceKnown;
 	}
+
+	public ArrayList<PerceptedVisibleForm> getPerceptedForms() {
+		
+		return unit.getPerceptedForms(this);
+	}
+
 	
 }

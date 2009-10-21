@@ -21,6 +21,7 @@ package org.jcrpg.game.logic;
 import java.util.ArrayList;
 
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
@@ -32,7 +33,7 @@ import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
 public class PerceptionEvaluator {
 	
 	
-	public static int likenessLevelOfPerception(EntityMemberInstance member, EntityFragment fragment)
+	public static int likenessLevelOfPerception(EntityMemberInstance member, EncounterUnit fragment)
 	{
 		boolean internal = member.getParentFragment().enteredPopulation!=null;
 		Class <? extends SkillBase> perceptionSkill = null;
@@ -48,7 +49,7 @@ public class PerceptionEvaluator {
 		
 	}
 	
-	public static int likenessLevelOfPerception(EntityFragment source, EntityFragment fragment)
+	public static int likenessLevelOfPerception(EntityFragment source, EncounterUnit fragment)
 	{
 		boolean internal = source.enteredPopulation!=null;
 		Class <? extends SkillBase> perceptionSkill = null;
@@ -71,7 +72,7 @@ public class PerceptionEvaluator {
 	 * @param fragment
 	 * @return
 	 */
-	public static int likenessLevelOfPerception(SkillContainer skills, boolean activeSourceSkill, Class <? extends SkillBase> perceptionSkill, EntityFragment fragment)
+	public static int likenessLevelOfPerception(SkillContainer skills, boolean activeSourceSkill, Class <? extends SkillBase> perceptionSkill, EncounterUnit fragment)
 	{
 		int level = skills.getSkillLevel(perceptionSkill,null);
 		if (!activeSourceSkill) level /=3;
@@ -89,7 +90,7 @@ public class PerceptionEvaluator {
 			for (Class<? extends SkillBase> contraSkill: contraSkills)
 			{
 				// maxing out skill level
-				int cLevel = fragment.getActiveBehaviorSkillLevel(contraSkill);
+				int cLevel = fragment.getFragment().getActiveBehaviorSkillLevel(contraSkill);
 				if (cLevel>sLevel) sLevel = cLevel;
 			}
 		}
@@ -102,21 +103,21 @@ public class PerceptionEvaluator {
 		return (HashUtil.mixPercentage(seed, 1, 2) + (karma /20f)+ (level))/100f;
 	}
 	
-	public static int likenessLevelOfIdentification(EntityMemberInstance member, EntityFragment fragment)
+	public static int likenessLevelOfIdentification(EntityMemberInstance member, EncounterUnit fragment)
 	{
 		Class <? extends SkillBase> identificationSkill = fragment.getDescription().getSkillForIdentification();
 		boolean active = member.behaviorSkill!=null && member.behaviorSkill.getClass().equals(identificationSkill);
 		return likenessLevelOfIdentification(member.getSkills(), active, identificationSkill, fragment);
 	}
 
-	public static int likenessLevelOfIdentification(EntityFragment source, EntityFragment fragment)
+	public static int likenessLevelOfIdentification(EntityFragment source, EncounterUnit fragment)
 	{
 		Class <? extends SkillBase> identificationSkill = fragment.getDescription().getSkillForIdentification();
 		boolean active = false;//source.instance.skills.behaviorSkill!=null && member.behaviorSkill.getClass().equals(identificationSkill);
 		return likenessLevelOfIdentification(source.instance.skills, active, identificationSkill, fragment);
 	}
 
-	public static int likenessLevelOfIdentification(SkillContainer skills, boolean activeSourceSkill, Class <? extends SkillBase> identificationSkill, EntityFragment fragment)
+	public static int likenessLevelOfIdentification(SkillContainer skills, boolean activeSourceSkill, Class <? extends SkillBase> identificationSkill, EncounterUnit fragment)
 	{
 		int level = skills.getSkillLevel(identificationSkill,null);
 		if (!activeSourceSkill) level /=3;
@@ -130,7 +131,7 @@ public class PerceptionEvaluator {
 			for (Class<? extends SkillBase> contraSkill: contraSkills)
 			{
 				// maxing out skill level
-				int cLevel = fragment.getActiveBehaviorSkillLevel(contraSkill);
+				int cLevel = fragment.getFragment().getActiveBehaviorSkillLevel(contraSkill);
 				if (cLevel>sLevel) sLevel = cLevel;
 			}
 		}

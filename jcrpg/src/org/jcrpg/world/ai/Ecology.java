@@ -339,9 +339,9 @@ public class Ecology {
 	 * @param targetFragment
 	 * @return true if percepted a part of the target fragment.
 	 */
-	public boolean fillPerceptedEntityData(int seed, EntityFragment fragment, EntityFragment targetFragment)
+	public boolean fillPerceptedEntityData(int seed, EntityFragment fragment, EncounterUnit target, int[] groupIds)
 	{
-		return fragment.fillPerceptedEntityData(seed,targetFragment);
+		return fragment.fillPerceptedEntityData(seed,target,groupIds);
 	}
 	
 	/**
@@ -410,11 +410,6 @@ public class Ecology {
 			{
 				if (usedUp.contains(f)) continue;
 				usedUp.add(f);
-				boolean percepted = fillPerceptedEntityData(seed, fragment, f.getFragment());
-				if (!percepted) {
-					f.getFragment().notifyUnpercepted();
-					continue;
-				}
 				int[][] r = listOfCommonRadiusFragments.get(f);
 				EncounterInfo pre = null;
 				if (staticEncounterInfoInstances.size()==counter)
@@ -440,6 +435,12 @@ public class Ecology {
 				calcGroupsOfEncounter(fragment, f, r[1][0], r[1][1], r[1][2], r[0][1], pre, false);
 				// fill how many of the interceptor entity group intercepts the target
 				calcGroupsOfEncounter(f, fragment, r[1][0], r[1][1], r[1][2], r[0][0], pre, true);
+
+				boolean percepted = fillPerceptedEntityData(seed, fragment, f, pre.encounteredGroupIds.get(f));
+				if (!percepted) {
+					f.getFragment().notifyUnpercepted();
+					continue;
+				}
 
 				Vector3f v1 = new Vector3f(r[1][0],r[1][1],r[1][2]); // this is the vector of intersection point to measure to the others distance.
 				
@@ -478,8 +479,6 @@ public class Ecology {
 					// vectors)
 					if (fragment == J3DCore.getInstance().gameState.player.theFragment || v2.distance(v1)<joinLimit) 
 					{
-						// fill source fragment with perception data (based on skill checks in that function).
-						fillPerceptedEntityData(seed, fragment, fT.getFragment());
 						
 						// joining the Encounter unit into the EncounterInfo
 						
@@ -493,6 +492,9 @@ public class Ecology {
 						calcGroupsOfEncounter(fragment, fT, r2[1][0], r2[1][1], r2[1][2], r2[0][1], pre, false);
 						// fill how many of the interceptor entity group intercepts the target
 						calcGroupsOfEncounter(fT, fragment, r2[1][0], r2[1][1], r2[1][2], r2[0][0], pre, true);
+						// fill source fragment with perception data (based on skill checks in that function).
+						int[] groupIds = pre.encounteredGroupIds.get(fT);
+						fillPerceptedEntityData(seed, fragment, fT, groupIds);
 					} else
 					{
 						// not joining this, skipping.
@@ -631,7 +633,7 @@ public class Ecology {
 			engine.ecologyTurnFinished();
 			J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "DICE");
 			J3DCore.getInstance().updateDisplay(null);
-			J3DCore.getInstance().gameState.updateEntityIcons();
+			J3DCore.getInstance().gameState.updatePerceptionRelated();
 		}
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
 	}

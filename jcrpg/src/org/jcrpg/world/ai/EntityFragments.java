@@ -18,6 +18,8 @@
 package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.game.logic.PerceptionEvaluator;
@@ -26,10 +28,11 @@ import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.state.StateEffect;
+import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
-import org.jcrpg.world.ai.humanoid.MemberPerson;
-import org.jcrpg.world.ai.profession.HumanoidProfessional;
+import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.place.Economic;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.economic.Population;
 
 import com.jme.math.Vector3f;
@@ -211,6 +214,64 @@ public class EntityFragments {
 		public int getGroupSize(int groupId) {
 			return instance.getGroupSizes()[groupId];
 		}
+
+		public ArrayList<PerceptedVisibleForm> getPerceptedForms(PerceptedEntityData perceptedData) {
+			ArrayList<PerceptedVisibleForm> forms = new ArrayList<PerceptedVisibleForm>();
+			
+			int id = 0;
+			if (perceptedData.groupIds!=null)
+			{
+				id = perceptedData.groupIds[0];
+			}
+			
+			PerceptedVisibleForm form = instance.getPerceptedOne(this,id);
+			form.worldX = (int)getRoamingPosition().x;
+			form.worldY = (int)getRoamingPosition().y;
+			form.worldZ = (int)getRoamingPosition().z;
+			
+			boolean positioned = false;
+			if (enteredPopulation!=null)
+			{
+				ArrayList<int[]> list = enteredPopulation.getPossibleSettlePlaces();
+				if (list!=null && list.size()>0)
+				{
+					form.worldX = list.get(0)[0];
+					form.worldY = list.get(0)[1];
+					form.worldZ = list.get(0)[2];
+					positioned = true;
+				}
+			}
+			if (!positioned)
+			{
+				ArrayList<SurfaceHeightAndType[]> surface = instance.world.getSurfaceData(form.worldX, form.worldZ);
+				for (SurfaceHeightAndType[] type: surface)
+				{
+					for (SurfaceHeightAndType s:type)
+					{
+						if (enteredPopulation!=null)
+						{
+							if (s.self == enteredPopulation.soilGeo)
+							{
+								form.worldY = s.surfaceY;
+								positioned = true;
+								break;
+							}
+						} else
+						{
+							form.worldY = s.surfaceY;
+							positioned = true;
+							break;
+						}
+					}
+				}
+			}
+			if (positioned)
+			{
+				forms.add(form);
+			}
+			return forms;
+		}
+
 		public VisibleLifeForm getOne(int groupId) {
 			return instance.getOne(groupId);
 		}
@@ -295,7 +356,7 @@ public class EntityFragments {
 		 * @param target
 		 * @return True if target is percepted.
 		 */
-		public boolean fillPerceptedEntityData(int seed, EntityFragment target)
+		public boolean fillPerceptedEntityData(int seed, EncounterUnit target, int[] groupIds)
 		{
 			if (perceptedEntities==null)
 			{
@@ -309,7 +370,8 @@ public class EntityFragments {
 			}
 			PerceptedEntityData data = percept(seed, 0, target);
 			rData.mergeBest(data);
-			rData.fragment = target;
+			rData.unit = target;
+			rData.groupIds = groupIds;
 			rData.source = this;
 			perceptedEntities.add(rData);
 			if (rData.percepted==true) return true;
@@ -322,7 +384,7 @@ public class EntityFragments {
 		}
 
 		
-		public PerceptedEntityData percept(int seed, int karma, EntityFragment target)
+		public PerceptedEntityData percept(int seed, int karma, EncounterUnit target)
 		{
 			int likeness = PerceptionEvaluator.likenessLevelOfPerception(this, target);
 			if (target == J3DCore.getInstance().gameState.player.theFragment)

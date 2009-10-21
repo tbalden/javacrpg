@@ -32,7 +32,6 @@ Journal window will be needed!
 
 [ ] side types should include difficulty of climbing.
 
-[ ] scorpoman and desert towns
 [ ] harpy / blood golem (check Downloads (2) version with pose!) - greek maze?
 [ ] grass color log(x)?
 [ ] feature idea: button to constantly walk. fo example "shift + dirKey"
@@ -54,7 +53,11 @@ Before next release:
 	[X] random greetings sounds for encounters?
 	[X] danger sounds for perception (aggressive beings?)
 	
-[ ] check continuous load + after combat bug
+[-] check continuous load + after combat bug
+
+[X] add detected moving models to their respective locations? upon UpdateEntityOmeter
+[ ] integrate harpy to maze
+
 
 [X] integrate Anatipions
 
