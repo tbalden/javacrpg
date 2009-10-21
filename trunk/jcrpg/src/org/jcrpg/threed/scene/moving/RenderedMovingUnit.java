@@ -55,6 +55,7 @@ public class RenderedMovingUnit {
 	public String id = null;
 	public int worldX, worldY, worldZ;
 	public float c3dX, c3dY, c3dZ;
+	public float walkHeight = 0f;
 	
 	public Model[] models = null;
 	public VisibleLifeForm form = null;
@@ -107,6 +108,11 @@ public class RenderedMovingUnit {
 			if (c.walkHeight!=0)
 			{
 				c3dY+=c.walkHeight;
+				walkHeight = c.walkHeight;
+			} else
+			{
+				c3dY+=c.middleHeight;
+				walkHeight = c.middleHeight;
 			}
 		}
 		c3dZ = (origoZ-(worldZ-origoZ)) * J3DCore.CUBE_EDGE_SIZE;

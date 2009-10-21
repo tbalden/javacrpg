@@ -67,6 +67,7 @@ import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.config.SideTypeModels;
 import org.jcrpg.threed.scene.side.RenderedSide;
+import org.jcrpg.threed.standing.J3DPerceptionEngine;
 import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.ui.ButtonRow;
 import org.jcrpg.ui.UIBase;
@@ -2134,7 +2135,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		uiBase.hud.initGameStateNodes();
 		createWorldMap();
 		// updating entity icons on HUD
-		gameState.updateEntityIcons();
+		gameState.updatePerceptionRelated();
 
 		if (skySphere != null)
 			skyParentNode.detachChild(skySphere);
@@ -2225,6 +2226,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		if (mEngine == null) {
 			mEngine = new J3DMovingEngine(this);
 		}
+		if (pEngine == null) {
+			pEngine = new J3DPerceptionEngine(this);
+		}
 		skyParentNode.updateRenderState();
 		updateDisplay(null);
 		rootNode.updateGeometricState(0, false);
@@ -2265,6 +2269,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			sEngine.clearAll();
 			eEngine.clearAll();
 			mEngine.clearAll();
+			pEngine.clearAll();
 			renderedArea.clear();
 			renderedEncounterArea.clear();
 			extRootNode.detachAllChildren();
@@ -2779,6 +2784,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public J3DEncounterEngine eEngine = null;
 	public J3DMovingEngine mEngine = null;
 	public J3DStandingEngine sEngine = null;
+	public J3DPerceptionEngine pEngine = null;
 
 	LightNode playerLightNode;
 	public PointLight playerLight;
@@ -3053,6 +3059,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			/** Update controllers/render states/transforms/bounds for rootNode. */
 			if (mEngine != null)
 				mEngine.updateScene(tpf);
+			if (pEngine != null)
+				pEngine.updateScene(tpf);
 			rootNode.updateGeometricState(tpf, true);
 			//fpsNode.updateGeometricState(tpf, true);
 

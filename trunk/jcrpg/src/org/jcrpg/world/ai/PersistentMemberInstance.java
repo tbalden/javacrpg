@@ -22,8 +22,10 @@ import java.util.ArrayList;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.place.Economic;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.InfrastructureElementParameters;
 
@@ -140,6 +142,9 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	public VisibleLifeForm getOne(int groupId) {
 		return new VisibleLifeForm(this.getClass().getName()+""+this,description,getParentFragment().instance,this);
 	}
+	public PerceptedVisibleForm getPerceptedOne() {
+		return new PerceptedVisibleForm(this.getClass().getName()+""+this,description,instance,parentFragment,this);
+	}
 
 	public int getRelationLevel(EncounterUnit unit) {
 		return getParentFragment()==null?0:getParentFragment().instance.relations.getRelationLevel(unit);
@@ -199,4 +204,83 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	{
 		this.roamingBoundary.setPosition(1, worldX, worldY, worldZ);
 	}
+
+	public void addPerceptableGroup(EntityFragment f, int groupId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addPerceptableUnit(PersistentMemberInstance f) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public ArrayList<PerceptedVisibleForm> getPerceptedForms(PerceptedEntityData perceptedData) {
+		ArrayList<PerceptedVisibleForm> forms = new ArrayList<PerceptedVisibleForm>();
+
+		getOne(0);
+		PerceptedVisibleForm form = getPerceptedOne();
+		form.worldX = (int)getRoamingPosition().x;
+		form.worldY = (int)getRoamingPosition().y;
+		form.worldZ = (int)getRoamingPosition().z;
+		boolean positioned = false;
+		if (parentFragment.enteredPopulation!=null)
+		{
+			ArrayList<int[]> list = parentFragment.enteredPopulation.getPossibleSettlePlaces();
+			if (list!=null && list.size()>0)
+			{
+				form.worldX = list.get(0)[0];
+				form.worldY = list.get(0)[1];
+				form.worldZ = list.get(0)[2];
+				positioned = true;
+			}
+			if (generatedOwnInfrastructures!=null && generatedOwnInfrastructures.size()>0)
+			{
+				for (Economic eco:generatedOwnInfrastructures)
+				{
+					if (eco.parent == parentFragment.enteredPopulation)
+					{
+						list = eco.getPossibleSettlePlaces();
+						if (list!=null && list.size()>0)
+						{
+							form.worldX = list.get(0)[0];
+							form.worldY = list.get(0)[1];
+							form.worldZ = list.get(0)[2];
+							positioned = true;
+						}
+					}
+				}
+			}
+		}
+		if (!positioned)
+		{
+			ArrayList<SurfaceHeightAndType[]> surface = instance.world.getSurfaceData(form.worldX, form.worldZ);
+			for (SurfaceHeightAndType[] type: surface)
+			{
+				for (SurfaceHeightAndType s:type)
+				{
+					if (parentFragment.enteredPopulation!=null)
+					{
+						if (s.self == parentFragment.enteredPopulation.soilGeo)
+						{
+							form.worldY = s.surfaceY;
+							positioned = true;
+							break;
+						}
+					} else
+					{
+						form.worldY = s.surfaceY;
+						positioned = true;
+						break;
+					}
+				}
+			}
+		}
+		if (positioned)
+		{
+			forms.add(form);
+		}
+		return forms;
+	}
+
 }

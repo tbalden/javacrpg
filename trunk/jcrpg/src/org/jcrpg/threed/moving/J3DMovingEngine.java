@@ -31,7 +31,6 @@ import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.jme.program.EffectNode;
 import org.jcrpg.threed.jme.ui.FlyingNode;
-import org.jcrpg.threed.jme.ui.HighlightParentNode;
 import org.jcrpg.threed.jme.ui.NodeFontFreer;
 import org.jcrpg.threed.jme.ui.ZoomingParentNode;
 import org.jcrpg.threed.scene.config.MovingTypeModels;
@@ -41,7 +40,6 @@ import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.ui.Characters;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.text.FontTT;
-import org.jcrpg.ui.text.Text;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.EntityScaledRelationType;
@@ -55,11 +53,8 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial.CullHint;
-import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.Spatial.TextureCombineMode;
-import com.jme.scene.state.BlendState;
 import com.jme.scene.state.ZBufferState;
-import com.jme.system.DisplaySystem;
 
 /**
  * Moving units 3d display part.
@@ -69,11 +64,11 @@ public class J3DMovingEngine {
 
 	Logger logger = Logger.getLogger(J3DMovingEngine.class.getName());
 	
-	J3DCore core = null;
+	protected J3DCore core = null;
 	
 	MovingTypeModels movingTypeModels = null;
 	
-	HashMap<String, RenderedMovingUnit> units = new HashMap<String, RenderedMovingUnit>();
+	protected HashMap<String, RenderedMovingUnit> units = new HashMap<String, RenderedMovingUnit>();
 	
 	public static HashSet<RenderedMovingUnit> activeUnits = new HashSet<RenderedMovingUnit>();
 	public static HashSet<EffectNode> activeEffectNodes = new HashSet<EffectNode>();
@@ -136,7 +131,7 @@ public class J3DMovingEngine {
 	 * @param n Nodes
 	 * @param unit the r.cube parent of the nodes, needed for putting the rendered node as child into it.
 	 */
-	private void renderNodes(NodePlaceholder[] n, RenderedMovingUnit unit)
+	protected void renderNodes(NodePlaceholder[] n, RenderedMovingUnit unit)
 	{
 		if (n==null) return;
 	
@@ -518,6 +513,7 @@ public class J3DMovingEngine {
 	{
 			for (RenderedMovingUnit unit: units.values())
 			{
+				if (unit.nodePlaceholders.iterator().next().realNode==null)
 				for (NodePlaceholder n : unit.nodePlaceholders)
 				{
 					Node realPooledNode = (Node)core.modelPool.getMovingModel(unit, n.model, n);
@@ -539,6 +535,9 @@ public class J3DMovingEngine {
 						if (J3DCore.SETTINGS.SHADOWS) core.shadowsPass.addOccluder((Node)realPooledNode);
 						//core.encounterIntRootNode.attachChild((Node)realPooledNode);
 					}
+					realPooledNode.setCullHint(CullHint.Never); // added this one because otherwise some units were culled for no good reason. temp fix. 
+					//TODO remove this if found real bug
+					// probably boundary problem?
 					realPooledNode.updateRenderState();
 					realPooledNode.lockBounds();
 					

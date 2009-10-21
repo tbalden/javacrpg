@@ -350,7 +350,7 @@ public class EntityMemberInstance {
 		return new Vector3f(getParentFragment().roamingBoundary.posX,getParentFragment().roamingBoundary.posY,getParentFragment().roamingBoundary.posZ);
 	}
 	
-	public PerceptedEntityData percept(int seed, EntityFragment target)
+	public PerceptedEntityData percept(int seed, EncounterUnit target)
 	{
 		int likeness = PerceptionEvaluator.likenessLevelOfPerception(this, target);
 		//System.out.println("=== "+description.getName()+" "+likeness);

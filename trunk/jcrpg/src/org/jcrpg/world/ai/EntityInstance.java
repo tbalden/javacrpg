@@ -40,6 +40,7 @@ import org.jcrpg.world.ai.abs.state.EntityState;
 import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.body.MammalBody;
 import org.jcrpg.world.ai.body.SinglePartBody;
+import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.player.PartyInstance;
@@ -322,6 +323,11 @@ public class EntityInstance {
 	public VisibleLifeForm getOne(int groupId)
 	{
 		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),getGroupSizesAndTypes()[groupId].type,this,groupId);
+	}
+
+	public PerceptedVisibleForm getPerceptedOne(EntityFragment fragment,int groupId)
+	{
+		return new PerceptedVisibleForm(this.getClass().getName()+nextVisibleSequence(),getGroupSizesAndTypes()[groupId].type,this,fragment,groupId);
 	}
 	
 	public void setPosition(int[] coords)

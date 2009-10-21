@@ -26,4 +26,9 @@ public abstract class DescriptionBase {
 		return org.jcrpg.world.ai.abs.skill.mental.Ecology.class;
 	}
 	
+	public String getEntityIconPic()
+	{
+		return "unknown";
+	}
+
 }
