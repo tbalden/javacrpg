@@ -327,7 +327,7 @@ public class EntityInstance {
 
 	public PerceptedVisibleForm getPerceptedOne(EntityFragment fragment,int groupId)
 	{
-		return new PerceptedVisibleForm(this.getClass().getName()+nextVisibleSequence(),getGroupSizesAndTypes()[groupId].type,this,fragment,groupId);
+		return new PerceptedVisibleForm(this.getClass().getName()+nextVisibleSequence(),calcGroupSizes()[groupId].type,this,fragment,groupId);
 	}
 	
 	public void setPosition(int[] coords)

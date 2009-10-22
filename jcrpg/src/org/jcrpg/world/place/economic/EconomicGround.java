@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.place.economic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.audio.AudioServer;
@@ -171,5 +172,13 @@ public abstract class EconomicGround extends DistrictSubelement {
 
 	public abstract EconomicGround getInstance(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner);
 
+
+	private ArrayList<int[]> tmpSettlePlaces = new ArrayList<int[]>();
+	@Override
+	public ArrayList<int[]> getPossibleSettlePlaces() {
+		tmpSettlePlaces.clear();
+		tmpSettlePlaces.add(new int[]{origoX+sizeX/2, origoY, origoZ+sizeZ/2});
+		return tmpSettlePlaces;
+	}
 
 }
