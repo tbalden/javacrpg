@@ -514,41 +514,44 @@ public class J3DMovingEngine {
 			for (RenderedMovingUnit unit: units.values())
 			{
 				if (unit.nodePlaceholders.iterator().next().realNode==null)
-				for (NodePlaceholder n : unit.nodePlaceholders)
 				{
-					Node realPooledNode = (Node)core.modelPool.getMovingModel(unit, n.model, n);
-					n.realNode = (PooledNode)realPooledNode;
-					realPooledNode.setLocalTranslation(n.getLocalTranslation());
-					realPooledNode.setLocalRotation(n.getLocalRotation());
-					realPooledNode.setLocalScale(n.getLocalScale());
-					//realPooledNode.attachChild(unit.circleNode);
-					
-					
-					if (unit.internal) {
-						core.gameState.getCurrentStandingEngine().extRootNode.
-							attachChild((Node)realPooledNode);
-						if (J3DCore.SETTINGS.SHADOWS) core.shadowsPass.addOccluder((Node)realPooledNode);
-					} else 
+					System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RENDERING: "+ unit.form.member+ " "+unit.form.entity);
+					for (NodePlaceholder n : unit.nodePlaceholders)
 					{
-						core.gameState.getCurrentStandingEngine().extRootNode.
-							attachChild((Node)realPooledNode);
-						if (J3DCore.SETTINGS.SHADOWS) core.shadowsPass.addOccluder((Node)realPooledNode);
-						//core.encounterIntRootNode.attachChild((Node)realPooledNode);
+						Node realPooledNode = (Node)core.modelPool.getMovingModel(unit, n.model, n);
+						n.realNode = (PooledNode)realPooledNode;
+						realPooledNode.setLocalTranslation(n.getLocalTranslation());
+						realPooledNode.setLocalRotation(n.getLocalRotation());
+						realPooledNode.setLocalScale(n.getLocalScale());
+						//realPooledNode.attachChild(unit.circleNode);
+						
+						
+						if (unit.internal) {
+							core.gameState.getCurrentStandingEngine().extRootNode.
+								attachChild((Node)realPooledNode);
+							if (J3DCore.SETTINGS.SHADOWS) core.shadowsPass.addOccluder((Node)realPooledNode);
+						} else 
+						{
+							core.gameState.getCurrentStandingEngine().extRootNode.
+								attachChild((Node)realPooledNode);
+							if (J3DCore.SETTINGS.SHADOWS) core.shadowsPass.addOccluder((Node)realPooledNode);
+							//core.encounterIntRootNode.attachChild((Node)realPooledNode);
+						}
+						realPooledNode.setCullHint(CullHint.Never); // added this one because otherwise some units were culled for no good reason. temp fix. 
+						//TODO remove this if found real bug
+						// probably boundary problem?
+						realPooledNode.updateRenderState();
+						realPooledNode.lockBounds();
+						
 					}
-					realPooledNode.setCullHint(CullHint.Never); // added this one because otherwise some units were culled for no good reason. temp fix. 
-					//TODO remove this if found real bug
-					// probably boundary problem?
-					realPooledNode.updateRenderState();
-					realPooledNode.lockBounds();
-					
-				}
-				updateUnitTextNodes(unit);
-				if (unit.form.inEncounterPhase==Ecology.PHASE_TURNACT_COMBAT)
-				{
-					unit.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
-				} else
-				{
-					unit.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
+					updateUnitTextNodes(unit);
+					if (unit.form.inEncounterPhase==Ecology.PHASE_TURNACT_COMBAT)
+					{
+						unit.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
+					} else
+					{
+						unit.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
+					}
 				}
 			}
 	}
