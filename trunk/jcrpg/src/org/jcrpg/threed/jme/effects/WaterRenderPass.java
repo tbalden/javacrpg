@@ -32,6 +32,7 @@
 
 package org.jcrpg.threed.jme.effects;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,6 +62,7 @@ import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.TextureManager;
+import com.jme.util.resource.ResourceLocatorTool;
 
 /**
  * <code>WaterRenderPass</code>
@@ -125,7 +127,7 @@ public class WaterRenderPass extends Pass {
 	public static String projectedShaderRefractionStr = "com/jmex/effects/water/data/projectedwatershader_refraction";
 	private String currentShaderStr;
 
-    public static String normalMapTexture = "com/jmex/effects/water/data/normalmap3.dds";
+    public static String normalMapTexture = "normalmap3.dds";
     public static String dudvMapTexture = "com/jmex/effects/water/data/dudvmap.png";
     public static String foamMapTexture = "com/jmex/effects/water/data/oceanfoam.png";
     public static String fallbackMapTexture = "com/jmex/effects/water/data/water2.png";
@@ -234,8 +236,10 @@ public class WaterRenderPass extends Pass {
 				textureState = display.getRenderer().createTextureState();
 				textureState.setEnabled( true );
 
+				URL u = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, normalMapTexture);
+
 				Texture t1 = TextureManager.loadTexture(
-						WaterRenderPass.class.getClassLoader().getResource( normalMapTexture ),
+						u,
 						Texture.MinificationFilter.BilinearNoMipMaps,
 						Texture.MagnificationFilter.Bilinear
 				);

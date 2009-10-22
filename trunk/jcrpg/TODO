@@ -56,8 +56,13 @@ Before next release:
 [-] check continuous load + after combat bug
 
 [X] add detected moving models to their respective locations? upon UpdateEntityOmeter
+    [ ] better placament, more units for big groups?
+    
 [ ] integrate harpy to maze
 
+[ ] check hut
+[ ] check SSAO renderpass
+[ ] save Water dds to png - use resourceloc
 
 [X] integrate Anatipions
 

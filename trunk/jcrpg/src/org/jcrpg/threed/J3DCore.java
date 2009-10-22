@@ -57,6 +57,7 @@ import org.jcrpg.threed.jme.QuaternionBuggy;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
 import org.jcrpg.threed.jme.effects.DirectionalShadowMapPass;
+import org.jcrpg.threed.jme.effects.SSAORenderPass;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
 import org.jcrpg.threed.jme.geometryinstancing.BufferPool;
 import org.jcrpg.threed.jme.tool.CameraUtil;
@@ -212,6 +213,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		public boolean DOF_EFFECT = false;
 		public boolean DOF_DETAILED = false;
 		public boolean SHADOWS = true;
+		public boolean SSAO_EFFECT = false;
 
 		public boolean ANIMATED_GRASS = true;
 		public boolean DOUBLE_GRASS = true;
@@ -344,6 +346,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			coreSettings.ANIMATED_GRASS = loadValue("ANIMATED_GRASS", false);
 			coreSettings.DOUBLE_GRASS = loadValue("DOUBLE_GRASS", false);
 			coreSettings.SHADOWS = loadValue("SHADOWS", false);
+			coreSettings.SSAO_EFFECT = loadValue("SSAO_EFFECT", false);
 			coreSettings.ANIMATED_TREES = loadValue("ANIMATED_TREES", false);
 			coreSettings.DETAILED_TREES = loadValue("DETAILED_TREES", false);
 			coreSettings.DETAILED_TREE_FOLIAGE = loadValue("DETAILED_TREE_FOLIAGE", false);
@@ -2070,6 +2073,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	private DepthOfFieldRenderPass dofRenderPass;
 	private BloomRenderPass bloomRenderPass;
 	public static WaterRenderPass waterEffectRenderPass;
+	public static SSAORenderPass ssaoRenderPass;
 
 	public CullState cs_back = null;
 	public CullState cs_none = null;
@@ -2561,10 +2565,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		// waterEffectRenderPass.setWaterMaxAmplitude(2f);
 		pManager.add(waterEffectRenderPass);
 
-		//if (SETTINGS.SHADOWS) 
+		
 		{
 			shadowsPass = new DirectionalShadowMapPass(new Vector3f(-1f, -1f, -1f));
-			Jcrpg.LOGGER.info("SHADOWS!");
 			// sPass.setShadowColor(new ColorRGBA(0,0,0,1f));
 			shadowsPass.setEnabled(SETTINGS.SHADOWS);
 			// sPass.add(extRootNode);
@@ -2600,7 +2603,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		pManager.add(bloomRenderPass);
 		dofRenderPass.setEnabled(false);
 		pManager.add(dofRenderPass);
-		
+
+		ssaoRenderPass = new SSAORenderPass(cam, 4);
+		ssaoRenderPass.setEnabled(false);
+		pManager.add(ssaoRenderPass);
+
 		if (SETTINGS.BLOOM_EFFECT) {
 			if (!bloomRenderPass.isSupported()) {
 				Jcrpg.LOGGER.warning("!!!!!! BLOOM NOT SUPPORTED !!!!!!!! ");
