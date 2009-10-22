@@ -283,7 +283,26 @@ public abstract class Population extends Economic{
 		{
 			surfaceY = dataI.surfaceY;
 		}
-		tmpSettlePlaces.add(new int[]{centerX,surfaceY,centerZ});
+		for (EconomicGround g:groundList)
+		{
+			if (g.ownerMember==null)
+			{
+				ArrayList<int[]> list = g.getPossibleSettlePlaces();
+				if (list!=null)
+				tmpSettlePlaces.addAll(g.getPossibleSettlePlaces());
+			}
+		}
+		for (Residence g:residenceList)
+		{
+			if (g.ownerMember==null)
+			{
+				ArrayList<int[]> list = g.getPossibleSettlePlaces();
+				if (list!=null)
+				tmpSettlePlaces.addAll(g.getPossibleSettlePlaces());
+			}
+		}
+		
+		//tmpSettlePlaces.add(new int[]{centerX,surfaceY,centerZ});
 		return tmpSettlePlaces;
 	}
 	

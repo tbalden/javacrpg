@@ -18,8 +18,6 @@
 package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.game.logic.PerceptionEvaluator;
@@ -30,7 +28,6 @@ import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
-import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.economic.Population;
