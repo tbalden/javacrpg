@@ -53,6 +53,8 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		intRootNode = core.encounterIntRootNode;
 		extWaterRefNode = core.encounterExtRootNode;
 		intWaterRefNode = core.encounterIntRootNode;
+		extSSAONode = core.encounterExtRootNode;
+		intSSAONode = core.encounterIntRootNode;
 		renderedArea = core.renderedEncounterArea;
 		renderedArea.setRenderDistance(22); // set a low view distance for battles
 		renderedArea.setRenderDistanceFarview(22);

@@ -207,11 +207,11 @@ public class GeometryBatchHelper {
 	    		}
 	    		if (internal)
 	    		{
-	    			sEngine.intWaterRefNode.attachChild(batch.parent);
+	    			sEngine.intSSAONode.attachChild(batch.parent);
 	    			//sEngine.intRootNode.updateRenderState();
 	    		} else
 	    		{
-	    			sEngine.extWaterRefNode.attachChild(batch.parent);
+	    			sEngine.extSSAONode.attachChild(batch.parent);
 	    			//sEngine.extRootNode.updateRenderState();
 	    		}
     			batch.parent.setCullHint(CullHint.Inherit); // set culling to NEVER for the first rendering...
@@ -438,11 +438,11 @@ public class GeometryBatchHelper {
 		    		batch.key = key;
 		    		if (internal)
 		    		{
-		    			sEngine.intWaterRefNode.attachChild(batch.parent);
+		    			sEngine.intSSAONode.attachChild(batch.parent);
 		    			//sEngine.intRootNode.updateRenderState();
 		    		} else
 		    		{
-		    			sEngine.extWaterRefNode.attachChild(batch.parent);
+		    			sEngine.extSSAONode.attachChild(batch.parent);
 		    			//sEngine.extRootNode.updateRenderState();
 		    		}
 	    			batch.parent.setCullHint(CullHint.Inherit); // set culling to NEVER for the first rendering...

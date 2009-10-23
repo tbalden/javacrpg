@@ -93,6 +93,8 @@ public class J3DStandingEngine {
 	public Node extRootNode = null;
 	public Node intWaterRefNode  = null;
 	public Node extWaterRefNode = null;
+	public Node intSSAONode  = null;
+	public Node extSSAONode = null;
 	
 	public J3DStandingEngine(J3DCore core)
 	{
@@ -110,6 +112,8 @@ public class J3DStandingEngine {
 		extRootNode = core.extRootNode;
 		intWaterRefNode = core.intWaterRefNode;
 		extWaterRefNode = core.extWaterRefNode;
+		intSSAONode = core.intSSAONode;
+		extSSAONode = core.extSSAONode;
 	}
 	/**
 	 * Start this when newly initializing core.
@@ -129,6 +133,8 @@ public class J3DStandingEngine {
 		optimizeAngle = J3DCore.OPTIMIZE_ANGLES;
 		intWaterRefNode = core.intWaterRefNode;
 		extWaterRefNode = core.extWaterRefNode;
+		intSSAONode = core.intSSAONode;
+		extSSAONode = core.extSSAONode;
 
 	}
 
@@ -927,10 +933,10 @@ public class J3DStandingEngine {
 										}
 									
 										if (c.cube.internalCube) {
-											intWaterRefNode.attachChild((Node)realPooledNode);
+											intSSAONode.attachChild((Node)realPooledNode);
 										} else 
 										{
-											extWaterRefNode.attachChild((Node)realPooledNode);
+											extSSAONode.attachChild((Node)realPooledNode);
 										}
 										realPooledNode.setCullHint(CullHint.Never);
 										newNodesToSetCullingDynamic.add(realPooledNode);
@@ -1338,10 +1344,10 @@ public class J3DStandingEngine {
 									}
 								
 									if (c.cube.internalCube) {
-										intWaterRefNode.attachChild((Node)realPooledNode);
+										intSSAONode.attachChild((Node)realPooledNode);
 									} else 
 									{
-										extWaterRefNode.attachChild((Node)realPooledNode);
+										extSSAONode.attachChild((Node)realPooledNode);
 									}
 									realPooledNode.setCullHint(CullHint.Never);
 									newNodesToSetCullingDynamic.add(realPooledNode);

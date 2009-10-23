@@ -487,9 +487,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	/** external all root */
 	public Node extRootNode;
 	public Node extWaterRefNode; // reflected part
+	public Node extSSAONode; // SSAO part
 	/** internal all root */
 	public Node intRootNode;
 	public Node intWaterRefNode;
+	public Node intSSAONode; // SSAO part
 
 	/** encounter mode all root */
 	public Node encounterExtRootNode;
@@ -2130,6 +2132,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			dofParentNode.attachChild(encounterIntRootNode);
 			extRootNode.attachChild(extWaterRefNode);
 			intRootNode.attachChild(intWaterRefNode);
+			extWaterRefNode.attachChild(extSSAONode);
+			intWaterRefNode.attachChild(intSSAONode);
 			groundParentNode.attachChild(dofParentNode);
 			groundParentNode.attachChild(skyParentNode);
 		}
@@ -2241,9 +2245,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		if (coreFullyInitialized) {
 			reinitialized = true;
 		}
-		updatePlayerTorchLight();
 		coreFullyInitialized = true;
-		updatePlayerTorchLight();
 	}
 
 	boolean reinitialized = false;
@@ -2279,7 +2281,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			extRootNode.detachAllChildren();
 			intRootNode.detachAllChildren();
 			extWaterRefNode.detachAllChildren();
+			extSSAONode.detachAllChildren();
 			intWaterRefNode.detachAllChildren();
+			intSSAONode.detachAllChildren();
 			groundParentNode.detachAllChildren();
 			encounterExtRootNode.detachAllChildren();
 			encounterIntRootNode.detachAllChildren();
@@ -2444,7 +2448,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		display.getRenderer().setBackgroundColor(ColorRGBA.black);
 
 		cam.setFrustumPerspective(45.0f, (float) display.getWidth()
-				/ (float) display.getHeight(), 0.002f, 350);
+				/ (float) display.getHeight(), 0.002f, 350f);
 		dofParentNode.attachChild(intRootNode);
 		dofParentNode.attachChild(extRootNode);
 		groundParentNode.attachChild(dofParentNode);
@@ -2548,14 +2552,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		}
 		extWaterRefNode = new Node("extWatRef");
+		extSSAONode = new Node("extSSAO");
 		extRootNode.attachChild(extWaterRefNode);
+		extWaterRefNode.attachChild(extSSAONode);
 		intWaterRefNode = new Node("intWatRef");
+		intSSAONode = new Node("intSSAO");
 		intRootNode.attachChild(intWaterRefNode);
+		intWaterRefNode.attachChild(intSSAONode);
 
 		RenderPass rootPass = new RenderPass();
 		//rootPass.add(rootNode);
 		pManager.add(rootPass);
 
+		
 		waterEffectRenderPass = new WaterRenderPass(cam, 4, false, true);
 		// set equations to use z axis as up
 		waterEffectRenderPass.setWaterPlane(new Plane(new Vector3f(0.0f, 1.0f,
@@ -2589,6 +2598,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			// sPass.addOccluder(groundParentNode);
 		}
 
+		ssaoRenderPass = new SSAORenderPass(cam, 2);
+		ssaoRenderPass.setEnabled(SETTINGS.SSAO_EFFECT);
+		ssaoRenderPass.add(extSSAONode);
+		ssaoRenderPass.add(intSSAONode);
+		
+		//ssaoRenderPass.add(skyParentNode);
+		pManager.add(ssaoRenderPass);
+		
 		bloomRenderPass.setUseCurrentScene(true);
 		bloomRenderPass.setBlurIntensityMultiplier(1.0f);
 
@@ -2604,9 +2621,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		dofRenderPass.setEnabled(false);
 		pManager.add(dofRenderPass);
 
-		ssaoRenderPass = new SSAORenderPass(cam, 4);
-		ssaoRenderPass.setEnabled(false);
-		pManager.add(ssaoRenderPass);
 
 		if (SETTINGS.BLOOM_EFFECT) {
 			if (!bloomRenderPass.isSupported()) {
@@ -2829,11 +2843,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			encounterIntLightState.attach(playerLight);
 		} else
 		{
+			attachLightAtPos(playerLight,extLightState,1);//extLightState.attach(playerLight);
 			playerLight.setAmbient(ColorRGBA.black);
 			playerLight.setDiffuse(ColorRGBA.black);
 			playerLight.setSpecular(ColorRGBA.black);
 			//extLightState.detach(playerLight);
-			//encounterIntLightState.detach(playerLight);
+			encounterIntLightState.attach(playerLight);
 		}
 		extRootNode.updateRenderState();
 		encounterExtRootNode.updateRenderState();
@@ -3222,6 +3237,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		switchPass(shadowsPass, SETTINGS.SHADOWS);
 
 		switchPass(bloomRenderPass, SETTINGS.BLOOM_EFFECT);
+		switchPass(ssaoRenderPass, SETTINGS.SSAO_EFFECT);
 		
 		switchPass(dofRenderPass, SETTINGS.DOF_EFFECT&&!SETTINGS.BLOOM_EFFECT);
 		
@@ -3245,6 +3261,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			gameState.scenario.initiateScenario();
 		}
 		startingCleanBeforeScenarioInitialization = false;
+		
+		updateTimeRelated(true);
+		updatePlayerTorchLight();
+
 		if (callbackObject!=null)
 		{
 			callbackObject.callbackAfterInit(initCallbackParm);

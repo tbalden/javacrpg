@@ -88,6 +88,7 @@ public class OptionsMenu extends PagedInputWindow {
     
     CheckBox toggleBloom;
     CheckBox toggleDepthOfField;
+    CheckBox toggleSSAO;
     ValueTuner tunerShadowDistance;
     CheckBox toggleSlowAnimation;
 
@@ -213,12 +214,16 @@ public class OptionsMenu extends PagedInputWindow {
             addInput(1, selectWaterDeatil);
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.bloom"), false));
             toggleBloom = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.BLOOM_EFFECT);
-            secondLayout.addToColumn(1, toggleBloom, 0.1f, 0.5f);
+            secondLayout.addToColumn(1, toggleBloom, 0.1f, 0.4f);
             addInput(1, toggleBloom);
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.dof.effect"), false));
             toggleDepthOfField = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.DOF_EFFECT);
-            secondLayout.addToColumn(1, toggleDepthOfField, 0.1f, 0.5f);
+            secondLayout.addToColumn(1, toggleDepthOfField, 0.1f, 0.4f);
             addInput(1, toggleDepthOfField);
+            secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.ssao.effect"), false));
+            toggleSSAO = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.SSAO_EFFECT);
+            secondLayout.addToColumn(1, toggleSSAO, 0.1f, 0.4f);
+            addInput(1, toggleSSAO);
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.shadow.distance"), false));
             tunerShadowDistance = new ValueTuner("",this,pageSecond, 600f, J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE, 0, 20, 1);
             secondLayout.addToColumn(1, tunerShadowDistance, 0.35f, 0.5f);
@@ -311,6 +316,7 @@ public class OptionsMenu extends PagedInputWindow {
 
             J3DCore.SETTINGS.BLOOM_EFFECT = toggleBloom.isChecked();
             J3DCore.SETTINGS.DOF_EFFECT = toggleDepthOfField.isChecked();
+            J3DCore.SETTINGS.SSAO_EFFECT = toggleSSAO.isChecked();
             J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE = tunerShadowDistance.getSelection();
             J3DCore.SETTINGS.SHADOWS=J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE>0;
             J3DCore.SETTINGS.SLOW_ANIMATION = toggleSlowAnimation.isChecked();
@@ -386,6 +392,7 @@ public class OptionsMenu extends PagedInputWindow {
 
         toggleBloom.setChecked(coreSettings.BLOOM_EFFECT); toggleBloom.deactivate();
         toggleDepthOfField.setChecked(coreSettings.DOF_EFFECT); toggleDepthOfField.setUpdated(true);toggleDepthOfField.deactivate();
+        toggleSSAO.setChecked(coreSettings.SSAO_EFFECT); toggleSSAO.setUpdated(true);toggleSSAO.deactivate();
         tunerShadowDistance.setValue(coreSettings.RENDER_SHADOW_DISTANCE); tunerShadowDistance.setUpdated(true);tunerShadowDistance.deactivate();
         toggleSlowAnimation.setChecked(coreSettings.SLOW_ANIMATION); toggleSlowAnimation.setUpdated(true);toggleSlowAnimation.deactivate();
         //setupPage();
