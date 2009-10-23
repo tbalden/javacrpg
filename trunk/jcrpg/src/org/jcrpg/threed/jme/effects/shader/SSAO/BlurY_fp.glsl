@@ -48,8 +48,9 @@ float blurY(void)
 
 void main(void)
 {
-	float b = blurY();
-   gl_FragColor = vec4(b,b,b,b);
+	gl_FragColor = blurY();
+	//float b = blurY();
+   //gl_FragColor = vec4(b,b,b,b);
 
    // calculate the y blur and combine with the x blur
    //gl_FragColor = blurY();//texture2D(AOBlurXMap,vTexCoord);//(blurY() + texture2D(AOBlurXMap,vTexCoord))/2.0;

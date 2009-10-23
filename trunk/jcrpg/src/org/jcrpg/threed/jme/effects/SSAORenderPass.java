@@ -36,8 +36,10 @@ public class SSAORenderPass extends Pass
 	private final TextureRenderer tRenderer;
 	
 	private final ArrayList<Texture> textures; 
+	private final ArrayList<Texture> texturesDepth; 
 	
-	private final Texture2D normalAndDepthTexture;
+	private final Texture2D normalTexture;
+	private final Texture2D depthTexture;
 	private final Texture2D SSAOTexture;
 	private final Texture2D SSAOBlurXTexture;
 	private final Texture2D SSAOBlurYTexture;
@@ -46,6 +48,7 @@ public class SSAORenderPass extends Pass
 	private final TextureState fsQuadTextureState; 
 	
 	private final  GLSLShaderObjectsState preRenderShader;
+	private final  GLSLShaderObjectsState preRenderDepthShader;
 	private final  GLSLShaderObjectsState SSAOShader;
 	private final  GLSLShaderObjectsState blurXShader;
 	private final  GLSLShaderObjectsState blurYShader;
@@ -79,34 +82,42 @@ public class SSAORenderPass extends Pass
 		
 		selectedTextureWidth = display.getWidth()/renderScale;
 		
-		normalAndDepthTexture = new Texture2D();
-		normalAndDepthTexture.setRenderToTextureType(RenderToTextureType.RGBA32F);
-		normalAndDepthTexture.setWrap(WrapMode.BorderClamp);
-		normalAndDepthTexture.setHasBorder(true);
-		normalAndDepthTexture.setBorderColor(new ColorRGBA(0.0f,0.0f,0.0f,1.0f));
-		normalAndDepthTexture.setMinificationFilter(Texture.MinificationFilter.NearestNeighborNoMipMaps);
-		normalAndDepthTexture.setMagnificationFilter(Texture.MagnificationFilter.NearestNeighbor);
+		normalTexture = new Texture2D();
+		normalTexture.setRenderToTextureType(RenderToTextureType.RGBA32F);
+		normalTexture.setWrap(WrapMode.BorderClamp);
+		normalTexture.setHasBorder(true);
+		normalTexture.setBorderColor(new ColorRGBA(1.0f,1.0f,1.0f,1.0f));
+		normalTexture.setMinificationFilter(Texture.MinificationFilter.NearestNeighborNoMipMaps);
+		normalTexture.setMagnificationFilter(Texture.MagnificationFilter.NearestNeighbor);
+		
+		depthTexture = new Texture2D();
+		depthTexture.setRenderToTextureType(RenderToTextureType.RGBA32F);
+		depthTexture.setWrap(WrapMode.BorderClamp);
+		depthTexture.setHasBorder(true);
+		depthTexture.setBorderColor(new ColorRGBA(1.0f,1.0f,1.0f,1.0f));
+		depthTexture.setMinificationFilter(Texture.MinificationFilter.NearestNeighborNoMipMaps);
+		depthTexture.setMagnificationFilter(Texture.MagnificationFilter.NearestNeighbor);
 		
 		SSAOBlurXTexture = new Texture2D();
-		//SSAOBlurXTexture.setRenderToTextureType(RenderToTextureType.Luminance8);
+		SSAOBlurXTexture.setRenderToTextureType(RenderToTextureType.Luminance8);
 		SSAOBlurXTexture.setWrap(WrapMode.BorderClamp);
-		SSAOBlurXTexture.setHasBorder(true); // not sure about this right now
+		//SSAOBlurXTexture.setHasBorder(true); // not sure about this right now
 		SSAOBlurXTexture.setBorderColor(ColorRGBA.white);
 		SSAOBlurXTexture.setMinificationFilter(Texture.MinificationFilter.BilinearNearestMipMap);
 		SSAOBlurXTexture.setMagnificationFilter(Texture.MagnificationFilter.Bilinear);
 		
 		SSAOBlurYTexture = new Texture2D();
-		//SSAOBlurYTexture.setRenderToTextureType(RenderToTextureType.Luminance8);
+		SSAOBlurYTexture.setRenderToTextureType(RenderToTextureType.Luminance8);
 		SSAOBlurYTexture.setWrap(WrapMode.BorderClamp);
-		SSAOBlurYTexture.setHasBorder(true); // not sure about this right now
+		//SSAOBlurYTexture.setHasBorder(true); // not sure about this right now
 		SSAOBlurYTexture.setBorderColor(ColorRGBA.white);
 		SSAOBlurYTexture.setMinificationFilter(Texture.MinificationFilter.BilinearNearestMipMap);
 		SSAOBlurYTexture.setMagnificationFilter(Texture.MagnificationFilter.Bilinear);
 		
 		SSAOTexture = new Texture2D();
-		//SSAOTexture.setRenderToTextureType(RenderToTextureType.Luminance8);
+		SSAOTexture.setRenderToTextureType(RenderToTextureType.Luminance8);
 		SSAOTexture.setWrap(WrapMode.BorderClamp);
-		SSAOTexture.setHasBorder(true); // not sure about this right now
+		//SSAOTexture.setHasBorder(true); // not sure about this right now
 		SSAOTexture.setBorderColor(ColorRGBA.white);
 		SSAOTexture.setMinificationFilter(Texture.MinificationFilter.BilinearNearestMipMap);
 		SSAOTexture.setMagnificationFilter(Texture.MagnificationFilter.Bilinear);
@@ -122,6 +133,7 @@ public class SSAORenderPass extends Pass
 		
 		// load the shaders
 		preRenderShader = createPreRenderShader(display);
+		preRenderDepthShader = createPreRenderDepthShader(display);
 	    blurXShader = createBlurXShader(display);
 	    blurYShader = createBlurYShader(display);
 	    SSAOShader = createSSAOShader(display);
@@ -129,9 +141,10 @@ public class SSAORenderPass extends Pass
 	    
 		// Set up the texture renderer
 		tRenderer = display.createTextureRenderer(selectedTextureWidth, selectedTextureWidth, TextureRenderer.Target.Texture2D);
-		tRenderer.setBackgroundColor(new ColorRGBA(.0f, .0f, .0f, 1f));
+		tRenderer.setBackgroundColor(new ColorRGBA(.0f, .0f, .0f, 0f));
 		tRenderer.setMultipleTargets(false);
-		tRenderer.setupTexture(normalAndDepthTexture);
+		tRenderer.setupTexture(normalTexture);
+		tRenderer.setupTexture(depthTexture);
 		tRenderer.setupTexture(SSAOTexture);
 		tRenderer.setupTexture(SSAOBlurXTexture);
 		tRenderer.setupTexture(SSAOBlurYTexture);
@@ -151,7 +164,8 @@ public class SSAORenderPass extends Pass
 		fsQuadTextureState.setEnabled(true);
 
 		fsQuadTextureState.setTexture(noiseTexture, 0);
-		fsQuadTextureState.setTexture(normalAndDepthTexture, 1);
+		fsQuadTextureState.setTexture(normalTexture, 1);
+		fsQuadTextureState.setTexture(depthTexture, 5);
 		fsQuadTextureState.setTexture(SSAOTexture, 2);
 		fsQuadTextureState.setTexture(SSAOBlurXTexture, 3);
 	    fsQuadTextureState.setTexture(SSAOBlurYTexture, 4);
@@ -176,8 +190,12 @@ public class SSAORenderPass extends Pass
         fullScreenQuad.updateRenderState();
         
         textures = new ArrayList<Texture>(1);
-        textures.add(normalAndDepthTexture);
+        textures.add(normalTexture);
+        texturesDepth = new ArrayList<Texture>(1);
+        textures.add(depthTexture);
 	}
+	
+	boolean doThing = true;
 	
 	@Override
 	protected void doRender(Renderer r)
@@ -212,13 +230,25 @@ public class SSAORenderPass extends Pass
 		// restore context
 		context.clearEnforcedState(RenderState.StateType.GLSLShaderObjects);
 		
+		
+		// enforce the shader that will render the depth and the normals
+		context.enforceState(preRenderDepthShader);
+		
+		// render to texture
+		tRenderer.render(spatials, texturesDepth,true);
+
+		// restore context
+		context.clearEnforcedState(RenderState.StateType.GLSLShaderObjects);
+		
+
+		if (doThing){
 		// second, render SSAO to SSAO texture
 	    fullScreenQuad.setRenderState(SSAOShader);
 	    fullScreenQuad.updateRenderState();
 		
 //	    tRendererHalf.render(fullScreenQuad, SSAOTexture,true);
 	    tRenderer.render(fullScreenQuad, SSAOTexture,false);
-	    
+		}
 		// third, render a X-blur to SSAOBlurXTexture
 
 	    fullScreenQuad.setRenderState(blurXShader);
@@ -232,6 +262,7 @@ public class SSAORenderPass extends Pass
 	    
 	    tRenderer.render(fullScreenQuad, SSAOBlurYTexture,false);
 	    
+	    
 	    fullScreenQuad.setRenderState(texturingShader);
 	    
 	    
@@ -244,10 +275,18 @@ public class SSAORenderPass extends Pass
 	    r.renderQueue();
 	    
 	    // remove the blend state
-	    fullScreenQuad.clearRenderState(RenderState.StateType.Blend);
+	   fullScreenQuad.clearRenderState(RenderState.StateType.Blend);
 	}
 
+	
+	public static String shaderDirectory2 = "org/jcrpg/threed/jme/effects/shader/";
+
 	public static String shaderDirectory = "org/jcrpg/threed/jme/effects/shader/SSAO/";
+	public float nearBlurDepth = 10f;
+    public float focalPlaneDepth = 25f;
+    public float farBlurDepth = 50f;
+    /** blurriness cutoff constant for objects behind the focal plane */
+    public float blurrinessCutoff = 1f;
 
 	private GLSLShaderObjectsState createPreRenderShader(DisplaySystem display) 
     {
@@ -256,15 +295,66 @@ public class SSAORenderPass extends Pass
         try 
         {
             so .load(
+    				SSAORenderPass.class
+                            .getClassLoader()
+                            .getResource(
+                            		shaderDirectory+"PreRender_vp.glsl"),
+                    SSAORenderPass.class
+                            .getClassLoader()
+                            .getResource(
+                            		shaderDirectory+"PreRender_fp.glsl"));
+            so.apply();
+        /*   so .load(
             				SSAORenderPass.class
                                     .getClassLoader()
                                     .getResource(
-                                    		shaderDirectory+"PreRender_vp.glsl"),
+                                    		shaderDirectory2+"dof_1_depth.vert"),//"PreRender_vp.glsl"),
                             SSAORenderPass.class
                                     .getClassLoader()
                                     .getResource(
-                                    		shaderDirectory+"PreRender_fp.glsl"));
+                                    		shaderDirectory2+"dof_1_depth.frag"));//"PreRender_fp.glsl"));
+            so.apply();*/
+            DisplaySystem.getDisplaySystem().getRenderer().checkCardError();
+        } catch (JmeException e) 
+        {
+        	System.out.println(Level.WARNING + "Error loading shader" + e);
+        }
+
+        so.setUniform("zFar", 40);//cam.getFrustumFar());
+        
+        so.setUniform("dofParams", nearBlurDepth, focalPlaneDepth, farBlurDepth, blurrinessCutoff);
+        so.setUniform("mainTexture", 0);       
+        
+        so.setEnabled(true);
+
+        return so;
+    }
+	private GLSLShaderObjectsState createPreRenderDepthShader(DisplaySystem display) 
+    {
+        GLSLShaderObjectsState so = display.getRenderer().createGLSLShaderObjectsState();
+
+        try 
+        {
+            so .load(
+    				SSAORenderPass.class
+                            .getClassLoader()
+                            .getResource(
+                            		shaderDirectory+"PreRenderDepth_vp.glsl"),
+                    SSAORenderPass.class
+                            .getClassLoader()
+                            .getResource(
+                            		shaderDirectory+"PreRenderDepth_fp.glsl"));
             so.apply();
+        /*   so .load(
+            				SSAORenderPass.class
+                                    .getClassLoader()
+                                    .getResource(
+                                    		shaderDirectory2+"dof_1_depth.vert"),//"PreRender_vp.glsl"),
+                            SSAORenderPass.class
+                                    .getClassLoader()
+                                    .getResource(
+                                    		shaderDirectory2+"dof_1_depth.frag"));//"PreRender_fp.glsl"));
+            so.apply();*/
             DisplaySystem.getDisplaySystem().getRenderer().checkCardError();
         } catch (JmeException e) 
         {
@@ -272,6 +362,9 @@ public class SSAORenderPass extends Pass
         }
 
         so.setUniform("zFar", cam.getFrustumFar());
+        
+        so.setUniform("dofParams", nearBlurDepth, focalPlaneDepth, farBlurDepth, blurrinessCutoff);
+        so.setUniform("mainTexture", 0);       
         
         so.setEnabled(true);
 
@@ -295,7 +388,7 @@ public class SSAORenderPass extends Pass
         	System.out.println(Level.WARNING + "Error loading shader" + e);
         }
         
-        so.setUniform("texture", 4);
+        so.setUniform("texture", doThing?4:1);//1); //4
         
         so.setEnabled(true);
 
@@ -321,7 +414,8 @@ public class SSAORenderPass extends Pass
 
         so.setUniform("rnm", 0);
         so.setUniform("normalMap", 1);
-        
+        so.setUniform("depthMap", 5);
+               
         so.setUniform("totStrength", ssaoTotalStrength);
         so.setUniform("strength", ssaoRayStrength);
         so.setUniform("offset", ssaoOffset);
@@ -541,4 +635,6 @@ public class SSAORenderPass extends Pass
 		this.ssaoFallOff = ssaoFallOff;
 		shouldUpdateUniforms = true; 
 	}
+	
+	
 }

@@ -1,6 +1,7 @@
 varying vec3 Normal;
 varying float depth; // in eye space
 
+
 uniform float zFar; 
 
 void main( void )
@@ -12,5 +13,5 @@ void main( void )
    Normal = gl_NormalMatrix * gl_Normal;
    
    gl_Position = ftransform();
-
+ 
 }

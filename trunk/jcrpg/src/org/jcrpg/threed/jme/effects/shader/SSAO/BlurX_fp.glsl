@@ -48,6 +48,7 @@ float blurX(void)
 
 void main(void)
 {
-	float b = blurX();
-   gl_FragColor = vec4(b,b,b,b);
+	gl_FragColor = blurX();
+	//float b = blurX();
+   //gl_FragColor = vec4(b,b,b,b);
 }
