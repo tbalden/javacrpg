@@ -30,9 +30,11 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.jme.program.EffectNode;
+import org.jcrpg.threed.jme.ui.FadeController;
 import org.jcrpg.threed.jme.ui.FlyingNode;
 import org.jcrpg.threed.jme.ui.NodeFontFreer;
 import org.jcrpg.threed.jme.ui.ZoomingParentNode;
+import org.jcrpg.threed.jme.ui.FadeController.FadeMode;
 import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
@@ -503,6 +505,8 @@ public class J3DMovingEngine {
 	}
 	
 	
+	protected boolean needsFadeIn = false;
+	
 	boolean firstRenderToViewPort = true;
 	/**
 	 * Set in view units visible / out of view units invisible on every movement of player or every new turn if no
@@ -542,7 +546,15 @@ public class J3DMovingEngine {
 						// probably boundary problem?
 						realPooledNode.updateRenderState();
 						realPooledNode.lockBounds();
-						
+						if (needsFadeIn)
+						{
+								PooledNode pooledRealNode = n.realNode;
+								if (pooledRealNode!=null) {
+									Node realNode = (Node)pooledRealNode;
+									FadeController c = new FadeController(pooledRealNode,realNode,1f, FadeMode.FadingIn);
+									core.controllers.add(c);
+								}
+						}
 					}
 					updateUnitTextNodes(unit);
 					if (unit.form.inEncounterPhase==Ecology.PHASE_TURNACT_COMBAT)
@@ -888,20 +900,25 @@ public class J3DMovingEngine {
 	{
 		
 		Matrix3f rotMat = new Matrix3f();
-		Vector3f dirOrigo = new Vector3f(0f, 0f, -1);
-		//Vector3f left = new Vector3f(-1, 0, 0);
-		//Vector3f up = new Vector3f(0, 1, 0);
+		Vector3f dirOrigo = new Vector3f(0f, 0f, -1f);//-1);
+		Vector3f left = new Vector3f(-1, 0, 0);
+		Vector3f up = new Vector3f(0, 1, 0);
 
 
 		Vector3f dirNew = mVec;
 		dirNew.normalizeLocal();
 		rotMat.fromStartEndVectors(dirOrigo, dirNew);
+		rotMat.mult(left, left);
+		rotMat.mult(up, up);
+		left.normalize();
+		up.normalize();
 		
-		
-		Vector3f m = new Vector3f(mVec);
-		m.y=0;
+		//Vector3f m = new Vector3f(mVec);
+		//m.y=0;
 		Quaternion q = new Quaternion();
-		q.fromRotationMatrix(rotMat);
+		q.fromAxes(left,up,dirNew);
+		q.normalize();
+		//q.fromRotationMatrix(rotMat);
 		//q.fromAngleNormalAxis( m.normalize().angleBetween(new Vector3f(0,0,1f).normalize()), new Vector3f(0f,-1f,0f).normalize() );
 		//Matrix3f m3f = new Matrix3f();
 		//m3f.fromStartEndVectors(new Vector3f(0,0,1f).normalize(), m.normalize());
@@ -912,8 +929,14 @@ public class J3DMovingEngine {
 		//if (q.mult(mVec).x>0 && q.mult(mVec).z>0) q.oppositeLocal();
 		
 		// trick for quaternion fixing, opposite local if ...
-		m.normalizeLocal();
-		q.oppositeLocal();
+		//m.normalizeLocal();
+		//q.oppositeLocal();
+		float [] f = q.toAngles(null);
+		//System.out.println("---------- "+		f[0]+"/ "+f[1]+"/ "+f[2]);
+		if (f[0]<-3.11f || f[1]<-3.11f)
+		{
+			q.oppositeLocal();
+		}
 		//if (m.x>0 && m.z>-0.4f && m.z<0.4f) q.oppositeLocal();
 		Quaternion between = new Quaternion(current);
 		between.slerp(q, 1f);

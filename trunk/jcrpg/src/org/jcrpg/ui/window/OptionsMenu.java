@@ -187,7 +187,7 @@ public class OptionsMenu extends PagedInputWindow {
             header2.setRenderState(base.hud.hudAS);
             pageSecond.attachChild(header2);
 
-            SimpleLayout secondLayout = new SimpleLayout(0.30f, 0.16f, 0.25f, 0.07f ,3);
+            SimpleLayout secondLayout = new SimpleLayout(0.30f, 0.16f, 0.25f, 0.06f ,3);
             //SimpleLayout secondLayout = new SimpleLayout(0.4f, 0.16f, 0.3f, 0.07f ,3);
             
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.continuous.load"), false));

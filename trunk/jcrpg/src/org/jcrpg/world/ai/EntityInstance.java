@@ -43,6 +43,7 @@ import org.jcrpg.world.ai.body.SinglePartBody;
 import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
+import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.ai.wealth.EntityCommonWealth;
 import org.jcrpg.world.place.Economic;
@@ -141,7 +142,7 @@ public class EntityInstance {
 		skills.addSkills(description.getStartingSkills());
 		calculateGroupsAndPositions();
 		
-		if (!(this instanceof PartyInstance))
+		if (!(this instanceof PartyInstance) && description!=null && description instanceof HumanoidEntityDescription)
 		{
 			PersistentMemberInstance p = new PersistentMemberInstance(fragments.fragments.get(0),this, new org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale("GORILLA_MALE",MammalBody.class,GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
 			InfrastructureElementParameters i = new InfrastructureElementParameters();

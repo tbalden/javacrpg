@@ -50,7 +50,12 @@ import com.jme.animation.SkinNode;
 import com.jme.bounding.BoundingBox;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
+import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.RenderState;
+import com.jme.system.DisplaySystem;
 
 /**
  * Animated model helper node for md5.
@@ -263,7 +268,11 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
         	attachChild(bodyInstance);
 	        setModelBound(new BoundingBox());
 	        updateModelBound();
-	        
+
+	        stripTexturesAndMaterials(this);
+	        MaterialState s = DisplaySystem.getDisplaySystem().getRenderer().createMaterialState();
+	        s.setDiffuse(ColorRGBA.lightGray);
+	        setRenderState(s);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -275,27 +284,17 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 	{
 		this(fileName,animation,scale, disposition,1f);		
 	}
-    /*@SuppressWarnings("unused")
-	private void stripTexturesAndMaterials(SceneElement sp) {
-        sp.clearRenderState(RenderState.RS_TEXTURE);
-        sp.clearRenderState(RenderState.RS_MATERIAL);
-        for (int i=0; i<RenderState.RS_MAX_STATE; i++)
-        {
-        	sp.clearRenderState(i);
-        }
+    @SuppressWarnings("unused")
+	private void stripTexturesAndMaterials(Spatial sp) {
+        //sp.clearRenderState(RenderState.RS_TEXTURE);
+        sp.clearRenderState(RenderState.StateType.Material);
         if (sp instanceof Node) {
             Node n = (Node) sp;
             for (Spatial child : n.getChildren()) {
                 stripTexturesAndMaterials(child);
             }
-        } else if (sp instanceof Geometry) {
-            Geometry g = (Geometry) sp;
-            //g.setNormalsMode(SceneElement.NM_GL_NORMALIZE_PROVIDED);
-            for (int x = 0; x < g.getBatchCount(); x++) {
-                stripTexturesAndMaterials(g.getBatch(x));
-            }
         }
-    }*/
+    }
     
     public static HashMap<String, Model> cache = new HashMap<String, Model>();
 	
