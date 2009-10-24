@@ -133,6 +133,7 @@ import com.jme.renderer.Renderer;
 import com.jme.renderer.pass.BasicPassManager;
 import com.jme.renderer.pass.Pass;
 import com.jme.renderer.pass.RenderPass;
+import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.Text;
@@ -182,6 +183,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	public ScenarioLoader scenarioLoader;
 	public CameraUtil cameraUtil = new CameraUtil();
+	
+	public static ArrayList<Controller> controllers = new ArrayList<Controller>();
+	public static ArrayList<Controller> toRemoveControllers = new ArrayList<Controller>();
 	
 	public static class CoreSettings
 	{
@@ -2329,6 +2333,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	 * culled!
 	 */
 	Quad quadToFixHUDCulling = null;
+	
+	public BlendState as;
 
 	@Override
 	protected void simpleInitGame() {
@@ -2460,7 +2466,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		rootNode.attachChild(groundParentNode);
 
-		BlendState as = DisplaySystem.getDisplaySystem().getRenderer()
+		as = DisplaySystem.getDisplaySystem().getRenderer()
 				.createBlendState();
 		as.setEnabled(true);
 		as.setBlendEnabled(true);
@@ -2927,7 +2933,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	@Override
 	protected void simpleUpdate() {
 		
-
+		
 		if (System.currentTimeMillis()-lastAudioUpdate>50)
 		{
 			AudioSystem.getSystem().update();
@@ -3075,7 +3081,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		{
 			/* updating camera if a program for camera is running (like in combat) */
 			cameraUtil.update(tpf);
-			
+
+			for (Controller c:controllers)
+			{
+				c.update(tpf);
+			}
+			controllers.removeAll(toRemoveControllers);
+
 			/** Call simpleUpdate in any derived classes of SimpleGame. */
 
 			/** Update controllers/render states/transforms/bounds for rootNode. */

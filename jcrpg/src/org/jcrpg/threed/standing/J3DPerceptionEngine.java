@@ -25,16 +25,20 @@ import java.util.HashSet;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
+import org.jcrpg.threed.jme.ui.FadeController;
+import org.jcrpg.threed.jme.ui.FadeController.FadeMode;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
 
 import com.jme.scene.Node;
+import com.jme.scene.state.BlendState.BlendEquation;
 
 public class J3DPerceptionEngine extends J3DMovingEngine {
 
 	public J3DPerceptionEngine(J3DCore core) {
 		super(core);
+		needsFadeIn = true;
 	}
 	
 	
@@ -62,6 +66,7 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 			unit.direction = (i%2==1?0:1);
 			NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);
 			renderNodes(placeHolders, unit);
+
 			i++;			
 		}
 		renderedIdentifiers.removeAll(newRenderedIds);
@@ -88,9 +93,11 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 					clearUnitTextNodes(u);
 					if (pooledRealNode!=null) {
 						Node realNode = (Node)pooledRealNode;
-						if (J3DCore.SETTINGS.SHADOWS) core.removeOccludersRecoursive(realNode);
-						realNode.removeFromParent();
-						core.modelPool.releaseNode(pooledRealNode);
+						//if (J3DCore.SETTINGS.SHADOWS) core.removeOccludersRecoursive(realNode);
+						//realNode.removeFromParent();
+						//core.modelPool.releaseNode(pooledRealNode);
+						FadeController c = new FadeController(pooledRealNode,realNode,1f, FadeMode.FadingOut);
+						core.controllers.add(c);
 					}
 				}
 			}

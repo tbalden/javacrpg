@@ -52,17 +52,10 @@ Before next release:
 	[X] need heal
 	[X] random greetings sounds for encounters?
 	[X] danger sounds for perception (aggressive beings?)
-	
-[-] check continuous load + after combat bug
 
-[X] add detected moving models to their respective locations? upon UpdateEntityOmeter
-    [ ] better placament, more units for big groups?
-    
+[ ] more units for big groups?
+
 [ ] integrate harpy to maze
-
-[ ] check hut
-[ ] check SSAO renderpass
-[ ] save Water dds to png - use resourceloc
 
 [X] integrate Anatipions
 
@@ -75,6 +68,19 @@ Before next release:
 
 	[X] animations by tidbit - contact Zphr with problem. rootbone?
 	[X] entity icons for beings
+
+[X] check hut
+[-] check SSAO renderpass
+[X] save Water dds to png - use resourceloc
+
+[-] check continuous load + after combat bug
+[X] add detected moving models to their respective locations? upon UpdateEntityOmeter
+    [X] better placament, 
+    [X] add Fade In/Out effect somehow for them
+    	[X] make a shader based nicer version
+    	[-] correct current
+    [X] turning should turn Y axis, fix that based on camera code?
+    
 
 [X] integrate lizard animation
 
