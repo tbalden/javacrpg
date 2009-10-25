@@ -416,13 +416,6 @@ public class ListSelect extends InputBase {
 		activatedNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
 		baseNode.updateModelBound();
-		System.out.println("ACTIVATION FINISHED "+size+ " "+id);
-		try {
-			if (id.equals("group")) throw new Exception();
-		} catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
 	}
 
 	public boolean select(boolean next)

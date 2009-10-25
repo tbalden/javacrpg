@@ -26,11 +26,9 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.ui.text.TextEntry;
-import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EncounterUnitData;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
-import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.object.InventoryListElement;
 
@@ -50,7 +48,7 @@ public class UseObjEvaluator {
 		d.visibleForm.worldX = source.parentFragment.getEncounterBoundary().posX;
 		d.visibleForm.worldY = source.parentFragment.getEncounterBoundary().posY;
 		d.visibleForm.worldZ = source.parentFragment.getEncounterBoundary().posZ;
-		RenderedMovingUnit unit = new RenderedMovingUnit("-",d.visibleForm.worldX,d.visibleForm.worldY,d.visibleForm.worldZ,new org.jcrpg.threed.scene.model.Model[0]);
+		RenderedMovingUnit unit = new RenderedMovingUnit(J3DCore.getInstance().mEngine,"-",d.visibleForm.worldX,d.visibleForm.worldY,d.visibleForm.worldZ,new org.jcrpg.threed.scene.model.Model[0]);
 		unit.form = d.visibleForm;
 		d.visibleForm.renderedUnit = unit;
 		choice.member.encounterData = d;

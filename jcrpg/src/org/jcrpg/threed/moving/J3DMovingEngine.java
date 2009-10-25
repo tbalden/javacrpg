@@ -72,11 +72,11 @@ public class J3DMovingEngine {
 	
 	protected HashMap<String, RenderedMovingUnit> units = new HashMap<String, RenderedMovingUnit>();
 	
-	public static HashSet<RenderedMovingUnit> activeUnits = new HashSet<RenderedMovingUnit>();
-	public static HashSet<EffectNode> activeEffectNodes = new HashSet<EffectNode>();
+	public HashSet<RenderedMovingUnit> activeUnits = new HashSet<RenderedMovingUnit>();
+	public HashSet<EffectNode> activeEffectNodes = new HashSet<EffectNode>();
 	//public static HashSet<FlyingNode> activeFlyingNodes = new HashSet<FlyingNode>()
 	
-	public static boolean isEnginePlaying()
+	public boolean isEnginePlaying()
 	{
 		return activeUnits.size()>0 || activeEffectNodes.size()>0;
 	}
@@ -816,7 +816,7 @@ public class J3DMovingEngine {
 	
 	public RenderedMovingUnit materializeLifeForm(VisibleLifeForm form)
 	{
-		RenderedMovingUnit unit = movingTypeModels.getRenderedUnit(form.type.visibleTypeId).instantiate(form.uniqueId, form, form.worldX, form.worldY, form.worldZ);
+		RenderedMovingUnit unit = movingTypeModels.getRenderedUnit(form.type.visibleTypeId).instantiate(this, form.uniqueId, form, form.worldX, form.worldY, form.worldZ);
 		unit.onSteep = form.onSteep;
 		form.renderedUnit = unit;
 		units.put(form.uniqueId, unit);

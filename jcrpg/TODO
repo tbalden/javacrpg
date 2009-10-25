@@ -52,11 +52,13 @@ Before next release:
 
 
 [ ] integrate harpy to maze
+[ ] integrate plantoid
 
 [ ] more units for big groups?
-[ ] unit placement - don't place two on same location, add possilbe locations for the perceptedVisibleForm
-[ ] switch percepted update off while in encounter mode
+[ ] unit placement - don't place two on same location, add possible locations for the perceptedVisibleForm
 
+
+[X] switch percepted update off while in encounter mode
 
 [X] use more of the sounds that are available (need heal)
 	[X] need heal

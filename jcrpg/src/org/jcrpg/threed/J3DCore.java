@@ -3094,7 +3094,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			if (mEngine != null)
 				mEngine.updateScene(tpf);
 			if (pEngine != null)
-				pEngine.updateScene(tpf);
+			{
+				if (mEngine!=null && !mEngine.isEnginePlaying())
+				{
+					pEngine.updateScene(tpf);
+				}
+			}
 			rootNode.updateGeometricState(tpf, true);
 			//fpsNode.updateGeometricState(tpf, true);
 
