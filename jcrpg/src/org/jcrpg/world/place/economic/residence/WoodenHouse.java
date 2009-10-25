@@ -318,15 +318,6 @@ public class WoodenHouse extends Residence {
 		}
 	}
 
-	private ArrayList<int[]> tmpSettlePlaces = new ArrayList<int[]>();
-
-	@Override
-	public ArrayList<int[]> getPossibleSettlePlaces() {
-		tmpSettlePlaces.clear();
-		tmpSettlePlaces.add(new int[]{origoX+sizeX/2, origoY, origoZ+sizeZ/2});
-		return tmpSettlePlaces;
-	}
-
 
 
 	@Override

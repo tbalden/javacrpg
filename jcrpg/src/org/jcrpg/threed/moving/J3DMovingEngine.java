@@ -638,10 +638,11 @@ public class J3DMovingEngine {
 				VisibleLifeForm target = n.targetForm==null?playerFakeForm:n.targetForm;
 				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("EFFECT TARGET ########### "+(target==playerFakeForm)+" "+target.worldX+" "+target.worldY+" "+target.worldZ);
 				Vector3f cVec = new Vector3f(n.currentPos);
-				Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnit(cVec, target.renderedUnit, n.speed, timePerFrame);
+				Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnit(cVec, target.renderedUnit, n.speed, timePerFrame,false);
 				Vector3f mVec = rVectors[0];
 				Vector3f eVec = rVectors[1];
 				n.currentPos.addLocal(mVec);
+				rVectors = calculateNewPositionOfMovementAndEndForUnit(cVec, target.renderedUnit, n.speed, timePerFrame,true);
 				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine(n.currentPos);
 				
 				float prevDist = eVec.distance(n.currentPos); // getting distance before move to be able to check if dist is still decreasing
@@ -650,7 +651,7 @@ public class J3DMovingEngine {
 
 				Quaternion current = n.getAngle();
 				if (current!=null) {
-					current = calculateRotationForMovingDirection(mVec, current);
+					current = calculateRotationForMovingDirection(rVectors[0], current);
 				}
 				n.setPosition(n.currentPos,current);
 				
@@ -686,12 +687,13 @@ public class J3DMovingEngine {
 						//VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
 						Vector3f cVec = new Vector3f(n.getLocalTranslation());
 						
-						Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, 20f, timePerFrame);		
+						Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, 20f, timePerFrame,false);		
 						//Vector3f eVec = rVectors[1];
 						Vector3f mVec = rVectors[0];
+						rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, 20f, timePerFrame,true);		
 
 						Quaternion current = ((Node)n.realNode).getLocalRotation();
-						current = calculateRotationForMovingDirection(mVec, current);
+						current = calculateRotationForMovingDirection(rVectors[0], current);
 						
 						((Node)n.realNode).setLocalRotation(current);//getLocalRotation().set(mVec.x, 0, mVec.z,1);
 						
@@ -743,12 +745,13 @@ public class J3DMovingEngine {
 						
 						Vector3f cVec = new Vector3f(n.getLocalTranslation());
 						
-						Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, 20f, timePerFrame);		
+						Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, 20f, timePerFrame,false);		
 						//Vector3f eVec = rVectors[1];
 						Vector3f mVec = rVectors[0];
+						rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, 20f, timePerFrame,true);		
 						
 						Quaternion current = ((Node)n.realNode).getLocalRotation();
-						current = calculateRotationForMovingDirection(mVec, current);
+						current = calculateRotationForMovingDirection(rVectors[0], current);
 						
 						((Node)n.realNode).setLocalRotation(current);//getLocalRotation().set(mVec.x, 0, mVec.z,1);
 						
@@ -779,16 +782,17 @@ public class J3DMovingEngine {
 						
 						Vector3f cVec = new Vector3f(n.getLocalTranslation());
 
-						Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, unit.movingSpeed, timePerFrame);		
+						Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, unit.movingSpeed, timePerFrame, false);		
 						Vector3f eVec = rVectors[1];
 						Vector3f mVec = rVectors[0];
+						rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, unit.movingSpeed, timePerFrame, true);		
 
 						n.getLocalTranslation().addLocal(mVec);
 						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine(unit.c3dX+" "+unit.c3dY+" "+unit.c3dZ);
 						((Node)n.realNode).setLocalTranslation(n.getLocalTranslation());
 
 						Quaternion current = ((Node)n.realNode).getLocalRotation();
-						current = calculateRotationForMovingDirection(mVec, current);
+						current = calculateRotationForMovingDirection(rVectors[0], current);
 						((Node)n.realNode).setLocalRotation(current);//getLocalRotation().set(mVec.x, 0, mVec.z,1);
 
 						float dist = eVec.distance(n.getLocalTranslation());
@@ -871,17 +875,17 @@ public class J3DMovingEngine {
 	 * @param timePerFrame timePerFrame of 3d engine.
 	 * @return array of vector3f [disposition of movement vector, the end position to reach]  
 	 */
-	private Vector3f[] calculateNewPositionOfMovementAndEndForUnitTarget(Vector3f cVec, RenderedMovingUnit unit, float speed, float timePerFrame)
+	private Vector3f[] calculateNewPositionOfMovementAndEndForUnitTarget(Vector3f cVec, RenderedMovingUnit unit, float speed, float timePerFrame, boolean onHorizontalPlane)
 	{
 		VisibleLifeForm end = unit==null||unit.form==null||unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
 		Vector3f eVec = calculatePositionVector(unit,end,false);
-		return calculateNewPositionOfMovementAndEnd(cVec, eVec, speed, timePerFrame);
+		return calculateNewPositionOfMovementAndEnd(cVec, eVec, speed, timePerFrame,onHorizontalPlane);
 	}
-	private Vector3f[] calculateNewPositionOfMovementAndEndForUnit(Vector3f cVec, RenderedMovingUnit unit, float speed, float timePerFrame)
+	private Vector3f[] calculateNewPositionOfMovementAndEndForUnit(Vector3f cVec, RenderedMovingUnit unit, float speed, float timePerFrame, boolean onHorizontalPlane)
 	{
 		VisibleLifeForm end = unit==null||unit.form==null?playerFakeForm:unit.form;
 		Vector3f eVec = calculatePositionVector(unit,end,true);
-		return calculateNewPositionOfMovementAndEnd(cVec, eVec, speed, timePerFrame);
+		return calculateNewPositionOfMovementAndEnd(cVec, eVec, speed, timePerFrame,onHorizontalPlane);
 	}
 	/**
 	 * Calculates movement disposition from a current pos to an end pos for a given speed.
@@ -891,8 +895,16 @@ public class J3DMovingEngine {
 	 * @param timePerFrame timePerFrame of 3d engine.
 	 * @return array of vector3f [disposition of movement vector, the end position to reach]
 	 */
-	private Vector3f[] calculateNewPositionOfMovementAndEnd(Vector3f cVec, Vector3f eVec, float speed, float timePerFrame)
+	private Vector3f[] calculateNewPositionOfMovementAndEnd(Vector3f cVec, Vector3f eVec, float speed, float timePerFrame, boolean onHorizontalPlane)
 	{
+		if (onHorizontalPlane)
+		{
+			Vector3f eVN = eVec.clone();
+			eVN.y = 0;
+			Vector3f cVN = cVec.clone();
+			cVN.y = 0;
+			return new Vector3f[]{eVN.subtract(cVN).normalize().mult(speed*10f * 0.1f*timePerFrame),eVec};
+		} else
 		return new Vector3f[]{eVec.subtract(cVec).normalize().mult(speed*10f * 0.1f*timePerFrame),eVec};
 	}
 	
@@ -933,7 +945,7 @@ public class J3DMovingEngine {
 		//q.oppositeLocal();
 		float [] f = q.toAngles(null);
 		//System.out.println("---------- "+		f[0]+"/ "+f[1]+"/ "+f[2]);
-		if (f[0]<-3.11f || f[1]<-3.11f)
+		if (f[0]<-3.09f || f[1]<-3.09f || f[0]>3.10f && f[1]>3.10f)
 		{
 			q.oppositeLocal();
 		}

@@ -226,12 +226,12 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		boolean positioned = false;
 		if (parentFragment.enteredPopulation!=null)
 		{
-			ArrayList<int[]> list = parentFragment.enteredPopulation.getPossibleSettlePlaces();
+			ArrayList<int[][]> list = parentFragment.enteredPopulation.getPossibleSettlePlaces();
 			if (list!=null && list.size()>0)
 			{
-				form.worldX = list.get(0)[0];
-				form.worldY = list.get(0)[1];
-				form.worldZ = list.get(0)[2];
+				form.worldX = list.get(0)[0][0];
+				form.worldY = list.get(0)[0][1];
+				form.worldZ = list.get(0)[0][2];
 				positioned = true;
 			}
 			if (generatedOwnInfrastructures!=null && generatedOwnInfrastructures.size()>0)
@@ -243,9 +243,9 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 						list = eco.getPossibleSettlePlaces();
 						if (list!=null && list.size()>0)
 						{
-							form.worldX = list.get(0)[0];
-							form.worldY = list.get(0)[1];
-							form.worldZ = list.get(0)[2];
+							form.worldX = list.get(0)[0][0];
+							form.worldY = list.get(0)[0][1];
+							form.worldZ = list.get(0)[0][2];
 							positioned = true;
 						}
 					}

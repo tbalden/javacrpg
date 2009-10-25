@@ -43,9 +43,19 @@ Journal window will be needed!
 [ ] tweak DOF to support near blur?
 [ ] add list of tasks to forum (text validation, sounds)
 
+Anatipions
+	[ ] add oasis lake to anatipion town?
+	[ ] sounds for new humanoids
 
 ----
 Before next release:
+
+
+[ ] integrate harpy to maze
+
+[ ] more units for big groups?
+[ ] unit placement - don't place two on same location, add possilbe locations for the perceptedVisibleForm
+[ ] switch percepted update off while in encounter mode
 
 
 [X] use more of the sounds that are available (need heal)
@@ -53,14 +63,7 @@ Before next release:
 	[X] random greetings sounds for encounters?
 	[X] danger sounds for perception (aggressive beings?)
 
-[ ] more units for big groups?
-
-[ ] integrate harpy to maze
-
 [X] integrate Anatipions
-
-	[ ] add oasis lake to anatipion town?
-	[ ] sounds for new humanoids
 
 	[X] housing
 	[X] sand igloo
@@ -68,11 +71,9 @@ Before next release:
 
 	[X] animations by tidbit - contact Zphr with problem. rootbone?
 	[X] entity icons for beings
-
 [X] check hut
 [-] check SSAO renderpass
 [X] save Water dds to png - use resourceloc
-
 [-] check continuous load + after combat bug
 [X] add detected moving models to their respective locations? upon UpdateEntityOmeter
     [X] better placament, 
@@ -80,7 +81,6 @@ Before next release:
     	[X] make a shader based nicer version
     	[-] correct current
     [X] turning should turn Y axis, fix that based on camera code?
-    
 
 [X] integrate lizard animation
 
