@@ -236,6 +236,7 @@ public class EntityFragments {
 					form.worldY = list.get(0)[0][1];
 					form.worldZ = list.get(0)[0][2];
 				}
+				form.setPossiblePlaces(list);
 			}
 			if (!positioned)
 			{

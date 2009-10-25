@@ -80,8 +80,11 @@ public class RenderedMovingUnit {
 	 */
 	public transient Node circleNode = null;
 	
+	transient J3DMovingEngine mEngine;
+	
 	public RenderedMovingUnit(Model[] models) {
 		super();
+		this.mEngine = J3DCore.getInstance().mEngine;
 		this.id = MovingTypeModels.NON_INSTANCE;
 		this.worldX = 0;
 		this.worldY = 0;
@@ -89,8 +92,9 @@ public class RenderedMovingUnit {
 		this.models = models;
 	}
 	
-	public RenderedMovingUnit(String id, int worldX, int worldY, int worldZ, Model[] models) {
+	public RenderedMovingUnit(J3DMovingEngine mEngine,String id, int worldX, int worldY, int worldZ, Model[] models) {
 		super();
+		this.mEngine = mEngine;
 		this.id = id;
 		this.worldX = worldX;
 		this.worldY = worldY;
@@ -117,10 +121,10 @@ public class RenderedMovingUnit {
 		}
 		c3dZ = (origoZ-(worldZ-origoZ)) * J3DCore.CUBE_EDGE_SIZE;
 	}
-	public RenderedMovingUnit instantiate(String uniqueId, VisibleLifeForm form, int worldX, int worldY, int worldZ)
+	public RenderedMovingUnit instantiate(J3DMovingEngine mEngine, String uniqueId, VisibleLifeForm form, int worldX, int worldY, int worldZ)
 	{
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("RenderedMovingUnit.instantiate : "+uniqueId+" INST: "+worldX+" "+worldY+" "+worldZ);
-		RenderedMovingUnit instance = new RenderedMovingUnit(uniqueId,worldX,worldY,worldZ,models);
+		RenderedMovingUnit instance = new RenderedMovingUnit(mEngine, uniqueId,worldX,worldY,worldZ,models);
 		instance.form = form;
 		instance.state = state;
 		instance.resetOrigo3DCoords();
@@ -166,7 +170,7 @@ public class RenderedMovingUnit {
 		state = MovingModelAnimDescription.ANIM_WALK;
 		changeToAnimation(state);
 		
-		J3DMovingEngine.activeUnits.add(this);
+		mEngine.activeUnits.add(this);
 		return true;
 		
 	}
@@ -194,13 +198,13 @@ public class RenderedMovingUnit {
 		state = stateAfterMovement;
 		changeToAnimation(state);
 		resetOrigo3DCoords();
-		J3DMovingEngine.activeUnits.remove(this);
+		mEngine.activeUnits.remove(this);
 	}
 	
 	public boolean startAttack(VisibleLifeForm target, String anim)
 	{
 		if (form.notRendered) return false;
-		J3DMovingEngine.activeUnits.add(this);
+		mEngine.activeUnits.add(this);
 		if (target!=null)
 			form.targetForm = target;
 		state = anim;		
@@ -209,7 +213,7 @@ public class RenderedMovingUnit {
 	public boolean startDefense(VisibleLifeForm target, String anim)
 	{
 		if (form.notRendered) return false;
-		J3DMovingEngine.activeUnits.add(this);
+		mEngine.activeUnits.add(this);
 		if (target!=null)
 			form.targetForm = target;
 		state = anim==null?MovingModelAnimDescription.ANIM_DEFEND_UPPER:anim;		
@@ -219,7 +223,7 @@ public class RenderedMovingUnit {
 	public boolean startPain(VisibleLifeForm target)
 	{
 		if (form.notRendered) return false;
-		J3DMovingEngine.activeUnits.add(this);
+		mEngine.activeUnits.add(this);
 		if (target!=null)
 			form.targetForm = target;
 		state = MovingModelAnimDescription.ANIM_PAIN;		
@@ -228,7 +232,7 @@ public class RenderedMovingUnit {
 	public boolean startDeath(VisibleLifeForm target, String anim)
 	{
 		if (form.notRendered) return false;
-		J3DMovingEngine.activeUnits.add(this);
+		mEngine.activeUnits.add(this);
 		if (target!=null)
 			form.targetForm = target;
 		stateAfterMovement = MovingModelAnimDescription.ANIM_DEAD;
@@ -244,7 +248,7 @@ public class RenderedMovingUnit {
 			// if not idle anim, we should change to it, otherwise idle animation should be already played. 
 			changeToAnimation(state);
 		}
-		J3DMovingEngine.activeUnits.remove(this);
+		mEngine.activeUnits.remove(this);
 	}
 	
 	public String playingAnimation = null;
@@ -325,12 +329,12 @@ public class RenderedMovingUnit {
 	 */
 	public void visualizeImpactPoints(ImpactUnit unit)
 	{
-		J3DCore.getInstance().mEngine.visualizeImpactPoints(this, unit);
+		mEngine.visualizeImpactPoints(this, unit);
 	}
 	
 	public void highlightUnit()
 	{
-		J3DCore.getInstance().mEngine.highlightUnitTemporarily(this);
+		mEngine.highlightUnitTemporarily(this);
 	}
 	
 }

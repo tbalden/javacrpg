@@ -648,7 +648,7 @@ public class EncounterLogic {
 						
 						if (turnActTurnState.getCurrentEvent().internalState==PlannedTurnActEvent.STATE_INIT)
 						{
-							if (J3DMovingEngine.isEnginePlaying()) 
+							if (gameLogic.core.mEngine.isEnginePlaying()) 
 							{
 								return;
 							}
@@ -672,7 +672,7 @@ public class EncounterLogic {
 							}
 						} else
 						{
-							if (J3DMovingEngine.isEnginePlaying()) 
+							if (gameLogic.core.mEngine.isEnginePlaying()) 
 							{
 								return;
 							}

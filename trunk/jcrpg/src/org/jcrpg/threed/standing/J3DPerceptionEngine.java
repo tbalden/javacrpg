@@ -32,7 +32,6 @@ import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
 
 import com.jme.scene.Node;
-import com.jme.scene.state.BlendState.BlendEquation;
 
 public class J3DPerceptionEngine extends J3DMovingEngine {
 
@@ -44,6 +43,10 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 	
 	
 	public HashSet<String> renderedIdentifiers = new HashSet<String>();
+	
+	public HashSet<Long> unitOccupiedCoordinates = new HashSet<Long>();
+	
+	
 	
 	/**
 	 * Renders the moving units inside the render distance : looks for life forms in the World in reach of the player.
@@ -57,6 +60,7 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 		for (PerceptedVisibleForm form:forms)
 		{
 			if (form.notRendered) continue;
+			if (!form.updateCoordinatesBasedOnOccupation(unitOccupiedCoordinates)) continue;
 			newRenderedIds.add(form.getIdentifier());
 			if (renderedIdentifiers.contains(form.getIdentifier())) {
 				continue;
@@ -84,6 +88,7 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 		{
 			if (toRemove.contains(((PerceptedVisibleForm)u.form).getIdentifier()))
 			{
+				((PerceptedVisibleForm)u.form).cleanOccupation(unitOccupiedCoordinates);
 				toClear.add(u.form.uniqueId);
 				System.out.println("//////////////////// REMOVING UNIT: "+((PerceptedVisibleForm)u.form).getIdentifier());
 				for (NodePlaceholder n:u.nodePlaceholders)
@@ -97,7 +102,7 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 						//realNode.removeFromParent();
 						//core.modelPool.releaseNode(pooledRealNode);
 						FadeController c = new FadeController(pooledRealNode,realNode,1f, FadeMode.FadingOut);
-						core.controllers.add(c);
+						J3DCore.controllers.add(c);
 					}
 				}
 			}

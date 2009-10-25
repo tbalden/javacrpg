@@ -157,6 +157,31 @@ public class Boundaries {
 		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("##"+ s);
 		return s;
 	}
+	public static int[] fromKey(Long key){
+		long x = (key >> 32);
+		long z = (key ^ (x<<32))>>16;;
+		long y = (key ^ ((x<<32)+(z<<16)));
+		return new int[]{ (int)x, (int)y, (int)z };
+	}
+	
+/*	
+    public static void main(String[] args)
+	{
+		for (int i=20000; i<20100; i++)
+		{
+			Long key = getKey(i, i+1, i+2);
+			int[] is = fromKey(key);
+			if (is[0]==i && is[1]==i+1 && is[2]==i+2)
+			{
+				System.out.println("GOOD "+i+" "+is[0]+" "+is[1]+" "+is[2]);
+			} else
+			{
+				System.out.println("ERROR "+i+" "+is[0]+" "+is[1]+" "+is[2]);
+			}
+		}
+	}
+*/
+	
 	/**
 	 * Tells if this boundary overlaps the area inside a distance to a given coordinate.
 	 * @param x

@@ -200,7 +200,7 @@ public class UnlockEvaluator {
 			d.visibleForm.worldX = info.trapWorldX;
 			d.visibleForm.worldY = info.trapWorldY;
 			d.visibleForm.worldZ = info.trapWorldZ;
-			RenderedMovingUnit unit = new RenderedMovingUnit("-",info.trapWorldX,info.trapWorldY,info.trapWorldZ,new org.jcrpg.threed.scene.model.Model[0]);
+			RenderedMovingUnit unit = new RenderedMovingUnit(J3DCore.getInstance().mEngine,"-",info.trapWorldX,info.trapWorldY,info.trapWorldZ,new org.jcrpg.threed.scene.model.Model[0]);
 			unit.form = d.visibleForm;
 			d.visibleForm.renderedUnit = unit;
 			choice.member.encounterData = d;
