@@ -273,9 +273,9 @@ public abstract class Population extends Economic{
 		this.town = town;
 	}
 
-	private ArrayList<int[]> tmpSettlePlaces = new ArrayList<int[]>();
+	private ArrayList<int[][]> tmpSettlePlaces = new ArrayList<int[][]>();
 	@Override
-	public ArrayList<int[]> getPossibleSettlePlaces() {
+	public ArrayList<int[][]> getPossibleSettlePlaces() {
 		tmpSettlePlaces.clear();
 		SurfaceHeightAndType[] data =  soilGeo.getPointSurfaceData(centerX, centerZ, null,false);
 		int surfaceY = worldGroundLevel;
@@ -287,7 +287,7 @@ public abstract class Population extends Economic{
 		{
 			if (g.ownerMember==null)
 			{
-				ArrayList<int[]> list = g.getPossibleSettlePlaces();
+				ArrayList<int[][]> list = g.getPossibleSettlePlaces();
 				if (list!=null)
 				tmpSettlePlaces.addAll(g.getPossibleSettlePlaces());
 			}
@@ -296,7 +296,7 @@ public abstract class Population extends Economic{
 		{
 			if (g.ownerMember==null)
 			{
-				ArrayList<int[]> list = g.getPossibleSettlePlaces();
+				ArrayList<int[][]> list = g.getPossibleSettlePlaces();
 				if (list!=null)
 				tmpSettlePlaces.addAll(g.getPossibleSettlePlaces());
 			}

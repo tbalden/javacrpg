@@ -18,6 +18,8 @@
 
 package org.jcrpg.world.place.economic;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.BoundaryUtils;
@@ -53,6 +55,15 @@ public abstract class Residence extends DistrictSubelement {
 		tmpFilledZones[0][0] = origoY;
 		tmpFilledZones[0][1] = origoY+sizeY;
 		return tmpFilledZones;
+	}
+
+	private ArrayList<int[][]> tmpSettlePlaces = new ArrayList<int[][]>();
+
+	@Override
+	public ArrayList<int[][]> getPossibleSettlePlaces() {
+		tmpSettlePlaces.clear();
+		tmpSettlePlaces.add(new int[][]{{origoX+1, origoY, origoZ+1},{origoX+sizeX-2, origoY, origoZ+sizeZ-2}});
+		return tmpSettlePlaces;
 	}
 
 }

@@ -18,14 +18,21 @@
 
 package org.jcrpg.world.ai.fauna;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 public class PerceptedVisibleForm extends VisibleLifeForm {
 
 	public EntityFragment fragment;
+	// TODO possibe places here?
+	
+	public ArrayList<int[][]> possilbePlaces;
 	
 	public PerceptedVisibleForm(String uniqueId, EntityMember type, EntityInstance entity, EntityFragment fragment,PersistentMemberInstance member) {
 		super(uniqueId,type,entity,member);

@@ -206,6 +206,18 @@ public class CubeInterpreter
 		int[] relCenter = new int[]{relX, relY, relZ};
 		int[] relPosInDirection = J3DCore.calcMovement(relCenter, direction, false);
 		
+		if (J3DCore.FREE_MOVEMENT)
+		{
+			result.relX = relPosInDirection[0];
+			result.relY = relPosInDirection[1];
+			result.relZ = relPosInDirection[2];
+			result.worldX = posInDirection[0];
+			result.worldY = posInDirection[1];
+			result.worldZ = posInDirection[2];
+			result.possible = true;
+			return result;
+		}
+		
 		Cube cubeInCenter = w.getCube(-1, center[0], center[1], center[2], false);
 		Cube cubeInCenterAbove = w.getCube(-1, center[0], center[1]+1, center[2], false);
 		if (DEBUG) System.out.println("cubeInCenter: "+cubeInCenter);

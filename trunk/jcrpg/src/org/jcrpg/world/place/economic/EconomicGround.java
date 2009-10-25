@@ -173,11 +173,11 @@ public abstract class EconomicGround extends DistrictSubelement {
 	public abstract EconomicGround getInstance(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner);
 
 
-	private ArrayList<int[]> tmpSettlePlaces = new ArrayList<int[]>();
+	private ArrayList<int[][]> tmpSettlePlaces = new ArrayList<int[][]>();
 	@Override
-	public ArrayList<int[]> getPossibleSettlePlaces() {
+	public ArrayList<int[][]> getPossibleSettlePlaces() {
 		tmpSettlePlaces.clear();
-		tmpSettlePlaces.add(new int[]{origoX+sizeX/2, origoY, origoZ+sizeZ/2});
+		tmpSettlePlaces.add(new int[][]{{origoX, origoY, origoZ},{origoX+sizeX-1, origoY, origoZ+sizeZ-1}});
 		return tmpSettlePlaces;
 	}
 

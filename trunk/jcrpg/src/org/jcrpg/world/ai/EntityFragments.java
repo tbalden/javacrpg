@@ -134,11 +134,11 @@ public class EntityFragments {
 			if (instance.homeEconomy==population)
 			{
 				settledAtHome = true;
-				ArrayList<int[]> settleList = population.getPossibleSettlePlaces();
+				ArrayList<int[][]> settleList = population.getPossibleSettlePlaces();
 				if (settleList==null || settleList.size()==0) return;
 				enteredPopulation = population;
 				
-				roamTo(settleList.get(0)[0],settleList.get(0)[1],settleList.get(0)[2]); 
+				roamTo(settleList.get(0)[0][0],settleList.get(0)[0][1],settleList.get(0)[0][2]); 
 				instance.recalcBoundarySizes();
 				for (PersistentMemberInstance pMI:followingMembers)
 				{
@@ -147,9 +147,9 @@ public class EntityFragments {
 					{
 						for (Economic e:list)
 						{
-							ArrayList<int[]> pP = e.getPossibleSettlePlaces();
+							ArrayList<int[][]> pP = e.getPossibleSettlePlaces();
 							if (pP==null || pP.size()==0) continue;
-							pMI.roamTo(pP.get(0)[0], pP.get(0)[1], pP.get(0)[2]);
+							pMI.roamTo(pP.get(0)[0][0], pP.get(0)[0][1], pP.get(0)[0][2]);
 							//System.out.println("pMI SETTLE "+pMI.getName()+" "+e.getClass().getSimpleName()+" "+ pP.get(0)[0]+","+ pP.get(0)[1] +","+ pP.get(0)[2] );
 						}
 					}
@@ -229,13 +229,12 @@ public class EntityFragments {
 			boolean positioned = false;
 			if (enteredPopulation!=null)
 			{
-				ArrayList<int[]> list = enteredPopulation.getPossibleSettlePlaces();
+				ArrayList<int[][]> list = enteredPopulation.getPossibleSettlePlaces();
 				if (list!=null && list.size()>0)
 				{
-					form.worldX = list.get(0)[0];
-					form.worldY = list.get(0)[1];
-					form.worldZ = list.get(0)[2];
-					positioned = true;
+					form.worldX = list.get(0)[0][0];
+					form.worldY = list.get(0)[0][1];
+					form.worldZ = list.get(0)[0][2];
 				}
 			}
 			if (!positioned)

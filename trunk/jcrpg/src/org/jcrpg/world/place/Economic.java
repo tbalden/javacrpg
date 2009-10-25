@@ -109,10 +109,10 @@ public class Economic extends Geography {
 	}
 	
 	/**
-	 * Returns coordinates for places where a unit can settle in a given economy.
+	 * Returns coordinate ranges (square sized) for places where a unit can settle in a given economy.
 	 * @return
 	 */
-	public ArrayList<int[]> getPossibleSettlePlaces()
+	public ArrayList<int[][]> getPossibleSettlePlaces()
 	{
 		return null;
 	}
