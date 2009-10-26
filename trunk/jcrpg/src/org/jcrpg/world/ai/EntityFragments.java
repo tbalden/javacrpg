@@ -29,6 +29,7 @@ import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.place.Economic;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.economic.Population;
 
@@ -72,6 +73,11 @@ public class EntityFragments {
 		 * If a population is updated and fragment is fallen of, next round this should be set 0.? TODO
 		 */
 		public Population enteredPopulation = null;
+		
+		/**
+		 * currently tread geography.
+		 */
+		public Geography nearGeography = null;
 		
 		/**
 		 * All additional stateful data of the fragment.
@@ -211,6 +217,16 @@ public class EntityFragments {
 		public int getGroupSize(int groupId) {
 			return instance.getGroupSizes()[groupId];
 		}
+		
+		/**
+		 * where the fragment is located at - if in population, pop's geo.
+		 * @return
+		 */
+		public Geography getNearGeo()
+		{
+			if (enteredPopulation!=null) return enteredPopulation.soilGeo;
+			return nearGeography;
+		}
 
 		public ArrayList<PerceptedVisibleForm> getPerceptedForms(PerceptedEntityData perceptedData) {
 			ArrayList<PerceptedVisibleForm> forms = new ArrayList<PerceptedVisibleForm>();
@@ -221,50 +237,58 @@ public class EntityFragments {
 				id = perceptedData.groupIds[0];
 			}
 			
-			PerceptedVisibleForm form = instance.getPerceptedOne(this,id);
-			form.worldX = (int)getRoamingPosition().x;
-			form.worldY = (int)getRoamingPosition().y;
-			form.worldZ = (int)getRoamingPosition().z;
-			
-			boolean positioned = false;
-			if (enteredPopulation!=null)
+			PerceptedVisibleForm form2 = instance.getPerceptedOne(this,id);
+			for (int i=0; i<form2.getSize();i++)
 			{
-				ArrayList<int[][]> list = enteredPopulation.getPossibleSettlePlaces();
-				if (list!=null && list.size()>0)
+				PerceptedVisibleForm form = instance.getPerceptedOne(this,id);
+				form.enteredPopulation = enteredPopulation;
+				form.nearGeography = getNearGeo();
+				form.uniqueId=i;
+				form.worldX = (int)getRoamingPosition().x;
+				form.worldY = (int)getRoamingPosition().y;
+				form.worldZ = (int)getRoamingPosition().z;
+				
+				boolean positioned = false;
+				if (enteredPopulation!=null)
 				{
-					form.worldX = list.get(0)[0][0];
-					form.worldY = list.get(0)[0][1];
-					form.worldZ = list.get(0)[0][2];
-				}
-				form.setPossiblePlaces(list);
-			}
-			if (!positioned)
-			{
-				ArrayList<SurfaceHeightAndType[]> surface = instance.world.getSurfaceData(form.worldX, form.worldZ);
-				for (SurfaceHeightAndType[] type: surface)
-				{
-					for (SurfaceHeightAndType s:type)
+					ArrayList<int[][]> list = enteredPopulation.getPossibleSettlePlaces();
+					if (list!=null && list.size()>0)
 					{
-						if (enteredPopulation!=null)
+						form.worldX = list.get(0)[0][0];
+						form.worldY = list.get(0)[0][1];
+						form.worldZ = list.get(0)[0][2];
+					}
+					form.setPossiblePlaces(list);
+				}
+				if (!positioned)
+				{
+					ArrayList<SurfaceHeightAndType[]> surface = instance.world.getSurfaceData(form.worldX, form.worldZ);
+					for (SurfaceHeightAndType[] type: surface)
+					{
+						for (SurfaceHeightAndType s:type)
 						{
-							if (s.self == enteredPopulation.soilGeo)
+							if (enteredPopulation!=null)
+							{
+								if (s.self == enteredPopulation.soilGeo)
+								{
+									form.worldY = s.surfaceY;
+									positioned = true;
+									break;
+								}
+							} else
 							{
 								form.worldY = s.surfaceY;
 								positioned = true;
 								break;
 							}
-						} else
-						{
-							form.worldY = s.surfaceY;
-							positioned = true;
-							break;
 						}
 					}
 				}
-			}
-			if (positioned)
-			{
-				forms.add(form);
+				if (positioned)
+				{
+					forms.add(form);
+					
+				}
 			}
 			return forms;
 		}

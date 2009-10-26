@@ -69,6 +69,8 @@ public class EntityMember extends DescriptionBase {
 	
 	public int genderType = EntityDescription.GENDER_NEUTRAL;
 	
+
+	
 	public EntityMember(String visibleTypeId, Class<? extends BodyBase> bodyType, AudioDescription audioDescription) {
 		super();
 		this.visibleTypeId = visibleTypeId;

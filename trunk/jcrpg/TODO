@@ -51,12 +51,14 @@ Anatipions
 Before next release:
 
 
+[ ] add Options for AntiAlias ANTIALIAS_SAMPLES
+
 [ ] integrate harpy to maze
 [ ] integrate plantoid
+[ ] integrate new sounds by getter77
 
-[ ] more units for big groups?
-[ ] unit placement - don't place two on same location, add possible locations for the perceptedVisibleForm
-
+[X] more units for big groups?
+[X] unit placement - don't place two on same location, add possible locations for the perceptedVisibleForm
 
 [X] switch percepted update off while in encounter mode
 

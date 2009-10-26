@@ -25,6 +25,7 @@ import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.place.Economic;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.InfrastructureElementParameters;
@@ -214,12 +215,24 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		// TODO Auto-generated method stub
 		
 	}
+	
+	/**
+	 * where the fragment is located at - if in population, pop's geo.
+	 * @return
+	 */
+	public Geography getNearGeo()
+	{
+		return parentFragment.getNearGeo();
+	}
+
 
 	public ArrayList<PerceptedVisibleForm> getPerceptedForms(PerceptedEntityData perceptedData) {
 		ArrayList<PerceptedVisibleForm> forms = new ArrayList<PerceptedVisibleForm>();
 
 		getOne(0);
 		PerceptedVisibleForm form = getPerceptedOne();
+		form.enteredPopulation = parentFragment.enteredPopulation;
+		form.nearGeography = getNearGeo();
 		form.worldX = (int)getRoamingPosition().x;
 		form.worldY = (int)getRoamingPosition().y;
 		form.worldZ = (int)getRoamingPosition().z;

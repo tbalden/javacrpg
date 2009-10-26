@@ -31,4 +31,47 @@ public abstract class DescriptionBase {
 		return "unknown";
 	}
 
+	/**
+	 * Tells if entity can go to water cube.
+	 */
+	public boolean waterDweller = false;
+	/**
+	 * Tells if entity can go on land.
+	 */
+	public boolean landDweller = true;
+	
+	/**
+	 * entity can fly?
+	 */
+	public boolean airDweller = false;
+	
+	/**
+	 * Tells if entity can go indoor places.
+	 */
+	public boolean indoorDweller = true;
+	/**
+	 * Tells if entity can go outdoor places.
+	 */
+	public boolean outdoorDweller = true;
+
+	public boolean isWaterDweller() {
+		return waterDweller;
+	}
+
+	public boolean isLandDweller() {
+		return landDweller;
+	}
+
+	public boolean isIndoorDweller() {
+		return indoorDweller;
+	}
+
+	public boolean isOutdoorDweller() {
+		return outdoorDweller;
+	}
+
+	public boolean isAirDweller() {
+		return airDweller;
+	}
+
 }
