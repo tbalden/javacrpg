@@ -119,6 +119,7 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 					clearUnitTextNodes(u);
 					if (pooledRealNode!=null) {
 						Node realNode = (Node)pooledRealNode;
+						realNode.unlock();
 						//if (J3DCore.SETTINGS.SHADOWS) core.removeOccludersRecoursive(realNode);
 						//realNode.removeFromParent();
 						//core.modelPool.releaseNode(pooledRealNode);

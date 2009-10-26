@@ -113,11 +113,16 @@ public class RenderedMovingUnit {
 			{
 				c3dY+=c.walkHeight;
 				walkHeight = c.walkHeight;
+				System.out.println("----- WH"+walkHeight);
 			} else
 			{
-				c3dY+=c.middleHeight;
+				c3dY+=c.middleHeight*2;
 				walkHeight = c.middleHeight;
+				System.out.println("----- MH"+walkHeight+" "+c.y+"::"+(c.cornerHeights!=null?c.cornerHeights[0]+" "+c.cornerHeights[1]+" "+c.cornerHeights[2]+" "+c.cornerHeights[3]+" ":"null"));
 			}
+			System.out.println("----- ---------------");//"+walkHeight);
+				
+			System.out.println("----- WALKHEIGHT"+walkHeight);
 		}
 		c3dZ = (origoZ-(worldZ-origoZ)) * J3DCore.CUBE_EDGE_SIZE;
 	}
