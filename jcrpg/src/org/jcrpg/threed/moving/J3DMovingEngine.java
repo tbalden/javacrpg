@@ -219,6 +219,7 @@ public class J3DMovingEngine {
 			if (pooledRealNode!=null) {
 				Node realNode = (Node)pooledRealNode;
 				if (J3DCore.SETTINGS.SHADOWS) core.removeOccludersRecoursive(realNode);
+				realNode.unlock();
 				realNode.removeFromParent();
 				core.modelPool.releaseNode(pooledRealNode);
 			}

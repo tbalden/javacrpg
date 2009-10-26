@@ -225,7 +225,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 			Model bodyModel = loadModel(fileName);
 			bodyInstance = new SkeletalModelInstance(bodyModel);
 			//bodyInstance.lockBounds();
-			bodyInstance.lockShadows();
+			//bodyInstance.lockShadows();
 			bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
 			if (J3DCore.SETTINGS.SLOW_ANIMATION)
 				bodyAnimationController.setSkipRate(1f);
@@ -272,6 +272,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 	        stripTexturesAndMaterials(this);
 	        MaterialState s = DisplaySystem.getDisplaySystem().getRenderer().createMaterialState();
 	        s.setDiffuse(ColorRGBA.lightGray);
+	        s.setAmbient(ColorRGBA.darkGray);
 	        setRenderState(s);
 		} catch (Exception ex)
 		{

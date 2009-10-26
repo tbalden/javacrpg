@@ -175,7 +175,12 @@ public class PerceptedVisibleForm extends VisibleLifeForm {
 					if (!dB.isAirDweller())
 						fine = false;
 				} else
+				if (!cb.canHoldUnit)
 				{
+					fine = false;
+				} else
+				{
+					
 					if (cb.waterCube)
 					{
 						if (!dB.isWaterDweller())
