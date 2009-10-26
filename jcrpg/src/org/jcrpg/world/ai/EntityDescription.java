@@ -93,29 +93,7 @@ public class EntityDescription extends DescriptionBase {
 	
 	public String iconPic = "unknown"; 
 	
-	/**
-	 * Tells if entity can go to water cube.
-	 */
-	public boolean waterDweller = false;
-	/**
-	 * Tells if entity can go on land.
-	 */
-	public boolean landDweller = true;
-	
-	/**
-	 * entity can fly?
-	 */
-	public boolean airDweller = false;
-	
-	/**
-	 * Tells if entity can go indoor places.
-	 */
-	public boolean indoorDweller = true;
-	/**
-	 * Tells if entity can go outdoor places.
-	 */
-	public boolean outdoorDweller = true;
-	
+
 
 	public ArrayList<SkillInstance> getStartingSkills()
 	{
@@ -313,26 +291,6 @@ public class EntityDescription extends DescriptionBase {
 		return numberOfActionsPerTurn;
 	}
 
-	public boolean isWaterDweller() {
-		return waterDweller;
-	}
-
-	public boolean isLandDweller() {
-		return landDweller;
-	}
-
-	public boolean isIndoorDweller() {
-		return indoorDweller;
-	}
-
-	public boolean isOutdoorDweller() {
-		return outdoorDweller;
-	}
-
-	public boolean isAirDweller() {
-		return airDweller;
-	}
-	
 	/**
 	 * This must be called when new ecology is generated to let the desciption settleg things for the instance.
 	 * @param instance

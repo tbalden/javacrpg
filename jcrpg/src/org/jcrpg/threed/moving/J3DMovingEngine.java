@@ -541,7 +541,10 @@ public class J3DMovingEngine {
 							if (J3DCore.SETTINGS.SHADOWS) core.shadowsPass.addOccluder((Node)realPooledNode);
 							//core.encounterIntRootNode.attachChild((Node)realPooledNode);
 						}
-						realPooledNode.setCullHint(CullHint.Never); // added this one because otherwise some units were culled for no good reason. temp fix. 
+						if (!needsFadeIn) // ugly check for perceptionEngine... only encounter engine needs cull never
+						{
+							realPooledNode.setCullHint(CullHint.Never); // added this one because otherwise some units were culled for no good reason. temp fix. 
+						}
 						//TODO remove this if found real bug
 						// probably boundary problem?
 						realPooledNode.updateRenderState();

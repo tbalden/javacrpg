@@ -21,6 +21,7 @@ package org.jcrpg.threed.standing;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.logging.Logger;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
@@ -30,6 +31,7 @@ import org.jcrpg.threed.jme.ui.FadeController.FadeMode;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
+import org.jcrpg.world.place.Boundaries;
 
 import com.jme.scene.Node;
 
@@ -40,13 +42,12 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 		needsFadeIn = true;
 	}
 	
-	
+	private static final Logger logger = Logger.getLogger(J3DPerceptionEngine.class
+			.getName());
 	
 	public HashSet<String> renderedIdentifiers = new HashSet<String>();
 	
 	public HashSet<Long> unitOccupiedCoordinates = new HashSet<Long>();
-	
-	
 	
 	/**
 	 * Renders the moving units inside the render distance : looks for life forms in the World in reach of the player.
@@ -57,15 +58,39 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 		//clearPreviousUnits();
 		int i=0;
 		HashSet<String> newRenderedIds = new HashSet<String>();
+		HashSet<String> alreadyRenderedIds = new HashSet<String>();
 		for (PerceptedVisibleForm form:forms)
 		{
 			if (form.notRendered) continue;
-			if (!form.updateCoordinatesBasedOnOccupation(unitOccupiedCoordinates)) continue;
 			newRenderedIds.add(form.getIdentifier());
 			if (renderedIdentifiers.contains(form.getIdentifier())) {
+				alreadyRenderedIds.add(form.getIdentifier());
 				continue;
 			}
-			System.out.println("@@@@@@@@@@@@@@@@@@@@@ ADDING NEW UNIT: "+form.getIdentifier());
+			
+		}
+		renderedIdentifiers.removeAll(newRenderedIds);
+		HashSet<String> toRemove = renderedIdentifiers;
+		renderedIdentifiers = newRenderedIds;
+		clearPreviousUnits(toRemove);
+		
+		for (PerceptedVisibleForm form:forms)
+		{
+			if (form.notRendered) continue;
+			if (J3DCore.SETTINGS.LOGGING)
+			{
+				logger.finer("# unit occupied coordinates: ");			
+				for (Long l:unitOccupiedCoordinates)
+				{
+					logger.finer("#===== "+Boundaries.fromKey(l)[0]+"/"+Boundaries.fromKey(l)[1]+"/"+Boundaries.fromKey(l)[2]);
+				}
+			}
+			
+			if (alreadyRenderedIds.contains(form.getIdentifier())) {
+				continue;
+			}
+			if (!form.updateCoordinatesBasedOnOccupation(unitOccupiedCoordinates)) continue;
+			logger.finer("@@@@@@@@@@@@@@@@@@@@@ ADDING NEW UNIT: "+form.getIdentifier());
 			RenderedMovingUnit unit = materializeLifeForm(form);
 			unit.direction = (i%2==1?0:1);
 			NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);
@@ -73,10 +98,6 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 
 			i++;			
 		}
-		renderedIdentifiers.removeAll(newRenderedIds);
-		HashSet<String> toRemove = renderedIdentifiers;
-		renderedIdentifiers = newRenderedIds;
-		clearPreviousUnits(toRemove);
 		
 		renderToViewPort(0f);
 	}
@@ -90,7 +111,7 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 			{
 				((PerceptedVisibleForm)u.form).cleanOccupation(unitOccupiedCoordinates);
 				toClear.add(u.form.uniqueId);
-				System.out.println("//////////////////// REMOVING UNIT: "+((PerceptedVisibleForm)u.form).getIdentifier());
+				logger.finer("//////////////////// REMOVING UNIT: "+((PerceptedVisibleForm)u.form).getIdentifier());
 				for (NodePlaceholder n:u.nodePlaceholders)
 				{
 					PooledNode pooledRealNode = n.realNode;
