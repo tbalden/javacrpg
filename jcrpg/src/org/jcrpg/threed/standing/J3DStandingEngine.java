@@ -1654,6 +1654,7 @@ public class J3DStandingEngine {
 				while (renderedArea.numberOfProcesses>0 && numberOfProcesses>0)
 				{
 					Jcrpg.LOGGER.info("WAITING FOR RENDER THREADS TO STOP...");
+					System.out.println("WAITING...");
 					try {
 						Thread.sleep(5);
 					} catch (Exception ex)
