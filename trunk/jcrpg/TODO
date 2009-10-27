@@ -50,6 +50,8 @@ Anatipions
 ----
 Before next release:
 
+[ ] continuous load is halting at times, leaving it stopped/no movement/icon there
+
 	
 [ ] integrate harpy to maze
 [ ] integrate plantoid

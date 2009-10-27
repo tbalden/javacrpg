@@ -173,7 +173,7 @@ public class OptionsMenu extends PagedInputWindow {
             selectAntiAliasLevel = new ListSelect("antialias", this, pageFirst, 600f, antiAliasLevelIds, antiAliasLevelIds, antiAliasLevelValues, null, null);
             firstLayout.addToColumn(1, selectAntiAliasLevel, 0.35f, 0.5f);
             addInput(0, selectAntiAliasLevel);
-            selectAntiAliasLevel.setSelected(J3DCore.SETTINGS.ANTIALIAS_SAMPLES);
+            selectAntiAliasLevel.setSelected((Object)J3DCore.SETTINGS.ANTIALIAS_SAMPLES);
 
             // buttons
             nextPage = new TextButton("nextPage",this, pageFirst, 0.26f, 0.75f, 0.18f, 0.06f, 500f,Language.v("optionsmenu.next.page"),"N");
@@ -401,7 +401,7 @@ public class OptionsMenu extends PagedInputWindow {
         tunerMusicVolume.setValue(coreSettings.MUSIC_VOLUME_PERCENT); tunerMusicVolume.setUpdated(true);tunerMusicVolume.deactivate();
         toggleNormalMapShader.setChecked(coreSettings.NORMALMAP_ENABLED); toggleNormalMapShader.setUpdated(true);toggleNormalMapShader.deactivate();
         toggleNormalMapDetailed.setChecked(coreSettings.NORMALMAP_DETAILED); toggleNormalMapDetailed.setUpdated(true);toggleNormalMapDetailed.deactivate();
-        selectAntiAliasLevel.setSelected(coreSettings.ANTIALIAS_SAMPLES); selectAntiAliasLevel.setUpdated(true);selectAntiAliasLevel.deactivate();
+        selectAntiAliasLevel.setSelected((Object)coreSettings.ANTIALIAS_SAMPLES); selectAntiAliasLevel.setUpdated(true);selectAntiAliasLevel.deactivate();
         
         // water detail
         int selIndex = (coreSettings.WATER_SHADER ? 0 : 1);
