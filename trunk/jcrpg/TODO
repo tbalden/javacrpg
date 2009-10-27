@@ -51,15 +51,18 @@ Anatipions
 Before next release:
 
 [ ] continuous load is halting at times, leaving it stopped/no movement/icon there
-
+[ ] memory leak again
 	
 [ ] integrate harpy to maze
 [ ] integrate plantoid
+
+
+
 [X] integrate new sounds by getter77
 
 [X] add Options for AntiAlias ANTIALIAS_SAMPLES
-	[ ] test on nvidia
-	[ ] test on ATi?
+	[X] test on nvidia
+	[-] test on ATi?
 
 [X] more units for big groups?
 [X] unit placement - don't place two on same location, add possible locations for the perceptedVisibleForm
