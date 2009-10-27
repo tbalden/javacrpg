@@ -350,7 +350,7 @@ public class EntityMemberInstance {
 		return new Vector3f(getParentFragment().roamingBoundary.posX,getParentFragment().roamingBoundary.posY,getParentFragment().roamingBoundary.posZ);
 	}
 	
-	public PerceptedEntityData percept(int seed, EncounterUnit target)
+	public PerceptEntityData percept(int seed, EncounterUnit target)
 	{
 		int likeness = PerceptionEvaluator.likenessLevelOfPerception(this, target);
 		//System.out.println("=== "+description.getName()+" "+likeness);
@@ -358,7 +358,7 @@ public class EntityMemberInstance {
 		int likenessIdent = PerceptionEvaluator.likenessLevelOfIdentification(this, target);
 		//System.out.println("=== "+description.getName()+" "+likenessIdent);
 		float resultIdent = PerceptionEvaluator.success(seed,getAttributes().getAttribute(FantasyAttributes.KARMA),likenessIdent);
-		PerceptedEntityData data = new PerceptedEntityData();
+		PerceptEntityData data = new PerceptEntityData();
 		data.updateToResultRatio(result,resultIdent, getRoamingPosition(),target);
 		return data;
 	}

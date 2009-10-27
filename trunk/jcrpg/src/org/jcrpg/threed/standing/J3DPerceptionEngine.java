@@ -30,7 +30,7 @@ import org.jcrpg.threed.jme.ui.FadeController;
 import org.jcrpg.threed.jme.ui.FadeController.FadeMode;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
-import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
+import org.jcrpg.world.ai.fauna.PerceptVisibleForm;
 import org.jcrpg.world.place.Boundaries;
 
 import com.jme.scene.Node;
@@ -52,14 +52,14 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 	/**
 	 * Renders the moving units inside the render distance : looks for life forms in the World in reach of the player.
 	 */
-	public void renderPercepted(Collection<PerceptedVisibleForm> forms)
+	public void renderPercepted(Collection<PerceptVisibleForm> forms)
 	{
 		
 		//clearPreviousUnits();
 		int i=0;
 		HashSet<String> newRenderedIds = new HashSet<String>();
 		HashSet<String> alreadyRenderedIds = new HashSet<String>();
-		for (PerceptedVisibleForm form:forms)
+		for (PerceptVisibleForm form:forms)
 		{
 			if (form.notRendered) continue;
 			newRenderedIds.add(form.getIdentifier());
@@ -74,7 +74,7 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 		renderedIdentifiers = newRenderedIds;
 		clearPreviousUnits(toRemove);
 		
-		for (PerceptedVisibleForm form:forms)
+		for (PerceptVisibleForm form:forms)
 		{
 			if (form.notRendered) continue;
 			if (J3DCore.SETTINGS.LOGGING)
@@ -107,11 +107,11 @@ public class J3DPerceptionEngine extends J3DMovingEngine {
 		ArrayList<String> toClear = new ArrayList<String>();
 		for (RenderedMovingUnit u:units.values())
 		{
-			if (toRemove.contains(((PerceptedVisibleForm)u.form).getIdentifier()))
+			if (toRemove.contains(((PerceptVisibleForm)u.form).getIdentifier()))
 			{
-				((PerceptedVisibleForm)u.form).cleanOccupation(unitOccupiedCoordinates);
+				((PerceptVisibleForm)u.form).cleanOccupation(unitOccupiedCoordinates);
 				toClear.add(u.form.uniqueId);
-				logger.finer("//////////////////// REMOVING UNIT: "+((PerceptedVisibleForm)u.form).getIdentifier());
+				logger.finer("//////////////////// REMOVING UNIT: "+((PerceptVisibleForm)u.form).getIdentifier());
 				for (NodePlaceholder n:u.nodePlaceholders)
 				{
 					PooledNode pooledRealNode = n.realNode;

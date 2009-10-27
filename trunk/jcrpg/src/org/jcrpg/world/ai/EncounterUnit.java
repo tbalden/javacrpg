@@ -20,7 +20,7 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
-import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
+import org.jcrpg.world.ai.fauna.PerceptVisibleForm;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 /**
@@ -68,7 +68,7 @@ public interface EncounterUnit {
 	
 	public int getSize();
 	
-	public ArrayList<PerceptedVisibleForm> getPerceptedForms(PerceptedEntityData perceptedData);
+	public ArrayList<PerceptVisibleForm> getPerceptedForms(PerceptEntityData perceptedData);
 
 	
 }

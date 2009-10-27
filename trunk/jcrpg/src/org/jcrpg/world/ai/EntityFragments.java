@@ -26,7 +26,7 @@ import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.state.StateEffect;
-import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
+import org.jcrpg.world.ai.fauna.PerceptVisibleForm;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
@@ -64,7 +64,7 @@ public class EntityFragments {
 		public EntityFragments parent;
 		public EntityInstance instance;
 		
-		public ArrayList<PerceptedEntityData> perceptedEntities;
+		public ArrayList<PerceptEntityData> perceptedEntities;
 		
 		public boolean settledAtHome = false;
 		
@@ -228,8 +228,8 @@ public class EntityFragments {
 			return nearGeography;
 		}
 
-		public ArrayList<PerceptedVisibleForm> getPerceptedForms(PerceptedEntityData perceptedData) {
-			ArrayList<PerceptedVisibleForm> forms = new ArrayList<PerceptedVisibleForm>();
+		public ArrayList<PerceptVisibleForm> getPerceptedForms(PerceptEntityData perceptedData) {
+			ArrayList<PerceptVisibleForm> forms = new ArrayList<PerceptVisibleForm>();
 			
 			int id = 0;
 			if (perceptedData.groupIds!=null)
@@ -237,10 +237,10 @@ public class EntityFragments {
 				id = perceptedData.groupIds[0];
 			}
 			
-			PerceptedVisibleForm form2 = instance.getPerceptedOne(this,id);
+			PerceptVisibleForm form2 = instance.getPerceptedOne(this,id);
 			for (int i=0; i<form2.getSize();i++)
 			{
-				PerceptedVisibleForm form = instance.getPerceptedOne(this,id);
+				PerceptVisibleForm form = instance.getPerceptedOne(this,id);
 				form.enteredPopulation = enteredPopulation;
 				form.nearGeography = getNearGeo();
 				form.uniqueId=i;
@@ -366,7 +366,7 @@ public class EntityFragments {
 				perceptedEntities.clear();
 			} else
 			{
-				perceptedEntities = new ArrayList<PerceptedEntityData>();
+				perceptedEntities = new ArrayList<PerceptEntityData>();
 				
 			}
 		}
@@ -381,15 +381,15 @@ public class EntityFragments {
 		{
 			if (perceptedEntities==null)
 			{
-				perceptedEntities = new ArrayList<PerceptedEntityData>();
+				perceptedEntities = new ArrayList<PerceptEntityData>();
 			}
-			PerceptedEntityData rData = new PerceptedEntityData();
+			PerceptEntityData rData = new PerceptEntityData();
 			for (PersistentMemberInstance i:followingMembers)
 			{
-				PerceptedEntityData data = i.percept(seed, target);
+				PerceptEntityData data = i.percept(seed, target);
 				rData.mergeBest(data);
 			}
-			PerceptedEntityData data = percept(seed, 0, target);
+			PerceptEntityData data = percept(seed, 0, target);
 			rData.mergeBest(data);
 			rData.unit = target;
 			rData.groupIds = groupIds;
@@ -405,7 +405,7 @@ public class EntityFragments {
 		}
 
 		
-		public PerceptedEntityData percept(int seed, int karma, EncounterUnit target)
+		public PerceptEntityData percept(int seed, int karma, EncounterUnit target)
 		{
 			int likeness = PerceptionEvaluator.likenessLevelOfPerception(this, target);
 			if (target == J3DCore.getInstance().gameState.player.theFragment)
@@ -415,7 +415,7 @@ public class EntityFragments {
 			float result = PerceptionEvaluator.success(seed, karma, likeness);
 			int likenessIdent = PerceptionEvaluator.likenessLevelOfIdentification(this, target);
 			float resultIdent = PerceptionEvaluator.success(seed,karma, likenessIdent);
-			PerceptedEntityData data = new PerceptedEntityData();
+			PerceptEntityData data = new PerceptEntityData();
 			data.updateToResultRatio(result,resultIdent,getRoamingPosition(),target);
 			return data;
 		}
