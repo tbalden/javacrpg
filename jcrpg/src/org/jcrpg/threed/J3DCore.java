@@ -816,10 +816,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			display.setMinAlphaBits(alphaBits);
 			display.setMinSamples(samples);
 
-			/** Create a window with the startup box's information. */
-			display.createWindow(settings.getWidth(), settings.getHeight(),
-					settings.getDepth(), settings.getFrequency(), settings.
-							isFullscreen());
+			try {
+				/** Create a window with the startup box's information. */
+				display.createWindow(settings.getWidth(), settings.getHeight(),
+						settings.getDepth(), settings.getFrequency(), settings.
+								isFullscreen());
+			} catch (JmeException ex)
+			{
+				System.out.println("COULDN'T INITIALIZE WINDOW, TRYING WITH ANTIALIAS_SAMPLES = 0 -- "+ex );
+				logger.info("COULDN'T INITIALIZE WINDOW, TRYING WITH ANTIALIAS_SAMPLES = 0 -- "+ex);
+				display.setMinSamples(0);
+				display.createWindow(settings.getWidth(), settings.getHeight(),
+						settings.getDepth(), settings.getFrequency(), settings.
+								isFullscreen());
+			}
 			logger.info("Running on: " + display.getAdapter()
 					+ "\nDriver version: " + display.getDriverVersion() + "\n"
 					+ display.getDisplayVendor() + " - "
@@ -3250,6 +3260,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	
 	public void applyOptions()
 	{
+		samples = SETTINGS.ANTIALIAS_SAMPLES;
+
 		updateFogStateDistances();
 		switchPass(shadowsPass, SETTINGS.SHADOWS);
 

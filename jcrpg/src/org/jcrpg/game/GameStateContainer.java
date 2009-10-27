@@ -41,11 +41,10 @@ import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EntityScaledRelationType;
 import org.jcrpg.world.ai.GroupingMemberProps;
-import org.jcrpg.world.ai.PerceptedEntityData;
+import org.jcrpg.world.ai.PerceptEntityData;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
-import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
-import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.ai.fauna.PerceptVisibleForm;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.Geography;
@@ -57,7 +56,6 @@ import org.jcrpg.world.time.Time;
 
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jmex.model.collada.schema.contributorType;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
@@ -419,11 +417,11 @@ public class GameStateContainer {
 		boolean needDangerSense = false;
 		
 		
-		ArrayList<PerceptedVisibleForm> lifeForms = new ArrayList<PerceptedVisibleForm>();
+		ArrayList<PerceptVisibleForm> lifeForms = new ArrayList<PerceptVisibleForm>();
 		
 		if (player.theFragment.perceptedEntities!=null)
 		{
-			for (PerceptedEntityData data:player.theFragment.perceptedEntities)
+			for (PerceptEntityData data:player.theFragment.perceptedEntities)
 			{
 				if (!data.percepted) continue;
 				System.out.println("--------###] "+data);
@@ -435,7 +433,7 @@ public class GameStateContainer {
 				
 				// gathering visible lifeforms
 				
-				ArrayList<PerceptedVisibleForm> forms = data.getPerceptedForms();
+				ArrayList<PerceptVisibleForm> forms = data.getPerceptedForms();
 				lifeForms.addAll(forms);
 				
 				if (i.getRelationLevel(player.theFragment)<=EntityScaledRelationType.NEUTRAL)

@@ -34,7 +34,13 @@ import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.economic.Population;
 
-public class PerceptedVisibleForm extends VisibleLifeForm {
+/**
+ * Extension of the VisibleLifeForm with special data for the J3DPerceptionEngine needs like place/economy, fragment data,
+ * possible places for rendering.
+ * @author illes
+ *
+ */
+public class PerceptVisibleForm extends VisibleLifeForm {
 
 	public EntityFragment fragment;
 	
@@ -68,12 +74,12 @@ public class PerceptedVisibleForm extends VisibleLifeForm {
 		}
 	}
 	
-	public PerceptedVisibleForm(String uniqueId, EntityMember type, EntityInstance entity, EntityFragment fragment,PersistentMemberInstance member) {
+	public PerceptVisibleForm(String uniqueId, EntityMember type, EntityInstance entity, EntityFragment fragment,PersistentMemberInstance member) {
 		super(uniqueId,type,entity,member);
 		this.fragment = fragment;
 		
 	}
-	public PerceptedVisibleForm(String uniqueId, EntityMember type,
+	public PerceptVisibleForm(String uniqueId, EntityMember type,
 			EntityInstance entity, EntityFragment fragment, int groupId) {
 		super(uniqueId, type, entity, groupId);
 		this.fragment = fragment;

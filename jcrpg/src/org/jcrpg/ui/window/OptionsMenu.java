@@ -85,7 +85,14 @@ public class OptionsMenu extends PagedInputWindow {
                                        Language.v("optionsmenu.preset.low"),
                                        Language.v("optionsmenu.preset.lowest"),
                                        };
-    
+    ListSelect selectAntiAliasLevel;
+    static final String[] antiAliasLevelIds = {Language.v("optionsmenu.antialias.0"),
+                                            Language.v("optionsmenu.antialias.2"),
+                                            Language.v("optionsmenu.antialias.4"),
+                                            Language.v("optionsmenu.antialias.8"),
+                                            };
+    static final Object[] antiAliasLevelValues = {0,2,4,8};
+   
     CheckBox toggleBloom;
     CheckBox toggleDepthOfField;
     CheckBox toggleSSAO;
@@ -118,7 +125,7 @@ public class OptionsMenu extends PagedInputWindow {
             header.setRenderState(base.hud.hudAS);
             pageFirst.attachChild(header);
 
-            SimpleLayout firstLayout = new SimpleLayout(0.30f, 0.16f, 0.25f, 0.07f ,3);
+            SimpleLayout firstLayout = new SimpleLayout(0.30f, 0.16f, 0.25f, 0.06f ,3);
             firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.presets"), false));
             selectPreset = new ListSelect("preset", this, pageFirst, 600f, presetIds, presetIds, null, null);
             //selectPreset.focusUponMouseEnter = true;
@@ -162,6 +169,11 @@ public class OptionsMenu extends PagedInputWindow {
             tunerMusicVolume = new ValueTuner("",this,pageFirst, 600f, J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT, 0, 100, 5);
             firstLayout.addToColumn(1, tunerMusicVolume, 0.35f, 0.5f);
             addInput(0, tunerMusicVolume);
+            firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.antialias"), false));
+            selectAntiAliasLevel = new ListSelect("antialias", this, pageFirst, 600f, antiAliasLevelIds, antiAliasLevelIds, antiAliasLevelValues, null, null);
+            firstLayout.addToColumn(1, selectAntiAliasLevel, 0.35f, 0.5f);
+            addInput(0, selectAntiAliasLevel);
+            selectAntiAliasLevel.setSelected(J3DCore.SETTINGS.ANTIALIAS_SAMPLES);
 
             // buttons
             nextPage = new TextButton("nextPage",this, pageFirst, 0.26f, 0.75f, 0.18f, 0.06f, 500f,Language.v("optionsmenu.next.page"),"N");
@@ -214,20 +226,24 @@ public class OptionsMenu extends PagedInputWindow {
             addInput(1, selectWaterDeatil);
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.bloom"), false));
             toggleBloom = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.BLOOM_EFFECT);
-            secondLayout.addToColumn(1, toggleBloom, 0.1f, 0.4f);
+            secondLayout.addToColumn(1, toggleBloom, 0.1f, 0.5f);
             addInput(1, toggleBloom);
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.dof.effect"), false));
             toggleDepthOfField = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.DOF_EFFECT);
-            secondLayout.addToColumn(1, toggleDepthOfField, 0.1f, 0.4f);
+            secondLayout.addToColumn(1, toggleDepthOfField, 0.1f, 0.5f);
             addInput(1, toggleDepthOfField);
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.ssao.effect"), false));
             toggleSSAO = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.SSAO_EFFECT);
-            secondLayout.addToColumn(1, toggleSSAO, 0.1f, 0.4f);
+            secondLayout.addToColumn(1, toggleSSAO, 0.1f, 0.5f);
             addInput(1, toggleSSAO);
+
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.shadow.distance"), false));
             tunerShadowDistance = new ValueTuner("",this,pageSecond, 600f, J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE, 0, 20, 1);
             secondLayout.addToColumn(1, tunerShadowDistance, 0.35f, 0.5f);
             addInput(1, tunerShadowDistance);
+            secondLayout.addToColumn(2, new TextLabel("",this, pageSecond, 600f, "", false), 4); // placeholder for rowspan
+            secondLayout.addToColumn(2, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.shadow.note"), false, true));
+
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.slow.animation"), false));
             toggleSlowAnimation = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.SLOW_ANIMATION);
             secondLayout.addToColumn(1, toggleSlowAnimation, 0.1f, 0.5f);
@@ -305,6 +321,7 @@ public class OptionsMenu extends PagedInputWindow {
             J3DCore.SETTINGS.TEXTURE_QUALITY = tunerTextureDetail.getSelection();
             J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT = tunerEffectsVolume.getSelection();
             J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT = tunerMusicVolume.getSelection();
+            J3DCore.SETTINGS.ANTIALIAS_SAMPLES = (Integer)selectAntiAliasLevel.getSelectedObject();
 
             J3DCore.SETTINGS.NORMALMAP_ENABLED = toggleNormalMapShader.isChecked();
             J3DCore.SETTINGS.NORMALMAP_DETAILED = toggleNormalMapDetailed.isChecked();
@@ -384,7 +401,8 @@ public class OptionsMenu extends PagedInputWindow {
         tunerMusicVolume.setValue(coreSettings.MUSIC_VOLUME_PERCENT); tunerMusicVolume.setUpdated(true);tunerMusicVolume.deactivate();
         toggleNormalMapShader.setChecked(coreSettings.NORMALMAP_ENABLED); toggleNormalMapShader.setUpdated(true);toggleNormalMapShader.deactivate();
         toggleNormalMapDetailed.setChecked(coreSettings.NORMALMAP_DETAILED); toggleNormalMapDetailed.setUpdated(true);toggleNormalMapDetailed.deactivate();
-
+        selectAntiAliasLevel.setSelected(coreSettings.ANTIALIAS_SAMPLES); selectAntiAliasLevel.setUpdated(true);selectAntiAliasLevel.deactivate();
+        
         // water detail
         int selIndex = (coreSettings.WATER_SHADER ? 0 : 1);
         selIndex = (coreSettings.WATER_DETAILED ? 2 : selIndex);

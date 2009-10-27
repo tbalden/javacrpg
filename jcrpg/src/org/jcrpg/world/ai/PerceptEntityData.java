@@ -21,11 +21,17 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
-import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
+import org.jcrpg.world.ai.fauna.PerceptVisibleForm;
 
 import com.jme.math.Vector3f;
 
-public class PerceptedEntityData {
+/**
+ * Percept entity's data for Entity'O'Meter and other use. Stored in the EntityFragment, put there by Ecology encounter calculation.
+ * Uses EncounterUnit for the target, perception's source is an EntityFragment.
+ * @author illes
+ *
+ */
+public class PerceptEntityData {
 	public EntityFragment source = null;
 
 	public EncounterUnit unit = null;
@@ -91,7 +97,7 @@ public class PerceptedEntityData {
 		
 	}
 	
-	public void mergeBest(PerceptedEntityData data)
+	public void mergeBest(PerceptEntityData data)
 	{
 		if (data.percepted) 
 		{
@@ -117,7 +123,7 @@ public class PerceptedEntityData {
 		return "Ped: "+unit.getName()+" -- perc "+percepted + " kind "+kindKnown+" size "+groupSizeKnown+" dist "+distanceKnown;
 	}
 
-	public ArrayList<PerceptedVisibleForm> getPerceptedForms() {
+	public ArrayList<PerceptVisibleForm> getPerceptedForms() {
 		
 		return unit.getPerceptedForms(this);
 	}

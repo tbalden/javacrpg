@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
-import org.jcrpg.world.ai.fauna.PerceptedVisibleForm;
+import org.jcrpg.world.ai.fauna.PerceptVisibleForm;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
@@ -143,8 +143,8 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	public VisibleLifeForm getOne(int groupId) {
 		return new VisibleLifeForm(this.getClass().getName()+""+this,description,getParentFragment().instance,this);
 	}
-	public PerceptedVisibleForm getPerceptedOne() {
-		return new PerceptedVisibleForm(this.getClass().getName()+""+this,description,instance,parentFragment,this);
+	public PerceptVisibleForm getPerceptedOne() {
+		return new PerceptVisibleForm(this.getClass().getName()+""+this,description,instance,parentFragment,this);
 	}
 
 	public int getRelationLevel(EncounterUnit unit) {
@@ -226,11 +226,11 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	}
 
 
-	public ArrayList<PerceptedVisibleForm> getPerceptedForms(PerceptedEntityData perceptedData) {
-		ArrayList<PerceptedVisibleForm> forms = new ArrayList<PerceptedVisibleForm>();
+	public ArrayList<PerceptVisibleForm> getPerceptedForms(PerceptEntityData perceptedData) {
+		ArrayList<PerceptVisibleForm> forms = new ArrayList<PerceptVisibleForm>();
 
 		getOne(0);
-		PerceptedVisibleForm form = getPerceptedOne();
+		PerceptVisibleForm form = getPerceptedOne();
 		form.enteredPopulation = parentFragment.enteredPopulation;
 		form.nearGeography = getNearGeo();
 		form.worldX = (int)getRoamingPosition().x;
