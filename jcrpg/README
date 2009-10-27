@@ -6,8 +6,9 @@ media under various licenses (PD,CC-BY-SA,CC-BY-SA-NC,GPL,LGPL) copyrighted by t
 
 s. Starting the game
 
-You need Sun's Java runtime environment to run the game. (See INSTALL.) 
-For starting under Linux and Mac use jcrpg-*.sh, under Windows use jcrpg-*.bat (choose a detail level from: between lowest and highest).
+You need Sun's Java runtime environment to run the game. (See INSTALL.) Under Windows 64-bit you should use the 32-bit version 
+of the Java, the 64-bit version cannot load the 64-bit dlls correctly for some reason. Linux 64-bit works. 
+For starting under Linux and Mac use jcrpg.sh, under Windows use jcrpg.bat.
 
 m. Movement/Keyboard
 
@@ -49,6 +50,11 @@ You can click left/right on character portraits for Inventory/Character Sheet.
 
 c. Configuration
 
+Use Options menu to modify settings and save them. Some of the settings will need restart of the game. If you note something is 
+not working properly after that, restart the game. You can also try to revert to lowest predefined settings in the Options menu.
+
+You can edit the file manually as well. Details below.
+
 config.properties:
 The optimal VIEW_DISTANCE is around 30-40 and RENDER_DISTANCE can be set to the double of these values. 
 Take care of the -Xmx parameter in your jcrpg.sh/jcrpg.bat if you receive OutOfMemory or Heap is full.
@@ -68,8 +74,12 @@ r. Requirements
 - At least ~500-600 megabyte free system memory, more if you set higher RENDER_DISTANCE/VIEW_DISTANCE 
 	in config.properties
 - Opengl accelerated video card (nvidia geforce 6200 or better should be good)
-	It's recommended to switch of 3D accelerated desktop effects, it can slow down jcrpg.
+	It's recommended to switch off 3D accelerated desktop effects, it can slow down jcrpg on a low-end machine.
 - Processor around 1.6GHz (Single core will do it)
+
+
+Be careful: Anti Alias samples higher than 0 might not work on some systems, especially 
+with Linux Intel opengl driver (tested, only works with 0).
 
 
 More information at http://sourceforge.net/apps/mediawiki/javacrpg/index.php?title=Main_Page .
@@ -106,8 +116,8 @@ Firstly there's config.properties in the root directory of the game that can be 
 
 Second you can have hogging problems if you set high detail values and Java runs with low memory parameters 
 or your system has small free memory. If you plan to run on high settings you may consider edit 
-jcrpg.bat or jcrpg.sh and modify the -Xmx parameter to a higher value. (Example: -Xmx200m.) 
-I recommend you to have at least 300MB free memory or more for the current default configuration (dec 2007).
+jcrpg.bat or jcrpg.sh and modify the -Xmx parameter to a higher value. (Example: -Xmx300m.) 
+I recommend you to have at least 500MB free memory or more for the current default configuration (oct 2009).
 
 Thirdly you may try to run it in lower resolutions - this can help a lot too.
 
