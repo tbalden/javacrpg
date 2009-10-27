@@ -37,9 +37,9 @@ public class MaleCrazy1 extends AudioDescription {
 		BRUISED = new String[] {base+"needheal1",base+"needheal2",};
 		BRUISED_HEALTH = new String[] {base+"needheal1",base+"needheal2",};
 		BRUISED_MANA = new String[] {base+"needheal1",base+"needheal2",};
-		BRUISED_MORALE= new String[] {base+"needheal1",base+"needheal2",};
-		BRUISED_SANITY = new String[] {base+"needheal1",base+"needheal2",};
-		BRUISED_STAMINA = new String[] {base+"needheal1",base+"needheal2",};
+		BRUISED_MORALE= new String[] {base+"sad1",base+"sad2",};
+		BRUISED_SANITY = new String[] {base+"crazy1",base+"crazy2",};
+		BRUISED_STAMINA = new String[] {base+"tired1",base+"tired2",};
 		pitchModifier = 1.1f;
 		
 	}

@@ -53,10 +53,11 @@ Before next release:
 	
 [ ] integrate harpy to maze
 [ ] integrate plantoid
-[ ] integrate new sounds by getter77
+[X] integrate new sounds by getter77
 
 [X] add Options for AntiAlias ANTIALIAS_SAMPLES
 	[ ] test on nvidia
+	[ ] test on ATi?
 
 [X] more units for big groups?
 [X] unit placement - don't place two on same location, add possible locations for the perceptedVisibleForm
