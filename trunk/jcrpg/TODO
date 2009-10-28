@@ -50,12 +50,16 @@ Anatipions
 ----
 Before next release:
 
-[ ] rgba/vectors leaking? states
-[X] continuous load is halting at times, leaving it stopped/no movement/icon there
-[X] memory leak again - debug - clearing NodePlaceHolders helped
-	
+[ ] more testing. win too
+
+
 [ ] integrate harpy to maze - needs fix, rootbone
 [ ] integrate plantoid - needs fix, faces
+
+
+
+[X] continuous load is halting at times, leaving it stopped/no movement/icon there
+[X] memory leak again - debug - clearing NodePlaceHolders helped
 
 [X] integrate new sounds by getter77
 
