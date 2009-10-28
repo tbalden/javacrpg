@@ -37,10 +37,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.ARBDepthTexture;
-import org.lwjgl.opengl.ARBShadow;
-import org.lwjgl.opengl.GL11;
-
 import com.jme.image.Texture;
 import com.jme.image.Texture2D;
 import com.jme.image.Texture.DepthTextureCompareFunc;
@@ -92,7 +88,7 @@ public class DirectionalShadowMapPass extends Pass {
 	/** The near plane when rendering the shadow map */
 	private float nearPlane = 1f;
 	/** The far plane when rendering the shadow map - currently tuned for the test*/
-	private float farPlane = 3000.0f;
+	private float farPlane = 1000.0f;
 	/** The location the shadow light source is looking at - must point at the focus of the scene */
 	private Vector3f shadowCameraLookAt;
 	/** The effective location of the light source - derived based on the distance of casting, look at and direction */
@@ -138,7 +134,7 @@ public class DirectionalShadowMapPass extends Pass {
 	 * The distance we're modelling the direction light source as being away from the focal point, again 
 	 * the higher the number the more of the scene is covered but at lower resolution 
 	 */
-	protected float dis = 500;
+	protected float dis = 20;
 	
 	/** A place to internally save previous enforced states setup before rendering this pass */
 	private RenderState[] preStates = new RenderState[RenderState.RS_MAX_STATE];
