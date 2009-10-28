@@ -1671,6 +1671,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public boolean move(int[] from, int[] fromRel, int[] directions) {
 		String canMoveString = gameState.player.canMove();
 
+		//System.out.println("------------- "+sEngine.toString());
+		//System.out.println("------------- "+renderedArea.toString());
+		
 		if (canMoveString != null
 				|| gameState.player.theFragment.fragmentState.isCamping
 				|| gameState.engine.isPause()) {

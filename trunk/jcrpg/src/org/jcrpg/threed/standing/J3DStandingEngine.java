@@ -1640,7 +1640,10 @@ public class J3DStandingEngine {
 			    				n.farView = false;
 			    	    	}
 			    		}
+			    		// clearing out references, RenderedCube is off
+			    		c.clear();
 					}
+					
 				}		
 				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("DETACH TIME = "+(System.currentTimeMillis()-t0));
 			} else
@@ -1806,7 +1809,8 @@ public class J3DStandingEngine {
 		    				n.farView = false;
 		    	    	}
 		    		}
-		    		//c.clear();
+		    		// clearing out references, RenderedCube is off
+		    		c.clear();
 				}
 			}
 			
@@ -2299,6 +2303,12 @@ public class J3DStandingEngine {
 			extRootNode.setCullHint(CullHint.Always);
 			intRootNode.setCullHint(CullHint.Always);
 		}
+	}
+	
+	
+	public String toString()
+	{
+		return "J3DSE hmC "+hmCurrentCubes.size()+" - alC "+alCurrentCubes.size()+ " - inVP "+inViewPort.size()+" - outVP "+outOfViewPort.size()+" - condNodes "+conditionalNodes.size();
 	}
 	
 }
