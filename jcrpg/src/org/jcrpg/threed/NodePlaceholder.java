@@ -128,5 +128,7 @@ public class NodePlaceholder {
 		if (neighborCubeData!=null) neighborCubeData.clear();
 		neighborCubeData = null;
 		realNode = null;
+		if (userData!=null) userData.clear();
+		userData = null;
 	}
 }
