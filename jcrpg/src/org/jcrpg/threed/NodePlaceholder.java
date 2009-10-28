@@ -126,5 +126,7 @@ public class NodePlaceholder {
 		modelGeomBatchInstance = null;
 		trimeshGeomBatchInstance = null;
 		if (neighborCubeData!=null) neighborCubeData.clear();
+		neighborCubeData = null;
+		realNode = null;
 	}
 }

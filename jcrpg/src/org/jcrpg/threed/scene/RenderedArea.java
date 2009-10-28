@@ -732,4 +732,8 @@ public class RenderedArea {
 		worldCubeCacheThreadSafeCopy.clear();
 	}
 	
+	public String toString()
+	{
+		return "RenderedArea: ts "+worldCubeCacheThreadSafeCopy.size() + " / c "+worldCubeCache.size()+" / n "+worldCubeCacheNext.size();
+	}
 }
