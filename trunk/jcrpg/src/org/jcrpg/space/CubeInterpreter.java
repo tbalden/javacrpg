@@ -194,7 +194,7 @@ public class CubeInterpreter
 
 	}
 
-	boolean DEBUG = true;
+	boolean DEBUG = false;
 	
 	public MovementInterpretationResult interpret(int direction)
 	{

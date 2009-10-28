@@ -238,163 +238,169 @@ public class World extends Place implements TileBasedMap {
 		}
 	}
 	
+	private static Object mutex = new Object();
+	
 	public Cube getCube(Time localTime, long key, int worldX, int worldY, int worldZ, boolean farView) {
 
-		if (WORLD_IS_GLOBE) {
-			worldX = shrinkToWorld(worldX);
-			worldZ = shrinkToWorld(worldZ);
-		}
-		int CONST_FARVIEW = farView?J3DCore.FARVIEW_GAP:1;
-		
-		
-		if (boundaries.isInside(worldX, worldY, worldZ))
+		synchronized (mutex) 
 		{
-			long t0 = System.currentTimeMillis();
-				
-			Cube ecoCube = economyContainer.getEconomicCube(key, worldX, worldY, worldZ, farView, localTime);
-			perf_eco_t0+=System.currentTimeMillis()-t0;
-			if (ecoCube!=null) 
-			{
-				
-				return ecoCube;
+		
+			if (WORLD_IS_GLOBE) {
+				worldX = shrinkToWorld(worldX);
+				worldZ = shrinkToWorld(worldZ);
 			}
-			CubeMergerInfo info = null;
-			synchronized (reusedMergerInfos)
-			{
-				info = reusedMergerInfos.remove(0);
-				info.currentMerged = null;
-				info.finalRounders.clear();
-				info.overLappers.clear();
-			}
+			int CONST_FARVIEW = farView?J3DCore.FARVIEW_GAP:1;
 			
-			perf_eco_t0+=System.currentTimeMillis()-t0;
-			//Cube retCube = null;
-			info.currentMerged = null;
-			info.overLappers.clear();
-			info.finalRounders.clear();
-			boolean insideGeography = false;
-			HashMap<Geography,SurfaceHeightAndType> tempGeosForSurface = null;
-			synchronized (reusedGeosForSurface)
+			
+			if (boundaries.isInside(worldX, worldY, worldZ))
 			{
-				tempGeosForSurface = reusedGeosForSurface.remove(0);
-				tempGeosForSurface.clear();
-			}
-
-			for (Geography geo : geographies.values()) {
-				//System.out.print("-!");
-				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
-				{
-					insideGeography = true;
+				long t0 = System.currentTimeMillis();
 					
-					t0 = System.currentTimeMillis();
-					Cube geoCube = geo.getCube(key, worldX, worldY, worldZ, farView);
-					perf_geo_t0+=System.currentTimeMillis()-t0;
-					collectCubes(info,geoCube,false);
-					if (geo instanceof Surface)
-					{
-						t0 = System.currentTimeMillis();
-						SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ, geoCube, farView);
-						perf_surface_t0+=System.currentTimeMillis()-t0;
-						for (int surfCount = 0; surfCount<surf.length; surfCount++) {
-							if (surf!=null && surf[surfCount].canContain) {
-								// collecting surfaces that can contain, e.g. waters
-								tempGeosForSurface.put(geo,surf[surfCount]);
-							}
-							if (geoCube!=null) { 
-								if (worldY/CONST_FARVIEW==surf[surfCount].surfaceY/CONST_FARVIEW && surf[surfCount].canContain)
-								{
-									// this can contain things upon it, do the climate and flora... 
-									t0 = System.currentTimeMillis();
-									CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
-									perf_climate_t0+=System.currentTimeMillis()-t0;
-									geoCube.climateId = conditions.belt.STATIC_ID;
-									// setting canContain for the geoCube, this is a surface cube.
-									geoCube.canContainFlora = true;
-									geoCube.canHoldUnit= true;
-									Cube floraCube = null;
-									t0 = System.currentTimeMillis();
-									floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
-									perf_flora_t0+=System.currentTimeMillis()-t0;
-									if (floraCube!=null)
-									{
-										floraCube.internalCube = geoCube.internalCube;
-										collectCubes(info,floraCube,true);
-									} 
-									else 
-									{
-										if (geoCube.internalCube) 
-										{
-										} else 
-										{
-											// outside green ground appended
-											collectCubes(info,new Cube(this,GROUND,worldX,worldY,worldZ),false);
-										}
-										
-									}
-								} else 
-								if (farView)
-								{
-									// for far view set climate always even if its not surface
-									CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
-									geoCube.climateId = conditions.belt.STATIC_ID;
-								}
-							}
-						}
-					} else 
-					{
-					}
-				}
-			}
-			mergeCubes(info);
-			
-			// waters
-			t0 = System.currentTimeMillis();
-			for (Water w : waters.values()) {
-				if (w.boundaries.isInside(worldX, worldY, worldZ)) 
+				Cube ecoCube = economyContainer.getEconomicCube(key, worldX, worldY, worldZ, farView, localTime);
+				perf_eco_t0+=System.currentTimeMillis()-t0;
+				if (ecoCube!=null) 
 				{
-					//boolean thePoint = false;
-					if (w.isWaterPoint(worldX, worldY, worldZ, farView))
+					
+					return ecoCube;
+				}
+				CubeMergerInfo info = null;
+				synchronized (reusedMergerInfos)
+				{
+					info = reusedMergerInfos.remove(0);
+					info.currentMerged = null;
+					info.finalRounders.clear();
+					info.overLappers.clear();
+				}
+				
+				perf_eco_t0+=System.currentTimeMillis()-t0;
+				//Cube retCube = null;
+				info.currentMerged = null;
+				info.overLappers.clear();
+				info.finalRounders.clear();
+				boolean insideGeography = false;
+				HashMap<Geography,SurfaceHeightAndType> tempGeosForSurface = null;
+				synchronized (reusedGeosForSurface)
+				{
+					tempGeosForSurface = reusedGeosForSurface.remove(0);
+					tempGeosForSurface.clear();
+				}
+	
+				for (Geography geo : geographies.values()) {
+					//System.out.print("-!");
+					if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
 					{
-						for (SurfaceHeightAndType s:tempGeosForSurface.values())
+						insideGeography = true;
+						
+						t0 = System.currentTimeMillis();
+						Cube geoCube = geo.getCube(key, worldX, worldY, worldZ, farView);
+						perf_geo_t0+=System.currentTimeMillis()-t0;
+						collectCubes(info,geoCube,false);
+						if (geo instanceof Surface)
 						{
-							int y = s.surfaceY;
-							int depth = w.getDepth(worldX, worldY, worldZ);
-							int bottom = y - depth;
-							if (farView) y = y - y%J3DCore.FARVIEW_GAP;
-							if (farView) bottom = bottom - bottom%J3DCore.FARVIEW_GAP;
-							//if (farView) System.out.println("Y = "+y+" = "+s.surfaceY+" BOTTOM = "+ bottom + " ## y <= "+worldY +" >= bottom");
-							if (worldY>=bottom&&worldY<=y)
-							{
-								Cube c = w.getWaterCube(worldX, worldY, worldZ, info.currentMerged, s, farView);
-								if (info.currentMerged!=null && info.currentMerged.overwrite) {
-									collectCubes(info,c,false);
-									c = mergeCubes(info);
+							t0 = System.currentTimeMillis();
+							SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ, geoCube, farView);
+							perf_surface_t0+=System.currentTimeMillis()-t0;
+							for (int surfCount = 0; surfCount<surf.length; surfCount++) {
+								if (surf!=null && surf[surfCount].canContain) {
+									// collecting surfaces that can contain, e.g. waters
+									tempGeosForSurface.put(geo,surf[surfCount]);
 								}
-								if (c!=null)
-								{
-									reusedMergerInfos.add(info);
-									reusedGeosForSurface.add(tempGeosForSurface);
-									return c;
+								if (geoCube!=null) { 
+									if (worldY/CONST_FARVIEW==surf[surfCount].surfaceY/CONST_FARVIEW && surf[surfCount].canContain)
+									{
+										// this can contain things upon it, do the climate and flora... 
+										t0 = System.currentTimeMillis();
+										CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
+										perf_climate_t0+=System.currentTimeMillis()-t0;
+										geoCube.climateId = conditions.belt.STATIC_ID;
+										// setting canContain for the geoCube, this is a surface cube.
+										geoCube.canContainFlora = true;
+										geoCube.canHoldUnit= true;
+										Cube floraCube = null;
+										t0 = System.currentTimeMillis();
+										floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
+										perf_flora_t0+=System.currentTimeMillis()-t0;
+										if (floraCube!=null)
+										{
+											floraCube.internalCube = geoCube.internalCube;
+											collectCubes(info,floraCube,true);
+										} 
+										else 
+										{
+											if (geoCube.internalCube) 
+											{
+											} else 
+											{
+												// outside green ground appended
+												collectCubes(info,new Cube(this,GROUND,worldX,worldY,worldZ),false);
+											}
+											
+										}
+									} else 
+									if (farView)
+									{
+										// for far view set climate always even if its not surface
+										CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
+										geoCube.climateId = conditions.belt.STATIC_ID;
+									}
 								}
 							}
+						} else 
+						{
 						}
-					} else
-					{
-						continue; // yes, we must look for the next water if there's one!
 					}
 				}
+				mergeCubes(info);
+				
+				// waters
+				t0 = System.currentTimeMillis();
+				for (Water w : waters.values()) {
+					if (w.boundaries.isInside(worldX, worldY, worldZ)) 
+					{
+						//boolean thePoint = false;
+						if (w.isWaterPoint(worldX, worldY, worldZ, farView))
+						{
+							for (SurfaceHeightAndType s:tempGeosForSurface.values())
+							{
+								int y = s.surfaceY;
+								int depth = w.getDepth(worldX, worldY, worldZ);
+								int bottom = y - depth;
+								if (farView) y = y - y%J3DCore.FARVIEW_GAP;
+								if (farView) bottom = bottom - bottom%J3DCore.FARVIEW_GAP;
+								//if (farView) System.out.println("Y = "+y+" = "+s.surfaceY+" BOTTOM = "+ bottom + " ## y <= "+worldY +" >= bottom");
+								if (worldY>=bottom&&worldY<=y)
+								{
+									Cube c = w.getWaterCube(worldX, worldY, worldZ, info.currentMerged, s, farView);
+									if (info.currentMerged!=null && info.currentMerged.overwrite) {
+										collectCubes(info,c,false);
+										c = mergeCubes(info);
+									}
+									if (c!=null)
+									{
+										reusedMergerInfos.add(info);
+										reusedGeosForSurface.add(tempGeosForSurface);
+										return c;
+									}
+								}
+							}
+						} else
+						{
+							continue; // yes, we must look for the next water if there's one!
+						}
+					}
+				}
+				perf_water_t0+=System.currentTimeMillis()-t0;
+				Cube c = info.currentMerged;
+				reusedMergerInfos.add(info);
+				reusedGeosForSurface.add(tempGeosForSurface);
+				if (insideGeography) return c;
+	
+				// not in geography, return null
+				return null;
+				//return worldY==worldGroundLevel?new Cube(this,OCEAN,worldX,worldY,worldZ):null; -- world generation made this deprecated
 			}
-			perf_water_t0+=System.currentTimeMillis()-t0;
-			Cube c = info.currentMerged;
-			reusedMergerInfos.add(info);
-			reusedGeosForSurface.add(tempGeosForSurface);
-			if (insideGeography) return c;
-
-			// not in geography, return null
-			return null;
-			//return worldY==worldGroundLevel?new Cube(this,OCEAN,worldX,worldY,worldZ):null; -- world generation made this deprecated
+			else return null;
 		}
-		else return null;
 	}
 
 	public static class CubeMergerInfo
