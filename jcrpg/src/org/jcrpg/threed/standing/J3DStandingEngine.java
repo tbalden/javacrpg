@@ -1488,6 +1488,9 @@ public class J3DStandingEngine {
 		}
 	}
 	
+	
+	private HashSet<RenderedCube> toClearReferencesCubes = new HashSet<RenderedCube>();
+	
 	/**
 	 * Rendering standing nodes into viewport. Converting nodePlaceHolders to actual Nodes if they are visible. (Using modelPool.)
 	 * @param refAngle
@@ -1641,7 +1644,8 @@ public class J3DStandingEngine {
 			    	    	}
 			    		}
 			    		// clearing out references, RenderedCube is off
-			    		c.clear();
+			    		toClearReferencesCubes.add(c); // gather. parallel rendering might need this still. after that clear (updateAfterRender part)
+			    		//c.clear();
 					}
 					
 				}		
@@ -2045,12 +2049,20 @@ public class J3DStandingEngine {
 			//System.gc();
 		}
 
+	    HashSet<RenderedCube> cleared = new HashSet<RenderedCube>();
+	    for (RenderedCube c:toClearReferencesCubes)
+	    {
+	    	c.clear();
+	    	cleared.add(c);
+	    }
+	    toClearReferencesCubes.removeAll(cleared);
+	    
 		// every 20 steps do a garbage collection
 	    core.garbCollCounter++;
 		if (core.garbCollCounter==20) {
 			//
 			core.garbCollCounter = 0;
-		}		
+		}
 		newNodesToSetCullingDynamic.clear();
 		threadRendering = false;
 		//engine.unpauseAfterRendering();
