@@ -1461,14 +1461,15 @@ public class J3DStandingEngine {
 				dist = cN.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
 				if (dist < J3DCore.SETTINGS.RENDER_GRASS_DISTANCE*J3DCore.SETTINGS.RENDER_GRASS_DISTANCE)
 				{
-					if (cN.trimeshGeomBatchInstance==null)
+				// TODO this cN.cube theoretically shouldnt be null here - parallel rendering and clearing somehow results this being null. why?
+					if (cN.cube!=null && cN.cube.cube!=null && cN.trimeshGeomBatchInstance==null)
 					{
 						batchHelper.addItem(this, cN.cube.cube.internalCube, cN.model, cN, cN.farView);
 					}
 					
 				} else
 				{
-					if (cN.trimeshGeomBatchInstance!=null)
+					if (cN.cube!=null && cN.cube.cube!=null && cN.trimeshGeomBatchInstance!=null)
 					{
 						batchHelper.removeItem(cN.cube.cube.internalCube, cN.model, cN, cN.farView);
 					}
@@ -1489,7 +1490,7 @@ public class J3DStandingEngine {
 	}
 	
 	
-	private HashSet<RenderedCube> toClearReferencesCubes = new HashSet<RenderedCube>();
+	private ArrayList<RenderedCube> toClearReferencesCubes = new ArrayList<RenderedCube>();
 	
 	/**
 	 * Rendering standing nodes into viewport. Converting nodePlaceHolders to actual Nodes if they are visible. (Using modelPool.)
@@ -1640,6 +1641,7 @@ public class J3DStandingEngine {
 										modelPool.releaseNode(pooledRealNode);
 									}
 			    				}
+			    				conditionalNodes.remove(n);
 			    				n.farView = false;
 			    	    	}
 			    		}
@@ -1809,12 +1811,13 @@ public class J3DStandingEngine {
 									modelPool.releaseNode(pooledRealNode);
 								}
 		    				}
-		    				
+		    				conditionalNodes.remove(n);
 		    				n.farView = false;
 		    	    	}
 		    		}
 		    		// clearing out references, RenderedCube is off
-		    		c.clear();
+		    		toClearReferencesCubes.add(c); // gather. parallel rendering might need this still. after that clear (updateAfterRender part)
+		    		//c.clear();
 				}
 			}
 			
@@ -2049,7 +2052,7 @@ public class J3DStandingEngine {
 			//System.gc();
 		}
 
-	    HashSet<RenderedCube> cleared = new HashSet<RenderedCube>();
+	    ArrayList<RenderedCube> cleared = new ArrayList<RenderedCube>();
 	    for (RenderedCube c:toClearReferencesCubes)
 	    {
 	    	c.clear();

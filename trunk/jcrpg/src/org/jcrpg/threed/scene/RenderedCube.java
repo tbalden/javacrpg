@@ -45,12 +45,28 @@ public class RenderedCube {
 	
 	public void clear()
 	{
-		for (NodePlaceholder node:hsRenderedNodes)
+		if (hsRenderedNodes!=null)
 		{
-			node.clear();
+			for (NodePlaceholder node:hsRenderedNodes)
+			{
+				node.clear();
+			}
+			hsRenderedNodes.clear();
+			hsRenderedNodes = null;
 		}
-		hsRenderedNodes.clear();
-		hmNodePlaceholderForSide.clear();
+		if (hmNodePlaceholderForSide!=null)
+		{
+			for (NodePlaceholder[] sides:hmNodePlaceholderForSide.values())
+			{
+				for (NodePlaceholder side:sides)
+				{
+					side.clear();
+				}
+			}
+			hmNodePlaceholderForSide.clear();
+			hmNodePlaceholderForSide=null;
+		}
+		
 		world = null;
 		cube = null;
 	}
