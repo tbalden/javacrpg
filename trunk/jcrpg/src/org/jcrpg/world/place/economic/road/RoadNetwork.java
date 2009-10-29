@@ -732,10 +732,17 @@ public class RoadNetwork extends Economic implements FlowGeography {
 		nonRoadGeos.add(Cave.class);
 	}
 	
-	private Geography getSoilGeoAt(int worldX, int worldZ)
+	private ArrayList<Geography> tmpList = new ArrayList<Geography>();
+	/**
+	 * Synchronized because of the common tmpList used here.
+	 * @param worldX
+	 * @param worldZ
+	 * @return
+	 */
+	private synchronized Geography getSoilGeoAt(int worldX, int worldZ)
 	{
 		
-		for (Geography g:((World)parent).getSurfaceGeographies(worldX,worldZ))
+		for (Geography g:((World)parent).getSurfaceGeographies(worldX,worldZ,tmpList))
 		{
 			if (nonRoadGeos.contains(g.getClass())) continue;
 			return g;

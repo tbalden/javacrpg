@@ -52,6 +52,7 @@ Before next release:
 
 [ ] more testing. win too
 
+[-] Separate CubeDesc class from Cube. Only Final merging rendering in World should instantiate new localized Cube instances!
 
 [ ] integrate harpy to maze - needs fix, rootbone
 [ ] integrate plantoid - needs fix, faces

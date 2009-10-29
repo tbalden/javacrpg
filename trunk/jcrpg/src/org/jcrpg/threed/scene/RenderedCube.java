@@ -25,6 +25,11 @@ import org.jcrpg.space.Side;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.world.place.World;
 
+/**
+ * Unit to hold a rendered/loaded state of a tile cube. Contains list of NodePlaceHolders which are actually visualized as jme nodes in renderToViewPort of J3DStandingEngine.
+ * @author illes
+ *
+ */
 public class RenderedCube {
 
 	

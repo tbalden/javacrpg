@@ -113,7 +113,7 @@ public class PerceptVisibleForm extends VisibleLifeForm {
 			
 		}
 		// positioning on surface
-		ArrayList<SurfaceHeightAndType[]> surface = fragment.instance.world.getSurfaceData(newCoordinates[0], newCoordinates[2]);
+		ArrayList<SurfaceHeightAndType[]> surface = fragment.instance.world.getSurfaceData(newCoordinates[0], newCoordinates[2], null);
 		for (SurfaceHeightAndType[] type: surface)
 		{
 			for (SurfaceHeightAndType s:type)

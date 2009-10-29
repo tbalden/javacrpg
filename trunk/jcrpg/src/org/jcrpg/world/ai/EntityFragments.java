@@ -262,7 +262,7 @@ public class EntityFragments {
 				}
 				if (!positioned)
 				{
-					ArrayList<SurfaceHeightAndType[]> surface = instance.world.getSurfaceData(form.worldX, form.worldZ);
+					ArrayList<SurfaceHeightAndType[]> surface = instance.world.getSurfaceData(form.worldX, form.worldZ, null);
 					for (SurfaceHeightAndType[] type: surface)
 					{
 						for (SurfaceHeightAndType s:type)

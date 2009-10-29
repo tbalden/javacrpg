@@ -136,11 +136,15 @@ public class World extends Place implements TileBasedMap {
 	 * returns on a per geography base a list of surface type and height array belonging to the give geographies at a given coordinates.
 	 * @param worldX
 	 * @param worldZ
+	 * @param listToUse temp instance of list array preventing instantiation. It will be filled with the surface data array.
 	 * @return
 	 */
-	public ArrayList<SurfaceHeightAndType[]> getSurfaceData(int worldX, int worldZ)
+	public ArrayList<SurfaceHeightAndType[]> getSurfaceData(int worldX, int worldZ, ArrayList<SurfaceHeightAndType[]> listToFill)
 	{
-		ArrayList<SurfaceHeightAndType[]> list = new ArrayList<SurfaceHeightAndType[]>();
+		if (listToFill!=null)
+			listToFill.clear();
+		ArrayList<SurfaceHeightAndType[]> list = listToFill==null?new ArrayList<SurfaceHeightAndType[]>():listToFill;
+		
 		int worldY = getSeaLevel(1);
 		for (Geography geo : geographies.values()) {
 			if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
@@ -169,9 +173,9 @@ public class World extends Place implements TileBasedMap {
 	 * @param worldZ
 	 * @return
 	 */
-	public ArrayList<Geography> getSurfaceGeographies(int worldX, int worldZ)
+	public ArrayList<Geography> getSurfaceGeographies(int worldX, int worldZ,ArrayList<Geography> list)
 	{
-		ArrayList<Geography> list = new ArrayList<Geography	>();
+		if (list==null) list = new ArrayList<Geography>();
 		int worldY = getSeaLevel(1);
 		for (Geography geo : geographies.values()) {
 			if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
@@ -209,13 +213,6 @@ public class World extends Place implements TileBasedMap {
 	public int lastXProbe = -1, lastYProbe = -1, lastZProbe = -1;
 	public Long lastKey;
 	public static int PROBE_DISTANCE = 100;
-	/*public static HashMap<Long,HashSet<Object>> provedToBeAway = new HashMap<Long,HashSet<Object>>();
-	public static HashMap<Long,HashSet<Object>> provedToBeNear = new HashMap<Long,HashSet<Object>>();
-	public static ArrayList<Long> probeCacheRemovalList = new ArrayList<Long>();
-
-	public static HashSet<Object> hsProvedToBeNear = null;
-	public static HashSet<Object> hsProvedToBeAway = null;
-	*/
 	
 	/**
 	 * For parallel use of world in more than 1 thread, we need separate merger objects...
@@ -688,17 +685,20 @@ public class World extends Place implements TileBasedMap {
 	public int lossFactor = 1000;
 	
 	
-	public class WorldTypeDesc
+	
+	
+	/**
+	 * 
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @param scanAroundForPopulation
+	 * @param listToUse temp instance of list array preventing instantiation. It will be filled with the surface data array.
+	 * @return
+	 */
+	public WorldTypeDesc getWorldDescAtPosition(int worldX, int worldY, int worldZ, boolean scanAroundForPopulation, ArrayList<SurfaceHeightAndType[]> listToUse, WorldTypeDesc descToUse)
 	{
-		public Geography g;
-		public int surfaceY;
-		public Population population;
-		public Economic detailedEconomic;
-		public Water w;
-	}
-	public WorldTypeDesc getWorldDescAtPosition(int worldX, int worldY, int worldZ, boolean scanAroundForPopulation)
-	{
-		return getWorldDescAtPosition(worldX, worldY, worldZ, scanAroundForPopulation, null);
+		return getWorldDescAtPosition(worldX, worldY, worldZ, scanAroundForPopulation, null, listToUse, descToUse);
 	}
 	/**
 	 * Return a description of the point, filtering for geographies if its list is not null.
@@ -707,9 +707,10 @@ public class World extends Place implements TileBasedMap {
 	 * @param worldZ
 	 * @param scanAroundForPopulation
 	 * @param filter
+	 * @param listToUse temp instance of list array preventing instantiation. It will be filled with the surface data array.
 	 * @return
 	 */
-	public WorldTypeDesc getWorldDescAtPosition(int worldX, int worldY, int worldZ, boolean scanAroundForPopulation, ArrayList<Class<?extends Geography>> filter)
+	public WorldTypeDesc getWorldDescAtPosition(int worldX, int worldY, int worldZ, boolean scanAroundForPopulation, ArrayList<Class<?extends Geography>> filter, ArrayList<SurfaceHeightAndType[]> listToUse, WorldTypeDesc descToUse)
 	{
 		Geography geo = null;
 		Geography backupGeo = null;
@@ -717,7 +718,7 @@ public class World extends Place implements TileBasedMap {
 		int backupClosestDiffToY = 999999;
 		int surfaceY = 9999999;
 		int backupSurfaceY = 9999999;
-		ArrayList<SurfaceHeightAndType[]> list = getSurfaceData(worldX, worldZ);
+		ArrayList<SurfaceHeightAndType[]> list = getSurfaceData(worldX, worldZ,listToUse);
 		for (SurfaceHeightAndType[] subList : list)
 		{
 			if (subList.length>0)
@@ -749,7 +750,11 @@ public class World extends Place implements TileBasedMap {
 				}
 			}
 		}
-		WorldTypeDesc desc = new WorldTypeDesc();
+		
+		if (descToUse!=null) descToUse.clear();
+		
+		WorldTypeDesc desc = descToUse==null?new WorldTypeDesc():descToUse;
+		
 		if (geo!=null)
 		{
 			desc.g = geo;

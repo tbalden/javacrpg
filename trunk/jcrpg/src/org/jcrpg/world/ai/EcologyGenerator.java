@@ -34,8 +34,9 @@ import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
-import org.jcrpg.world.place.World.WorldTypeDesc;
+import org.jcrpg.world.place.WorldTypeDesc;
 import org.jcrpg.world.time.Time;
 
 /**
@@ -159,6 +160,12 @@ public class EcologyGenerator {
 		return vEcology;
 	}
 
+	
+	/**
+	 * Temp list for preventing instantiating unneeded quantity of it in World.getWorldDescAtPosition
+	 */
+	ArrayList<SurfaceHeightAndType[]> tmpSurfaceList = new ArrayList<SurfaceHeightAndType[]>();
+
 	/**
 	 * Generate herbivore.
 	 * 
@@ -179,7 +186,8 @@ public class EcologyGenerator {
 		int nY = 20;
 
 		int blockX = (int)(pWorld.realSizeX * 1f / nX);
-		
+		WorldTypeDesc descToUse = new WorldTypeDesc();
+
 		int currentIndex = 0;
 		for (int i = 0; i < nX; i++) {
 			for (int j = 0; j < nY; j++) {
@@ -224,7 +232,7 @@ public class EcologyGenerator {
 							{
 								filter = ((AnimalEntityDescription)desc).geographies;
 							}
-							WorldTypeDesc wDesc = pWorld.getWorldDescAtPosition(wX, wY, wZ,false,filter);
+							WorldTypeDesc wDesc = pWorld.getWorldDescAtPosition(wX, wY, wZ,false,filter,tmpSurfaceList,descToUse);
 							if (wDesc.g==null)
 							{
 								continue;
@@ -264,6 +272,8 @@ public class EcologyGenerator {
 		int nX = 20;
 		int nY = 20;
 
+		WorldTypeDesc descToUse = new WorldTypeDesc();
+		
 		int currentIndex = 0;
 		for (int i = 0; i < nX; i++) {
 			for (int j = 0; j < nY; j++) {
@@ -299,7 +309,7 @@ public class EcologyGenerator {
 										+ population.getGenerationHashInt(), wZ);
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
-							WorldTypeDesc wDesc = pWorld.getWorldDescAtPosition(wX, wY, wZ,false);
+							WorldTypeDesc wDesc = pWorld.getWorldDescAtPosition(wX, wY, wZ,false,tmpSurfaceList, descToUse);
 							if (wDesc.g==null)
 							{
 								continue;

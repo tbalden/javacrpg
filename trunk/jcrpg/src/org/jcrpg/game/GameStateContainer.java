@@ -50,7 +50,7 @@ import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
-import org.jcrpg.world.place.World.WorldTypeDesc;
+import org.jcrpg.world.place.WorldTypeDesc;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.time.Time;
 
@@ -259,7 +259,7 @@ public class GameStateContainer {
 	public void repositionPlayerToSurface()
 	{
 		// looking for surface...
-		ArrayList<SurfaceHeightAndType[]> list = world.getSurfaceData(normalPosition.viewPositionX,normalPosition.viewPositionZ);
+		ArrayList<SurfaceHeightAndType[]> list = world.getSurfaceData(normalPosition.viewPositionX,normalPosition.viewPositionZ,null);
 		int y = normalPosition.viewPositionY;
 		int minDiff = 1000;
 		if (list!=null)
@@ -283,7 +283,7 @@ public class GameStateContainer {
 	public void positionPlayerToSurfaceEncounterMode()
 	{
 		// looking for surface...
-		ArrayList<SurfaceHeightAndType[]> list = J3DCore.getInstance().eEngine.world.getSurfaceData(encounterModePosition.viewPositionX,encounterModePosition.viewPositionZ);
+		ArrayList<SurfaceHeightAndType[]> list = J3DCore.getInstance().eEngine.world.getSurfaceData(encounterModePosition.viewPositionX,encounterModePosition.viewPositionZ,null);
 		int y = encounterModePosition.viewPositionY;
 		int minDiff = 1000;
 		if (list!=null)
@@ -411,7 +411,7 @@ public class GameStateContainer {
 	{
 		TreeMap<String, EntityOMeterData> map = new TreeMap<String, EntityOMeterData>();
 		Collection<Object> list = ecology.getEntities(player.world, player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
-		WorldTypeDesc playerDesc = ecology.getEntityFragmentWorldTypeDesc(player.theFragment);
+		WorldTypeDesc playerDesc = ecology.getEntityFragmentWorldTypeDesc(player.theFragment,null,null);
 		Vector3f vParty = new Vector3f(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
 
 		boolean needDangerSense = false;
@@ -500,10 +500,10 @@ public class GameStateContainer {
 	 */
 	public void checkAndHandleEnterLeave()
 	{
-		WorldTypeDesc desc = world.getWorldDescAtPosition(normalPosition.viewPositionX, normalPosition.viewPositionY, normalPosition.viewPositionZ,false);
+		WorldTypeDesc desc = world.getWorldDescAtPosition(normalPosition.viewPositionX, normalPosition.viewPositionY, normalPosition.viewPositionZ,false,null,null);
 		if (desc.population==null)
 		{
-			desc.population = world.getWorldDescAtPosition(normalPosition.viewPositionX, normalPosition.viewPositionY-1, normalPosition.viewPositionZ,false).population;
+			desc.population = world.getWorldDescAtPosition(normalPosition.viewPositionX, normalPosition.viewPositionY-1, normalPosition.viewPositionZ,false,null,null).population;
 		}
 		
 		Population p = desc.population;
@@ -548,7 +548,7 @@ public class GameStateContainer {
 	 */
 	public String getUpdatedBackgroundMusic()
 	{
-		WorldTypeDesc desc = player.world.getWorldDescAtPosition(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, false);
+		WorldTypeDesc desc = player.world.getWorldDescAtPosition(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, false,null,null);
 		if (desc.detailedEconomic!=null && desc.detailedEconomic.getMusicDescription()!=null)
 		{
 			return desc.detailedEconomic.getMusicDescription().getRandomBackgroundMusicFileOfCollection();
@@ -572,7 +572,7 @@ public class GameStateContainer {
 	{
 		if (player==null || player.world==null) return false;
 
-		WorldTypeDesc desc = player.world.getWorldDescAtPosition(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, false);
+		WorldTypeDesc desc = player.world.getWorldDescAtPosition(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, false,null,null);
 		if (desc!=null && desc.detailedEconomic!=null && desc.detailedEconomic.getMusicDescription()!=null)
 		{
 			if (lastMusicClass!=desc.detailedEconomic.getClass())
@@ -620,7 +620,7 @@ public class GameStateContainer {
 		if (environmentAudioCount==0)
 		{
 			// geo related sounds
-			WorldTypeDesc desc = player.world.getWorldDescAtPosition(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, false);
+			WorldTypeDesc desc = player.world.getWorldDescAtPosition(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, false,null,null);
 			boolean played = false;
 			int random = (int)Math.random()*100;
 			boolean denyOther = false;
@@ -678,13 +678,13 @@ public class GameStateContainer {
 			Collection<Object> list = ecology.getEntities(player.world, player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
 			if (list!=null)
 			{
-				WorldTypeDesc playerDesc = ecology.getEntityFragmentWorldTypeDesc(player.theFragment);
+				WorldTypeDesc playerDesc = ecology.getEntityFragmentWorldTypeDesc(player.theFragment,null,null);
 				boolean played = false;
 				for (Object o:list)
 				{
 					EntityFragment i = ((EntityFragment)o);
 					{
-						WorldTypeDesc desc = ecology.getEntityFragmentWorldTypeDesc(i);
+						WorldTypeDesc desc = ecology.getEntityFragmentWorldTypeDesc(i,null,null);
 						if (!ecology.isReachableWorldType(desc, playerDesc)) continue;
 						if (DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(i.roamingBoundary, player.theFragment.roamingBoundary)==null) continue;
 						if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("#_# Audio: "+i.instance.id);

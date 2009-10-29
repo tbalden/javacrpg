@@ -32,7 +32,7 @@ import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
-import org.jcrpg.world.place.World.WorldTypeDesc;
+import org.jcrpg.world.place.WorldTypeDesc;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.Residence;
 import org.jcrpg.world.place.economic.ground.EncounterGround;
@@ -160,7 +160,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 	{
 		if (encounterGroundWorlds==null) encounterGroundWorlds = new HashMap<String, World>();
 		
-		WorldTypeDesc desc = realWorld.getWorldDescAtPosition(worldX,worldY,worldZ,false);
+		WorldTypeDesc desc = realWorld.getWorldDescAtPosition(worldX,worldY,worldZ,false,null,null);
 		Geography geo = desc.g;
 		
 		

@@ -43,7 +43,7 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 	{
 		
 		int[] coords = world.economyContainer.getPopulationCoordinatesInZone(instance.domainBoundary.posX, instance.domainBoundary.posZ, world.magnification);
-		ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(coords[0],coords[1]);
+		ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(coords[0],coords[1],null);
 		if (surfaces.size()>0)
 		{
 			int count = 0;
