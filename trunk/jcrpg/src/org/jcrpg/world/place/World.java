@@ -175,6 +175,7 @@ public class World extends Place implements TileBasedMap {
 	 */
 	public ArrayList<Geography> getSurfaceGeographies(int worldX, int worldZ,ArrayList<Geography> list)
 	{
+		if (list!=null) list.clear();
 		if (list==null) list = new ArrayList<Geography>();
 		int worldY = getSeaLevel(1);
 		for (Geography geo : geographies.values()) {
