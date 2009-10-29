@@ -433,7 +433,7 @@ public class J3DMovingEngine {
 		}
 
 		
-		if (true==false)
+		/*if (true==false)
 		{
 			// creating circle around the unit, currently unused
 			
@@ -453,7 +453,7 @@ public class J3DMovingEngine {
 			n.setLocalTranslation(new Vector3f(0.0f,0.05f,0));
 			n.setLocalScale(1.1f);
 			unit.circleNode = n;
-		}
+		}*/
 	}
 	
 	public void updateUnitTextNodes(RenderedMovingUnit unit)
@@ -556,7 +556,7 @@ public class J3DMovingEngine {
 								if (pooledRealNode!=null) {
 									Node realNode = (Node)pooledRealNode;
 									FadeController c = new FadeController(pooledRealNode,realNode,1f, FadeMode.FadingIn);
-									core.controllers.add(c);
+									J3DCore.controllers.add(c);
 								}
 						}
 					}
@@ -641,7 +641,7 @@ public class J3DMovingEngine {
 				}
 				VisibleLifeForm target = n.targetForm==null?playerFakeForm:n.targetForm;
 				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("EFFECT TARGET ########### "+(target==playerFakeForm)+" "+target.worldX+" "+target.worldY+" "+target.worldZ);
-				Vector3f cVec = new Vector3f(n.currentPos);
+				Vector3f cVec = n.currentPos;
 				Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnit(cVec, target.renderedUnit, n.speed, timePerFrame,false);
 				Vector3f mVec = rVectors[0];
 				Vector3f eVec = rVectors[1];
@@ -689,11 +689,11 @@ public class J3DMovingEngine {
 					{
 						
 						//VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
-						Vector3f cVec = new Vector3f(n.getLocalTranslation());
+						Vector3f cVec = n.getLocalTranslation();
 						
 						Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, 20f, timePerFrame,false);		
 						//Vector3f eVec = rVectors[1];
-						Vector3f mVec = rVectors[0];
+						//Vector3f mVec = rVectors[0];
 						rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, 20f, timePerFrame,true);		
 
 						Quaternion current = ((Node)n.realNode).getLocalRotation();
@@ -747,11 +747,11 @@ public class J3DMovingEngine {
 						}
 						
 						
-						Vector3f cVec = new Vector3f(n.getLocalTranslation());
+						Vector3f cVec = n.getLocalTranslation();
 						
 						Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, 20f, timePerFrame,false);		
 						//Vector3f eVec = rVectors[1];
-						Vector3f mVec = rVectors[0];
+						//Vector3f mVec = rVectors[0];
 						rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, 20f, timePerFrame,true);		
 						
 						Quaternion current = ((Node)n.realNode).getLocalRotation();
@@ -784,7 +784,7 @@ public class J3DMovingEngine {
 					if (unit.state.equals(MovingModelAnimDescription.ANIM_WALK))
 					{
 						
-						Vector3f cVec = new Vector3f(n.getLocalTranslation());
+						Vector3f cVec = n.getLocalTranslation();
 
 						Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, unit.movingSpeed, timePerFrame, false);		
 						Vector3f eVec = rVectors[1];

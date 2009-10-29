@@ -40,6 +40,7 @@ import org.jcrpg.threed.ModelLoader.BillboardNodePooled;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
+import org.jcrpg.threed.jme.VectorPool;
 import org.jcrpg.threed.jme.geometryinstancing.BufferPool;
 import org.jcrpg.threed.jme.geometryinstancing.ExactBufferPool;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
@@ -399,12 +400,12 @@ public class J3DStandingEngine {
 				}
 				if (tmpDir==0 || tmpDir==3)
 				{
-					dislocation = new Vector3f(0,0,-2f*n[i].model.dislocationRate);
+					dislocation = VectorPool.getVector3f(0,0,-2f*n[i].model.dislocationRate);
 					newTrans = n[i].getLocalTranslation().add(0,0,-2f*n[i].model.dislocationRate);
 				}
 				if (tmpDir==1 || tmpDir==2)
 				{
-					dislocation = new Vector3f(0,0,+2f*n[i].model.dislocationRate);
+					dislocation = VectorPool.getVector3f(0,0,+2f*n[i].model.dislocationRate);
 					newTrans = n[i].getLocalTranslation().add(0,0,+2f*n[i].model.dislocationRate);
 				}
 				//System.out.println("ROT & LOC:"+n[i].model.id+ " "+tmpDir+" "+newTrans);
@@ -418,6 +419,7 @@ public class J3DStandingEngine {
 					}
 					n[i].setLocalTranslation(newTrans);
 				}
+				VectorPool.releaseVector3f(dislocation);
 			}
 			
 			
@@ -427,7 +429,7 @@ public class J3DStandingEngine {
 			{
 				if (n[i].model.elevateOnSteep && !n[i].model.rotateAndLocate)
 				{
-					Vector3f newTrans = n[i].getLocalTranslation().add(0f,(J3DCore.CUBE_EDGE_SIZE*cube.cube.middleHeight - J3DCore.CUBE_EDGE_SIZE * 0.25f)*(cube.farview?J3DCore.FARVIEW_GAP:1),0f);
+					Vector3f newTrans = n[i].getLocalTranslation().addLocal(0f,(J3DCore.CUBE_EDGE_SIZE*cube.cube.middleHeight - J3DCore.CUBE_EDGE_SIZE * 0.25f)*(cube.farview?J3DCore.FARVIEW_GAP:1),0f);
 					n[i].setLocalTranslation(newTrans);
 				}
 			}
@@ -890,7 +892,7 @@ public class J3DStandingEngine {
 										realPooledNode.setLocalTranslation(n.getLocalTranslation());
 										if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel && n.neighborCubeData!=null && n.neighborCubeData.getTextureKeyPartForBatch()!=null)
 										{
-											realPooledNode.setLocalTranslation(realPooledNode.getLocalTranslation().add(new Vector3f(-0.5f*J3DCore.CUBE_EDGE_SIZE,0,-0.5f*J3DCore.CUBE_EDGE_SIZE)));
+											realPooledNode.setLocalTranslation(realPooledNode.getLocalTranslation().add(-0.5f*J3DCore.CUBE_EDGE_SIZE,0,-0.5f*J3DCore.CUBE_EDGE_SIZE));
 										}
 										
 										if (realPooledNode instanceof BillboardNodePooled)
@@ -2166,7 +2168,7 @@ public class J3DStandingEngine {
 				Cube n1 = cube.cube.getNeighbour(i);
 				if (n1!=null)
 				{
-					if (n1.hasSideOfType(i,side.type) || n1.hasSideOfType(J3DCore.oppositeDirections.get(new Integer(i)).intValue(),side.type))
+					if (n1.hasSideOfType(i,side.type) || n1.hasSideOfType(J3DCore.oppositeDirections.get(i),side.type))
 					{
 						render = false; break;
 					}
@@ -2183,7 +2185,7 @@ public class J3DStandingEngine {
 		}
 		if (direction!=J3DCore.TOP && direction!=J3DCore.BOTTOM && renderedSide.type == RenderedSide.RS_CONTINUOUS) // Continuous side
 		{
-			int dir = J3DCore.nextDirections.get(new Integer(direction)).intValue();
+			int dir = J3DCore.nextDirections.get(direction);
 			if (cube.cube.getNeighbour(J3DCore.TOP)!=null)
 			{
 				// if there is a side of the same kind above the current side, 
@@ -2197,7 +2199,7 @@ public class J3DStandingEngine {
 			if (cube.cube.getNeighbour(dir)!=null)
 			if (cube.cube.getNeighbour(dir).hasSideOfType(direction,side.type))
 			{
-				checkCube = cube.cube.getNeighbour(J3DCore.oppositeDirections.get(new Integer(dir)).intValue());
+				checkCube = cube.cube.getNeighbour(J3DCore.oppositeDirections.get(dir));
 				if (checkCube !=null) {
 					if (checkCube.hasSideOfType(direction,side.type))
 					{
@@ -2227,7 +2229,7 @@ public class J3DStandingEngine {
 				
 			} else 
 			{
-				checkCube = cube.cube.getNeighbour(J3DCore.oppositeDirections.get(new Integer(dir)).intValue());
+				checkCube = cube.cube.getNeighbour(J3DCore.oppositeDirections.get(dir));
 				if (checkCube!=null)
 				{
 					if (checkCube.hasSideOfType(direction, side.type))
