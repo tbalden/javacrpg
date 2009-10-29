@@ -297,6 +297,7 @@ public class GameLogic implements InitCallbackObject {
 		int dir = core.gameState.getEncounterPositions().viewDirection;
 		int[] trans = J3DCore.moveTranslations.get(dir);
 		HashSet<Integer> usedPositions = new HashSet<Integer>();
+		ArrayList<SurfaceHeightAndType[] > tmpDataList = new ArrayList<SurfaceHeightAndType[]>();
 		for (VisibleLifeForm form:forms)
 		{
 			boolean found = true;
@@ -325,7 +326,7 @@ public class GameLogic implements InitCallbackObject {
 				form.worldX = core.gameState.getEncounterPositions().viewPositionX+(i/3+distance)*trans[0]+((variantRow+startRow)*trans[2]);
 				//form.worldY = core.gameState.viewPositionY;
 				form.worldZ = core.gameState.getEncounterPositions().viewPositionZ+(i/3+distance)*trans[2]+((variantRow+startRow)*trans[0]);
-				ArrayList<SurfaceHeightAndType[] > data = core.eEngine.world.getSurfaceData(form.worldX, form.worldZ);
+				ArrayList<SurfaceHeightAndType[] > data = core.eEngine.world.getSurfaceData(form.worldX, form.worldZ,tmpDataList);
 				if (data!=null)
 				{
 					for (SurfaceHeightAndType[] d:data)

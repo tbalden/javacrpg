@@ -98,7 +98,33 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		desc.PAIN = "./data/models/humanoid/boarman/mage/boarmage_pain.md5anim";
 		desc.DEATH_NORMAL = "./data/models/humanoid/boarman/mage/boarmage_death.md5anim";
 		desc.DEAD = "./data/models/humanoid/boarman/mage/boarmage_dead.md5anim";
+/*
+		desc.IDLE = "./data/models/monster/harpy/harpy1_idle.md5anim";		
+		desc.IDLE_COMBAT = "./data/models/monster/harpy/harpy1_idle.md5anim";
+		desc.WALK = "./data/models/monster/harpy/harpy1_idle.md5anim";
+		desc.ATTACK_LOWER = "./data/models/monster/harpy/harpy1_attack.md5anim";
+		desc.ATTACK_UPPER = "./data/models/monster/harpy/harpy1_attack.md5anim";
+		desc.DEFEND_LOWER = "./data/models/monster/harpy/harpy1_hit.md5anim";
+		desc.DEFEND_UPPER = "./data/models/monster/harpy/harpy1_hit.md5anim";
+		desc.PAIN = "./data/models/monster/harpy/harpy1_hit.md5anim";
+		desc.DEATH_NORMAL = "./data/models/monster/harpy/harpy1_hit.md5anim";
+		desc.DEAD = "./data/models/monster/harpy/harpy1_hit.md5anim";
+
+	/*	desc.IDLE = "./data/models/monster/plantobite/plantoid1_idle.md5anim";		
+		desc.IDLE_COMBAT = "./data/models/monster/plantobite/plantoid1_idle.md5anim";
+		desc.WALK = "./data/models/monster/plantobite/plantoid1_idle.md5anim";
+		desc.ATTACK_LOWER = "./data/models/monster/plantobite/plantoid1_attack.md5anim";
+		desc.ATTACK_UPPER = "./data/models/monster/plantobite/plantoid1_attack.md5anim";
+		desc.DEFEND_LOWER = "./data/models/monster/plantobite/plantoid1_hit.md5anim";
+		desc.DEFEND_UPPER = "./data/models/monster/plantobite/plantoid1_hit.md5anim";
+		desc.PAIN = "./data/models/monster/plantobite/plantoid1_hit.md5anim";
+		desc.DEATH_NORMAL = "./data/models/monster/plantobite/plantoid1_hit.md5anim";
+		desc.DEAD = "./data/models/monster/plantobite/plantoid1_hit.md5anim";
+*/
 		boarmanMaleMage = new MovingModel("./data/models/humanoid/boarman/mage/boarmage.md5mesh",desc,null,null,false);
+		//boarmanMaleMage = new MovingModel("./data/models/monster/harpy/harpy1.md5mesh",desc,null,null,false);
+		//boarmanMaleMage = new MovingModel("./data/models/monster/plantobite/plantoid1.md5mesh",desc,null,null,false);
+		//boarmanMaleMage.disposition = new float[]{0,1f,0};
 		boarmanMaleMage.genericScale = 1.1f;
 	
 	}

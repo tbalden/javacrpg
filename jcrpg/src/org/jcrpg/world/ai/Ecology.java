@@ -28,9 +28,10 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.TreeLocator;
 import org.jcrpg.world.place.World;
-import org.jcrpg.world.place.World.WorldTypeDesc;
+import org.jcrpg.world.place.WorldTypeDesc;
 
 import com.jme.math.Vector3f;
 
@@ -238,23 +239,23 @@ public class Ecology {
 		return true;
 	}
 	
-	public WorldTypeDesc getEntityFragmentWorldTypeDesc(EntityFragment fragment)
+	public WorldTypeDesc getEntityFragmentWorldTypeDesc(EntityFragment fragment, ArrayList<SurfaceHeightAndType[]> listToUse,WorldTypeDesc descToUse)
 	{
 		int worldX = fragment.getEncounterBoundary().posX;
 		int worldY = fragment.getEncounterBoundary().posY;
 		int worldZ = fragment.getEncounterBoundary().posZ;
-		WorldTypeDesc desc =  fragment.instance.world.getWorldDescAtPosition(worldX, worldY, worldZ,false);
+		WorldTypeDesc desc =  fragment.instance.world.getWorldDescAtPosition(worldX, worldY, worldZ,false, listToUse, descToUse);
 		if (fragment.enteredPopulation!=null)
 			desc.population = fragment.enteredPopulation;
 		return desc;
 	}
 	
-	public WorldTypeDesc getUnitStandingWorldTypeDesc(EncounterUnit unit)
+	public WorldTypeDesc getUnitStandingWorldTypeDesc(EncounterUnit unit,ArrayList<SurfaceHeightAndType[]> listToUse,WorldTypeDesc descToUse)
 	{
 		int worldX = unit.getEncounterBoundary().posX;
 		int worldY = unit.getEncounterBoundary().posY;
 		int worldZ = unit.getEncounterBoundary().posZ;
-		WorldTypeDesc desc =  unit.getFragment().instance.world.getWorldDescAtPosition(worldX, worldY, worldZ,false);
+		WorldTypeDesc desc =  unit.getFragment().instance.world.getWorldDescAtPosition(worldX, worldY, worldZ,false, listToUse, descToUse);
 		if (unit.getFragment().enteredPopulation!=null)
 			desc.population = unit.getFragment().enteredPopulation;
 		if (playerDebug)
@@ -263,6 +264,13 @@ public class Ecology {
 		return desc;
 	}
 	boolean playerDebug = false;
+	
+	/**
+	 * Temp list for preventing instantiating unneeded quantity of it in World.getWorldDescAtPosition
+	 */
+	ArrayList<SurfaceHeightAndType[]> listToUseForIntersection = new ArrayList<SurfaceHeightAndType[]>();
+	WorldTypeDesc descToUseSource = new WorldTypeDesc(), descToUseTarget = new WorldTypeDesc();
+	
 	public void intersectTwoUnits(EncounterUnit initiatorUnit, EncounterUnit targetUnit, HashMap<EncounterUnit,int[][]> listOfCommonRadiusFragments, TreeLocator loc, int joinLimit)
 	{
 		int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(initiatorUnit.getEncounterBoundary(), targetUnit.getEncounterBoundary());
@@ -282,12 +290,12 @@ public class Ecology {
 		
 		World w = initiatorUnit.getFragment().instance.world;
 		if (targetUnit.getFragment().instance.world!=w) return;
-		WorldTypeDesc desc = w.getWorldDescAtPosition(wX, wY, wZ, true);
+		WorldTypeDesc desc = w.getWorldDescAtPosition(wX, wY, wZ, true,listToUseForIntersection,descToUseSource);
 		if (playerDebug)
 		{
 			System.out.println("Encounter LOC: "+desc.g+" / "+(desc.population!=null?desc.population.foundationName:"null")+" "+desc.surfaceY+" -- "+wX+"/"+wY+"/"+wZ);
 		}
-		if (!isReachableWorldType(getUnitStandingWorldTypeDesc(initiatorUnit),desc)) 
+		if (!isReachableWorldType(getUnitStandingWorldTypeDesc(initiatorUnit,listToUseForIntersection, descToUseTarget),desc))
 		{
 			if (playerDebug)
 			{
@@ -295,7 +303,7 @@ public class Ecology {
 			}
 			return;
 		}
-		if (!isReachableWorldType(getUnitStandingWorldTypeDesc(targetUnit),desc)) 
+		if (!isReachableWorldType(getUnitStandingWorldTypeDesc(targetUnit,listToUseForIntersection, descToUseTarget),desc)) 
 		{
 			if (playerDebug)
 			{

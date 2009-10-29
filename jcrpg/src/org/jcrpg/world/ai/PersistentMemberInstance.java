@@ -267,7 +267,7 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		}
 		if (!positioned)
 		{
-			ArrayList<SurfaceHeightAndType[]> surface = instance.world.getSurfaceData(form.worldX, form.worldZ);
+			ArrayList<SurfaceHeightAndType[]> surface = instance.world.getSurfaceData(form.worldX, form.worldZ,null);
 			for (SurfaceHeightAndType[] type: surface)
 			{
 				for (SurfaceHeightAndType s:type)
