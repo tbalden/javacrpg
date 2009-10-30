@@ -39,6 +39,7 @@ import org.jcrpg.threed.RenderedAreaThread;
 import org.jcrpg.threed.ModelLoader.BillboardNodePooled;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.ModelGeometryBatch;
+import org.jcrpg.threed.jme.RenderedCubePool;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.VectorPool;
 import org.jcrpg.threed.jme.geometryinstancing.BufferPool;
@@ -2057,10 +2058,12 @@ public class J3DStandingEngine {
 	    ArrayList<RenderedCube> cleared = new ArrayList<RenderedCube>();
 	    for (RenderedCube c:toClearReferencesCubes)
 	    {
-	    	c.clear();
+	    	//c.clear();
+	    	RenderedCubePool.release(c);
 	    	cleared.add(c);
 	    }
 	    toClearReferencesCubes.removeAll(cleared);
+	    cleared.clear();
 	    
 		// every 20 steps do a garbage collection
 	    core.garbCollCounter++;
@@ -2272,8 +2275,18 @@ public class J3DStandingEngine {
 	{
 		world = null;
 		
+		for (RenderedCube c:hmCurrentCubes.values())
+		{
+			c.clear();
+			RenderedCubePool.release(c);
+		}
 		hmCurrentCubes.clear();
 		hmCurrentCubes_FARVIEW.clear();
+		for (RenderedCube c:hmCurrentCubes_FARVIEW.values())
+		{
+			//c.clear();
+			RenderedCubePool.release(c);
+		}
 		parallelLoadingHelper.getBackupCurrentCubes().clear();
 		alCurrentCubes.clear();
 		alCurrentCubes_FARVIEW.clear();

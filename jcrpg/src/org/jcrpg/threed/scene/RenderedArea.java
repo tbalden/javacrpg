@@ -24,6 +24,7 @@ import java.util.HashMap;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.jme.RenderedCubePool;
 import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.time.Time;
@@ -88,6 +89,8 @@ public class RenderedArea {
 			return false;
 		}
 	}
+	
+	boolean CUBE_POOLING = true;
 	
 	public int[][][] getNeededCoordinateIntervals(World world, int x, int y, int z, boolean old)
 	{
@@ -590,7 +593,8 @@ public class RenderedArea {
 											//if (cube!=null) System.out.println(cube);
 											if (cube!=null)
 											{
-												c = new RenderedCube(cube,wX-x,worldY-y,z-wZ);
+												c = //CUBE_POOLING?
+													RenderedCubePool.getInstance(cube,wX-x,worldY-y,z-wZ);//:new RenderedCube(cube,wX-x,worldY-y,z-wZ);
 												//c = new RenderedCube(cube,wX,worldY,wZ);
 												//System.out.println(c.renderedX+" "+c.renderedY+" "+c.renderedZ);
 												c.world = world;
@@ -634,7 +638,8 @@ public class RenderedArea {
 									//if (cube!=null) System.out.println(cube);
 									if (cube!=null)
 									{
-										c = new RenderedCube(cube,wX-x,worldY-y,z-wZ);
+										c = //CUBE_POOLING?
+											RenderedCubePool.getInstance(cube,wX-x,worldY-y,z-wZ);//:new RenderedCube(cube,wX-x,worldY-y,z-wZ);
 										//c = new RenderedCube(cube,wX,worldY,wZ);
 										//System.out.println(c.renderedX+" "+c.renderedY+" "+c.renderedZ);
 										c.world = world;

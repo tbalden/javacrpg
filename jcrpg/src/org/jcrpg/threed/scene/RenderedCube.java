@@ -17,6 +17,7 @@
 
 package org.jcrpg.threed.scene;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,13 +26,21 @@ import org.jcrpg.space.Side;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.world.place.World;
 
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
+import com.jme.util.export.Savable;
+
 /**
  * Unit to hold a rendered/loaded state of a tile cube. Contains list of NodePlaceHolders which are actually visualized as jme nodes in renderToViewPort of J3DStandingEngine.
  * @author illes
  *
  */
-public class RenderedCube {
+public class RenderedCube implements Savable {
 
+	public RenderedCube()
+	{
+		
+	}
 	
 	public RenderedCube(Cube c, int x, int y, int z)
 	{
@@ -57,7 +66,7 @@ public class RenderedCube {
 				node.clear();
 			}
 			hsRenderedNodes.clear();
-			hsRenderedNodes = null;
+			//hsRenderedNodes = null;
 		}
 		if (hmNodePlaceholderForSide!=null)
 		{
@@ -69,10 +78,25 @@ public class RenderedCube {
 				}
 			}
 			hmNodePlaceholderForSide.clear();
-			hmNodePlaceholderForSide=null;
+			//hmNodePlaceholderForSide=null;
 		}
 		
 		world = null;
 		cube = null;
+	}
+
+	public Class getClassTag() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void read(JMEImporter arg0) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void write(JMEExporter arg0) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 }
