@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.ai;
 
+import org.jcrpg.threed.jme.VectorPool;
 import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.World;
 
@@ -96,7 +97,9 @@ public class DistanceBasedBoundary extends Boundaries {
 		int x = absoluteX;
 		//int y = absoluteY;
 		int z = absoluteZ;
-		float dist = new Vector3f(x,0,z).distance(pv);
+		Vector3f v = VectorPool.getVector3f(x, 0, z);
+		float dist = v.distance(pv);
+		VectorPool.releaseVector3f(v);
 		if (dist<=radiusInRealCubes)
 		{
 			return true;

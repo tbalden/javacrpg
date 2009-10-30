@@ -54,6 +54,7 @@ import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.QuaternionBuggy;
+import org.jcrpg.threed.jme.RenderedCubePool;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
 import org.jcrpg.threed.jme.effects.DirectionalShadowMapPass;
@@ -1495,7 +1496,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		} catch (Exception ex) {
 		}
 		;
-		System.out.println("MIDDLE HEIGHT "+middleHeight+ "// "+cubeMiddleHeight);
+		//System.out.println("MIDDLE HEIGHT "+middleHeight+ "// "+cubeMiddleHeight);
 		float bonus = (gameState.getCurrentRenderPositions().onSteep ? 1.5f
 				: 0f);
 		float middleHeightBonus = CUBE_EDGE_SIZE * (middleHeight + 0.2f);
@@ -1673,6 +1674,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		//System.out.println("------------- "+sEngine.toString());
 		//System.out.println("------------- "+renderedArea.toString());
+		
+		System.out.println("---------###########  "+RenderedCubePool.getState());
 		
 		if (canMoveString != null
 				|| gameState.player.theFragment.fragmentState.isCamping

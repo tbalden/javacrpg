@@ -20,28 +20,50 @@ package org.jcrpg.threed.jme;
 
 import java.util.ArrayList;
 
+import org.jcrpg.space.Cube;
+import org.jcrpg.threed.scene.RenderedCube;
+
 import com.jme.math.Vector3f;
 
-public class VectorPool {
+public class RenderedCubePool {
 
-	private static final ObjectPool<Vector3f> VEC_POOL = ObjectPool.create(Vector3f.class, 30);
 
-	static ArrayList<Vector3f> vector3List = new ArrayList<Vector3f>();
+	static ArrayList<RenderedCube> vector3List = new ArrayList<RenderedCube>();
 	
-	public static Vector3f getVector3f()
+	static int counter = 0;
+	static int release = 0;
+	public static RenderedCube getInstance(Cube c, int x, int y, int z)
 	{
-		return VEC_POOL.fetch();
-
+		RenderedCube rc;
+		synchronized (vector3List) {
+			if (vector3List.size()>0)
+			{
+				rc = vector3List.remove(0);
+			} else
+			{
+				counter++;
+				rc = new RenderedCube();
+			}
+		} 
+		rc.cube = c;
+		rc.renderedX = x;
+		rc.renderedY = y;
+		rc.renderedZ = z;
+		return rc;
+	
 	}
-	public static Vector3f getVector3f(float x, float y, float z)
+	public static void release(RenderedCube vec)
 	{
-		Vector3f r = VEC_POOL.fetch();
-		r.set(x,y,z);
-		return r;
-	}
-	public static void releaseVector3f(Vector3f vec)
-	{
-		VEC_POOL.release(vec);
+		release++;
+		vec.clear();
+		synchronized (vector3List) {
+			vector3List.add(vec);
+			
+		}
 	}
 	
+	public static String getState()
+	{
+		return "SIZE:  "+vector3List.size()+" NEW COUNT:"+counter+" REL: "+release;
+	}
 }
