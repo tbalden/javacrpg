@@ -51,13 +51,15 @@ Anatipions
 Before next release:
 
 [ ] more testing. win too
+[ ] test RCube pool
 
+
+
+[X] integrate plantoid - needs fix, faces
+	[X] modify plantobite java
+
+[?] integrate harpy to maze - needs fix, rootbone
 [-] Separate CubeDesc class from Cube. Only Final merging rendering in World should instantiate new localized Cube instances!
-
-[ ] integrate harpy to maze - needs fix, rootbone
-[ ] integrate plantoid - needs fix, faces
-
-
 
 [X] continuous load is halting at times, leaving it stopped/no movement/icon there
 [X] memory leak again - debug - clearing NodePlaceHolders helped
