@@ -21,6 +21,7 @@ package org.jcrpg.world.ai.fauna.plantoid.member;
 
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityDescription;
@@ -44,7 +45,24 @@ public class Plantobite extends EntityMember {
 	public static MovingModel plantobite = new MovingModel("models/monster/plantobite/plantobite.obj",null,null,null,false);
 	static 
 	{
-		plantobite.disposition = new float[]{0,0f,0};
+		MovingModelAnimDescription desc = new MovingModelAnimDescription();
+
+		desc.IDLE = "./data/models/monster/plantobite/plantoid1_idle.md5anim";		
+		desc.IDLE_COMBAT = "./data/models/monster/plantobite/plantoid1_idle.md5anim";
+		desc.WALK = "./data/models/monster/plantobite/plantoid1_idle.md5anim";
+		desc.ATTACK_LOWER = "./data/models/monster/plantobite/plantoid1_attack.md5anim";
+		desc.ATTACK_UPPER = "./data/models/monster/plantobite/plantoid1_attack.md5anim";
+		desc.DEFEND_LOWER = "./data/models/monster/plantobite/plantoid1_hit.md5anim";
+		desc.DEFEND_UPPER = "./data/models/monster/plantobite/plantoid1_hit.md5anim";
+		desc.PAIN = "./data/models/monster/plantobite/plantoid1_hit.md5anim";
+		desc.DEATH_NORMAL = "./data/models/monster/plantobite/plantoid1_hit.md5anim";
+		desc.DEAD = "./data/models/monster/plantobite/plantoid1_hit.md5anim";
+
+		plantobite = new MovingModel("./data/models/monster/plantobite/plantoid1.md5mesh",desc,null,null,false);
+		plantobite.disposition = new float[]{0,1f,0};
+		plantobite.genericScale = 1.1f;
+
+		//plantobite.disposition = new float[]{0,0f,0};
 	}
 	public static RenderedMovingUnit plantobite_unit = new RenderedMovingUnit(new Model[]{plantobite});
 
