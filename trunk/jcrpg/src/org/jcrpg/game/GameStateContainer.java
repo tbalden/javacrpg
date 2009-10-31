@@ -336,71 +336,75 @@ public class GameStateContainer {
 	
 	public void switchToEncounterScenario(boolean on, String encWorldType)
 	{
-		if (on)
+		
+		synchronized (mutex)
 		{
-            J3DCore.getInstance().setCalculatedCameraLocation();
-            J3DCore.getInstance().getCamera().update();
-            encounterModePosition.viewDirection = J3DCore.NORTH;
-			currentSEngine = J3DCore.getInstance().eEngine; 
-			J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().eEngine);
-			currentRenderPositions = encounterModePosition;
-			boolean renderNotNeeded = J3DCore.getInstance().eEngine.renderToEncounterWorld(
-					normalPosition.viewPositionX,
-					normalPosition.viewPositionY,
-					normalPosition.viewPositionZ,
-					world,
-					encWorldType);
-			Cube c = J3DCore.getInstance().eEngine.world.getCube(-1, encounterModePosition.viewPositionX,
-					encounterModePosition.viewPositionY,
-					encounterModePosition.viewPositionZ,
-					false);
-			if (c!=null)
+			if (on)
 			{
-				Jcrpg.LOGGER.info(("Encounter Scenario switch, ##### "+c));
-				if (c.internalCube)
+	            J3DCore.getInstance().setCalculatedCameraLocation();
+	            J3DCore.getInstance().getCamera().update();
+	            encounterModePosition.viewDirection = J3DCore.NORTH;
+				currentSEngine = J3DCore.getInstance().eEngine; 
+				J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().eEngine);
+				currentRenderPositions = encounterModePosition;
+				boolean renderNotNeeded = J3DCore.getInstance().eEngine.renderToEncounterWorld(
+						normalPosition.viewPositionX,
+						normalPosition.viewPositionY,
+						normalPosition.viewPositionZ,
+						world,
+						encWorldType);
+				Cube c = J3DCore.getInstance().eEngine.world.getCube(-1, encounterModePosition.viewPositionX,
+						encounterModePosition.viewPositionY,
+						encounterModePosition.viewPositionZ,
+						false);
+				if (c!=null)
 				{
-					Jcrpg.LOGGER.info("Encounter Scenario Switch: INSIDE area");
-					encounterModePosition.insideArea = true;
-				
-				} else
-				{
-					encounterModePosition.insideArea = false;
+					Jcrpg.LOGGER.info(("Encounter Scenario switch, ##### "+c));
+					if (c.internalCube)
+					{
+						Jcrpg.LOGGER.info("Encounter Scenario Switch: INSIDE area");
+						encounterModePosition.insideArea = true;
+					
+					} else
+					{
+						encounterModePosition.insideArea = false;
+					}
+					encounterModePosition.internalLight = c.internalLight;
 				}
-				encounterModePosition.internalLight = c.internalLight;
-			}
-			J3DCore.getInstance().sEngine.switchOn(false);
-			positionPlayerToSurfaceEncounterMode();
-			J3DCore.getInstance().setCalculatedCameraLocation();
-			Vector3f dir = J3DCore.directions[getEncounterPositions().viewDirection];
-			J3DCore.getInstance().eEngine.switchOn(true);
-			CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y-0.2f, dir.z);
-			J3DCore.getInstance().getCamera().normalize();
-			J3DCore.getInstance().getCamera().update();
-			if (!renderNotNeeded)
-			{
-				J3DCore.getInstance().eEngine.rerender = true;
+				J3DCore.getInstance().sEngine.switchOn(false);
+				positionPlayerToSurfaceEncounterMode();
+				J3DCore.getInstance().setCalculatedCameraLocation();
+				Vector3f dir = J3DCore.directions[getEncounterPositions().viewDirection];
+				J3DCore.getInstance().eEngine.switchOn(true);
+				CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y-0.2f, dir.z);
+				J3DCore.getInstance().getCamera().normalize();
+				J3DCore.getInstance().getCamera().update();
+				if (!renderNotNeeded)
+				{
+					J3DCore.getInstance().eEngine.rerender = true;
+					J3DCore.getInstance().eEngine.renderToViewPort();
+					J3DCore.getInstance().eEngine.rerender = false;
+				}
 				J3DCore.getInstance().eEngine.renderToViewPort();
-				J3DCore.getInstance().eEngine.rerender = false;
-			}
-			J3DCore.getInstance().eEngine.renderToViewPort();
-			J3DCore.getInstance().groundParentNode.updateRenderState();
-			J3DCore.getInstance().eEngine.renderToViewPort();
-			J3DCore.getInstance().updateTimeRelated();
-						
-		} else
-		{
-			currentSEngine = J3DCore.getInstance().sEngine; 
-			J3DCore.getInstance().eEngine.switchOn(false);
-			currentRenderPositions = normalPosition;
-			J3DCore.getInstance().setCalculatedCameraLocation();
-			Vector3f dir = J3DCore.directions[getNormalPositions().viewDirection];
-			CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y, dir.z);
-			J3DCore.getInstance().sEngine.switchOn(true);
-			if (J3DCore.getInstance().coreFullyInitialized)
-			{
+				J3DCore.getInstance().groundParentNode.updateRenderState();
+				J3DCore.getInstance().eEngine.renderToViewPort();
 				J3DCore.getInstance().updateTimeRelated();
+							
+			} else
+			{
+				currentSEngine = J3DCore.getInstance().sEngine; 
+				currentRenderPositions = normalPosition;
+				J3DCore.getInstance().setCalculatedCameraLocation();
+				Vector3f dir = J3DCore.directions[getNormalPositions().viewDirection];
+				CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y, dir.z);
+				J3DCore.getInstance().sEngine.switchOn(true);
+				J3DCore.getInstance().eEngine.switchOn(false);
+				if (J3DCore.getInstance().coreFullyInitialized)
+				{
+					J3DCore.getInstance().updateTimeRelated();
+				}
+				J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().sEngine);
 			}
-			J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().sEngine);
 		}
 	}
 	
@@ -760,21 +764,36 @@ public class GameStateContainer {
 	private ScenarioPositions currentRenderPositions = null; 
 	public ScenarioPositions getCurrentRenderPositions()
 	{
-		if (currentRenderPositions == null) currentRenderPositions = normalPosition;
-		return currentRenderPositions;
+
+		synchronized (mutex)
+		{
+			if (currentRenderPositions == null) currentRenderPositions = normalPosition;
+			return currentRenderPositions;
+		}
 	}
+	
+	private static Object mutex = new Object();
 
 	public ScenarioPositions getNormalPositions()
 	{
-		return normalPosition;
+		synchronized (mutex)
+		{
+			return normalPosition;
+		}
 	}
 	public ScenarioPositions getEncounterPositions()
 	{
-		return encounterModePosition;
+		synchronized (mutex)
+		{
+			return encounterModePosition;
+		}
 	}
 	public J3DStandingEngine getCurrentStandingEngine()
 	{
-		return currentSEngine;
+		synchronized (mutex)
+		{
+			return currentSEngine;
+		}
 	}
 	
 	public void switchCamping()

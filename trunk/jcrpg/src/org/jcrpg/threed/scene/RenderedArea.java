@@ -370,9 +370,13 @@ public class RenderedArea {
 	boolean USE_ZONES_REMOVE = false;
 	
 
+	private Object mutex= new Object();
+	
 	@SuppressWarnings("unchecked")
 	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled, boolean rerender)
 	{
+		synchronized (mutex)
+		{
 		isInProcess = true;
 		numberOfProcesses++;
 
@@ -399,7 +403,6 @@ public class RenderedArea {
 		if (J3DCore.SETTINGS.CONTINUOUS_LOAD)
 		{
 			// making a threadsafe copy of the cache for normal calculation of 3d rendering...
-			synchronized (worldCubeCache)
 			{
 				long time = System.currentTimeMillis();
 				try 
@@ -677,7 +680,7 @@ public class RenderedArea {
 		isInProcess = false;
 		numberOfProcesses--;
 		return new RenderedCube[][]{toAdd,toRemove, new RenderedCube[0],new RenderedCube[0]};
-		
+		}
 	}
 	
 	public RenderedCube getCubeAtPosition(World world, int worldX, int worldY, int worldZ)

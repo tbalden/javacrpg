@@ -564,6 +564,11 @@ public class J3DStandingEngine {
 	
 	public boolean threadRendering = false;
 	
+	public boolean isRendering()
+	{
+		return threadRendering || newRenderPending || updateAfterRenderNeeded;
+	}
+	
 	public boolean needsIterativeRendering()
 	{
 		return threadRendering;
@@ -2306,7 +2311,8 @@ public class J3DStandingEngine {
 			core.getGroundParentNode().attachChild(intRootNode);
 			extRootNode.setCullHint(CullHint.Dynamic);
 			intRootNode.setCullHint(CullHint.Dynamic);
-			core.getGroundParentNode().updateRenderState();
+			core.getRootNode1().updateRenderState();
+			//core.getGroundParentNode().updateRenderState();
 			/*Cube c = core.gameState.world.getCube(-1, core.gameState.getCurrentRenderPositions().viewPositionX, core.gameState.getCurrentRenderPositions().viewPositionY,
 					core.gameState.getCurrentRenderPositions().viewPositionZ, false);
 			if (c != null) {
@@ -2329,9 +2335,9 @@ public class J3DStandingEngine {
 		{
 			extRootNode.removeFromParent();
 			intRootNode.removeFromParent();
+			//extRootNode.setCullHint(CullHint.Always);
+			//intRootNode.setCullHint(CullHint.Always);
 			core.getRootNode1().updateRenderState();
-			extRootNode.setCullHint(CullHint.Always);
-			intRootNode.setCullHint(CullHint.Always);
 		}
 	}
 	

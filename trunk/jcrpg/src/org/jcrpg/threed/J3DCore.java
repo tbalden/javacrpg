@@ -3061,7 +3061,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					label.activate();
 				}
 			}
-			if (sEngine!=null && !sEngine.parallelLoadingHelper.isParallelRenderingRunning())
+			if (sEngine!=null && !(sEngine.isRendering()) && !sEngine.parallelLoadingHelper.isParallelRenderingRunning())
 			{
 				// check only if no parallel rendering is being done.
 				
