@@ -34,8 +34,8 @@ public class RenderedCubePool {
 	static int release = 0;
 	public static RenderedCube getInstance(Cube c, int x, int y, int z)
 	{
-		RenderedCube rc;
-		synchronized (vector3List) {
+		RenderedCube rc = new RenderedCube();
+		/*synchronized (vector3List) {
 			if (vector3List.size()>0)
 			{
 				rc = vector3List.remove(0);
@@ -44,7 +44,7 @@ public class RenderedCubePool {
 				counter++;
 				rc = new RenderedCube();
 			}
-		} 
+		} */
 		rc.cube = c;
 		rc.renderedX = x;
 		rc.renderedY = y;
@@ -54,12 +54,12 @@ public class RenderedCubePool {
 	}
 	public static void release(RenderedCube vec)
 	{
-		release++;
+		//release++;
 		vec.clear();
-		synchronized (vector3List) {
+		/*synchronized (vector3List) {
 			vector3List.add(vec);
 			
-		}
+		}*/
 	}
 	
 	public static String getState()
