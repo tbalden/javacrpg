@@ -208,6 +208,12 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 		characterName.text = member.getName();
 		characterName.setUpdated(true);
 		characterName.deactivate();
+		resetSkillPointLeft();
+		skillTuned = null;
+		skillValueTuner.tunedObject = null;
+		skillText.text = Language.v("partySetup.selectSkill");
+		skillText.setUpdated(true);
+		skillText.activate();
 		updateToMemberInstance(member);
 	}
 
@@ -374,6 +380,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 			if (message.equals("enter")) {
 				// ############## SKILL VALUE SET, feed it back into listSelect
 				Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
+				if (skill==null){resetSkillPointLeft(); return false;}
 				member.setSkillLevel(skill, skillValueTuner.value);
 				skillGroupLeftLast.setUpdated(true);
 				backupSkillPointsLeft = skillPointsLeft;

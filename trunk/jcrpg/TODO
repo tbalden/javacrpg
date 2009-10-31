@@ -50,11 +50,11 @@ Anatipions
 ----
 Before next release:
 
-[ ] more testing. win too
-[ ] test RCube pool
+[ ] make sure to default to non-continuous loading. create package/save game/def. characters. Release it.
 
 
-
+[X] more testing. win too
+[X] test RCube pool, a bit laggy , removed
 [X] integrate plantoid - needs fix, faces
 	[X] modify plantobite java
 
