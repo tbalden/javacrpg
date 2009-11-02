@@ -1081,6 +1081,7 @@ public class PartySetup extends PagedInputWindow {
 			voiceSelect.setUpdated(true);
 			//voiceSelect.activate();
 			voiceSelect.deactivate();
+			inputEntered(professionSelect, "fake");
 			if ("lookUp".equals(message))
 			{
 				raceSelect.activate();
@@ -1124,13 +1125,18 @@ public class PartySetup extends PagedInputWindow {
 		if (snd!=null)
 			J3DCore.getInstance().audioServer.playLoading(snd,"ai",desc.pitchModifier);
 	}
+	
 
 	@Override
 	public boolean inputEntered(InputBase base, String message) {
-		if (base.equals(voiceSelect))
+		/*if (base.equals(voiceSelect))
 		{
 			AudioDescription desc  = (AudioDescription)voiceSelect.getSelectedObject();
 			playVoiceType(desc);
+		} else*/
+		if (skillSelects.values().contains(base)){
+			resetSkillPointLeft();
+			base.activate();
 		} else
 		if (base.equals(professionSelect))
 		{

@@ -50,8 +50,8 @@ Anatipions
 ----
 Before next release:
 
-[ ] make sure to default to non-continuous loading. create package/save game/def. characters. Release it.
 
+[X] make sure to default to non-continuous loading. create package/save game/def. characters. Release it.
 
 [X] more testing. win too
 [X] test RCube pool, a bit laggy , removed

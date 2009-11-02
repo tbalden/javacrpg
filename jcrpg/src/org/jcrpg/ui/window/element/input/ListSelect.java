@@ -584,6 +584,7 @@ public class ListSelect extends InputBase {
 					if (isEnabled() && !active)
 					{
 						activate();
+						if (w!=null) w.inputEntered(this, "");
 						return false;
 					}
 				} 
@@ -595,6 +596,7 @@ public class ListSelect extends InputBase {
 					if (isEnabled() && active)
 					{
 						deactivate();
+						if (w!=null) w.inputLeft(this, "");
 						return false;
 					}
 				}
@@ -653,6 +655,7 @@ public class ListSelect extends InputBase {
 					} else
 					{
 						activate();
+						if (w!=null) w.inputEntered(this, "");
 						return true;
 					}
 				}
@@ -686,6 +689,7 @@ public class ListSelect extends InputBase {
 					} else
 					{
 						activate();
+						if (w!=null) w.inputEntered(this, "");
 						return true;
 					}
 				}
