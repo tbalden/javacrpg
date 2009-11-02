@@ -1675,7 +1675,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		//System.out.println("------------- "+sEngine.toString());
 		//System.out.println("------------- "+renderedArea.toString());
 		
-		System.out.println("---------###########  "+RenderedCubePool.getState());
+		//System.out.println("---------###########  "+RenderedCubePool.getState());
 		
 		if (canMoveString != null
 				|| gameState.player.theFragment.fragmentState.isCamping

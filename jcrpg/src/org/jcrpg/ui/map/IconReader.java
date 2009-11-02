@@ -43,7 +43,7 @@ public class IconReader {
 	{
 		try 
 		{
-			System.out.println("___ "+path);
+			//System.out.println("___ "+path);
 			File file = new File(path);
 			
 			FileReader r = new FileReader(file);
@@ -63,13 +63,13 @@ public class IconReader {
 					green = (byteToInt((byte)bytes[y*WorldMap.PIXELS_PER_BLOCK*4+x*4 + count++]));
 					red = (byteToInt((byte)bytes[y*WorldMap.PIXELS_PER_BLOCK*4+x*4 + count++]));
 					alpha = (byteToInt((byte)bytes[y*WorldMap.PIXELS_PER_BLOCK*4+x*4 + count++]));
-					System.out.print(blue+ " "+green+ " "+red+" -- ");
+					//System.out.print(blue+ " "+green+ " "+red+" -- ");
 					c.b = blue/255f;
 					c.g = green/255f;
 					c.r = red/255f;
 					c.a = alpha/255f;
 					if (c.a>0.1) ; else c.a=0;
-					System.out.print(c.b+ " "+c.g+ " "+c.r+" | ");
+					//System.out.print(c.b+ " "+c.g+ " "+c.r+" | ");
 					pattern[WorldMap.PIXELS_PER_BLOCK-1-y][x] = c;
 				}
 				System.out.println();
