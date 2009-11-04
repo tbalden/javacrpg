@@ -59,6 +59,7 @@ public class Ecology {
 	
 	public void initTransient()
 	{
+		listToUseForIntersection = new ArrayList<SurfaceHeightAndType[]>();
 		staticEncounterInfoInstances = new ArrayList<EncounterInfo>();
 		locators = new HashMap<World, TreeLocator>();
 	}
@@ -268,7 +269,7 @@ public class Ecology {
 	/**
 	 * Temp list for preventing instantiating unneeded quantity of it in World.getWorldDescAtPosition
 	 */
-	ArrayList<SurfaceHeightAndType[]> listToUseForIntersection = new ArrayList<SurfaceHeightAndType[]>();
+	transient ArrayList<SurfaceHeightAndType[]> listToUseForIntersection = new ArrayList<SurfaceHeightAndType[]>();
 	WorldTypeDesc descToUseSource = new WorldTypeDesc(), descToUseTarget = new WorldTypeDesc();
 	
 	public void intersectTwoUnits(EncounterUnit initiatorUnit, EncounterUnit targetUnit, HashMap<EncounterUnit,int[][]> listOfCommonRadiusFragments, TreeLocator loc, int joinLimit)

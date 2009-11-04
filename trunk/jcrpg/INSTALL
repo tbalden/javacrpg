@@ -1,19 +1,27 @@
 Installing and Running JCRPG
 -----------------------------
 
-A draft description here, a better one can be found at wiki ( http://javacrpg.sourceforge.net/wiki/index.php/Download )
+A draft description here, a better one can be found at wiki ( http://sourceforge.net/apps/mediawiki/javacrpg/index.php?title=Download )
 
 First, install Sun JRE 1.5 or later on your PC. (use your distribution's repository or download at http://java.sun.com)
 Optionally you can use OpenJDK 6+ (available under different Linux distributions like Ubuntu).
 Then download jcrpg from http://sf.net/projects/javacrpg downloads. Unpack, and run jcrpg executable.
-Configure config.properties if you experience low FPS. (Set low RENDER_DISTANCE, RENDER_GRASS_DISTANCE.)
+
+Under Linux use 
+# chmod +x jcrpg.sh 
+to set it executable.
 
 Requirements:
 
-- Around 450MB free RAM with default config
+- Around 500MB free RAM with default config
 - Opengl accelerated videocard
 - X11 or Windows or MacOS
 - Sound card
 
-Configure RENDER_DISTANCE and VIEW_DISTANCE, far view and shaders if want to lower memory requirement or run out of memory. :-)
+Use Option menu to change performance / details related settings.
+If you're running an Intel vga (linux) and have problems with running the game (textures missing), edit your config.properties and add/set DISABLE_DDS=true.
+
+If having troubles with starting the game on a non-standard resolution display (meta-desktop) try switch off multiple desktops.
+Switching off desktop effects on low-end hardware may help performance of the game.
+
 Read README for further details.
