@@ -1,3 +1,27 @@
+2009-11-02 'Head Chop' release svn_20091102
+- New monsters/humanoids (by tidbit, TheAncientGoat)
+- New animations for some beings (by tidbit)
+- New town types (anatipion and yeti by tidbit)
+- New buildings (by tidbit)
+- New character voicepacks (by getter77 and qubodup)
+- Generated Road System added
+- Mouse support added (based on patches by mkienenb)
+- Camera set to smooth turning in combat mode
+- Options menu completed
+- Very basic scenario support with seed choosing at New Game
+- Intro text for scenario added
+- Behavior skills are now used in perception
+- Easier to use character creation
+- World map window enhancements, graphics, town icons
+- Enhanced shaders and more normal map textures
+- Displaying percept beings in 3D in walk mode with fade shader
+- Top button row for accessing windows
+- Tooltip system added
+- Optimized font rendering for UI elements
+- Lamp light added (key L)
+- Buffer pool debug OSD (key T)
+- Many-many bugfixes, optimization, reference leak fixes
+
 2009-02-28 'Spring Greeting' release svn_20090228
 - New monsters and animals (by tidbit)
 - New area type Maze (models by tidbit), maze generation
