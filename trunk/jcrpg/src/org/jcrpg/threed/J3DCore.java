@@ -18,11 +18,13 @@
 
 package org.jcrpg.threed;
 
+import java.awt.EventQueue;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Stack;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,7 +58,6 @@ import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.QuaternionBuggy;
-import org.jcrpg.threed.jme.RenderedCubePool;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
 import org.jcrpg.threed.jme.effects.DirectionalShadowMapPass;
@@ -792,6 +795,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	public void initCore() {
 		try {
+			settingsDialogImageOverride = new File("./data/ui/settings.png").toURL();
+			configShowMode = ConfigShowMode.AlwaysShow;
 			this.setConfigShowMode(ConfigShowMode.AlwaysShow,new File("./data/ui/settings.png").toURL());
 		} catch (Exception ex)
 		{
@@ -800,6 +805,89 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		this.start();
 	}
 
+	
+    private ConfigShowMode configShowMode = ConfigShowMode.ShowIfNoConfig;
+    private URL settingsDialogImageOverride = null;
+
+    /**
+     * <code>getAttributes</code> attempts to first obtain the properties
+     * information from a GameSettings load, then a dialog depending on
+     * the dialog behaviour.
+     */
+    protected void getAttributes() {
+        settings = getNewSettings();
+        if ((settings.isNew()
+                && configShowMode == ConfigShowMode.ShowIfNoConfig)
+                || configShowMode == ConfigShowMode.AlwaysShow) {
+            URL dialogImage = settingsDialogImageOverride;
+            if (dialogImage == null) {
+                String dflt = settings.getDefaultSettingsWidgetImage();
+                if (dflt != null) try {
+                    dialogImage = AbstractGame.class.getResource(dflt);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE,
+                            "Resource lookup of '" + dflt
+                            + "' failed.  Proceeding.");
+                }
+            }
+            if (dialogImage == null) {
+                logger.fine("No dialog image loaded");
+            } else {
+                logger.fine("Using dialog image '" + dialogImage + "'");
+            }
+
+            final URL dialogImageRef = dialogImage;
+        	final AtomicReference<LWJGLPropertiesDialog> dialogRef =
+                    new AtomicReference<LWJGLPropertiesDialog>();
+			final Stack<Runnable> mainThreadTasks = new Stack<Runnable>();
+			try {
+				if (EventQueue.isDispatchThread()) {
+					dialogRef.set(new LWJGLPropertiesDialog(settings,
+							dialogImageRef, mainThreadTasks));
+				} else {
+					EventQueue.invokeLater(new Runnable() { public void run() {
+							dialogRef.set(new LWJGLPropertiesDialog(settings,
+									dialogImageRef, mainThreadTasks));
+						}
+					});
+				}
+			} catch (Exception e) {
+				logger.logp(Level.SEVERE, this.getClass().toString(),
+						"AbstractGame.getAttributes()", "Exception", e);
+				return;
+			}
+        	
+            LWJGLPropertiesDialog dialogCheck = dialogRef.get();
+			while (dialogCheck == null || dialogCheck.isVisible()) {
+                try {
+                	// check worker queue for work
+                	while (!mainThreadTasks.isEmpty()) {
+                		mainThreadTasks.pop().run();
+                		Thread.sleep(100);
+                	}
+                	// go back to sleep for a while
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    logger.warning( "Error waiting for dialog system, using defaults.");
+                } catch (UnsatisfiedLinkError t){
+                    if( t.getLocalizedMessage()!=null && t.getLocalizedMessage().contains("java.library.path") ){
+                	logger.severe("\n\nNative library not set - go to \nhttp://www.jmonkeyengine.com/wiki/doku.php?id=no_lwjgl_in_java.library.path \nfor details.");
+                    }
+                    t.printStackTrace();
+                } catch (Throwable t){
+                    t.printStackTrace();
+                }
+                dialogCheck = dialogRef.get();
+            }
+
+            if (dialogCheck != null && dialogCheck.isCancelled()) {
+                //System.exit(0);
+                finish();
+            }
+        }
+    }
+
+	
 	private static final Logger logger = Logger.getLogger(J3DCore.class
 			.getName());
 
