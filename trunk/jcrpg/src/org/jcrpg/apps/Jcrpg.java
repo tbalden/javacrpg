@@ -43,7 +43,7 @@ public class Jcrpg extends Formatter implements Filter  {
 	public String format(LogRecord record) {
 		dateF.setTime(record.getMillis());
 		StringBuffer b = new StringBuffer();
-		b.append(dateF.toString()+" "+record.getSourceClassName()+" - "+record.getMessage()+'\n');
+		b.append(dateF.toString()+" "+record.getLevel().getName()+" " +record.getSourceClassName()+" - "+record.getMessage()+'\n');
 		if (record.getThrown()!=null)
 		{
 			b.append(record.getThrown()+"\n");
@@ -56,18 +56,14 @@ public class Jcrpg extends Formatter implements Filter  {
 		return b.toString();
 	}
 	public boolean isLoggable(LogRecord record) {
-		if (record.getSourceClassName().charAt(0)=='c')
-		{
-			if (record.getSourceClassName().equals("com.jme.scene.Node"))
-				return false;
-			if (record.getSourceClassName().equals("com.jme.renderer.lwjgl.LWJGLRenderer"))
-				return false;
-		}
-		if (record.getSourceClassName().startsWith("sun.awt"))
-			return false;
-		if (record.getSourceClassName().startsWith("java.awt"))
-			return false;
-		return true;
+		//if (true) return false;
+		String logger = record.getLoggerName();
+		if (logger.length()==0) return true;
+		if (logger.length()>0 && (logger.charAt(0)=='s' || logger.charAt(0)=='j')) return false;
+		
+		if (logger.startsWith("org.jcrpg")) return true;
+		return false;
+		
 	}
 
 	public static Logger LOGGER = null;
@@ -97,7 +93,13 @@ public class Jcrpg extends Formatter implements Filter  {
 		{
 			ex.printStackTrace();
 		}
-    	LOGGER.setLevel(Level.ALL); //LOGGER.setLevel(Level.SEVERE);
+		if (J3DCore.LOGGING())
+		{
+			LOGGER.setLevel(Level.ALL); //LOGGER.setLevel(Level.SEVERE);
+		} else
+		{
+			LOGGER.setLevel(Level.INFO);
+		}
     	try {
     		start();
     	} catch (Exception ex)
