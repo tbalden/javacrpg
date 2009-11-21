@@ -193,16 +193,10 @@ public final class LWJGLPropertiesDialog extends JDialog {
         this.imageFile = imageFile;
         this.mainThreadTasks = mainThreadTasks;
 
-        ModesRetriever retrieval = new ModesRetriever();
-        if ( mainThreadTasks != null )
-        {
-            mainThreadTasks.add(retrieval);
-        }
-        else
-        {
-            retrieval.run();
-        }
-        modes = retrieval.getModes();
+        try {
+        	modes = Display.getAvailableDisplayModes();
+        } catch (Exception ex)
+        {ex.printStackTrace();}
         Arrays.sort(modes, new DisplayModeSorter());
         
         createUI();
@@ -271,6 +265,7 @@ public final class LWJGLPropertiesDialog extends JDialog {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 cancelled = true;
+                ready = true;
                 dispose();
             }
         });
@@ -338,6 +333,7 @@ public final class LWJGLPropertiesDialog extends JDialog {
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cancelled = true;
+                ready = true;
                 dispose();
             }
         });
@@ -404,7 +400,10 @@ public final class LWJGLPropertiesDialog extends JDialog {
         if (!fullscreen)
             valid = true;
         else {
-            ModeValidator validator = new ModeValidator(renderer, width, height, depth, freq);
+        	DisplaySystem disp = DisplaySystem.getDisplaySystem(renderer);
+            valid = (disp != null) ? disp.isValidDisplayMode(width, height,
+                    depth, freq) : false;
+            /*ModeValidator validator = new ModeValidator(renderer, width, height, depth, freq);
             if ( mainThreadTasks != null )
             {
                 mainThreadTasks.add(validator);
@@ -414,7 +413,7 @@ public final class LWJGLPropertiesDialog extends JDialog {
                 validator.run();
             }
             
-            valid = validator.isValid();
+            valid = validator.isValid();*/
         }
 
         if (valid) {
@@ -437,8 +436,12 @@ public final class LWJGLPropertiesDialog extends JDialog {
                     "Your monitor claims to not support the display mode you've selected.\n"
                             + "The combination of bit depth and refresh rate is not supported.");
 
+        
+        ready = true;
         return valid;
     }
+    
+    public boolean ready = false;
 
     /**
      * <code>setUpChooser</code> retrieves all available display modes and
@@ -642,64 +645,5 @@ public final class LWJGLPropertiesDialog extends JDialog {
         return cancelled;
     }
 
-    class ModeValidator implements Runnable {
 
-        boolean ready = false, valid = false;
-        
-        String renderer;
-        int width, height, depth, freq;
-        
-        ModeValidator(String renderer, int width, int height, int depth, int freq) {
-            this.renderer = renderer;
-            this.width = width;
-            this.height = height;
-            this.depth = depth;
-            this.freq = freq;
-        }
-        
-        public void run() {
-            DisplaySystem disp = DisplaySystem.getDisplaySystem(renderer);
-            valid = (disp != null) ? disp.isValidDisplayMode(width, height,
-                    depth, freq) : false;
-            ready = true;
-        }
-        
-        public boolean isValid() {
-            while (!this.ready) {
-                try {
-                    Thread.sleep(100);
-                } catch (Exception e) { }
-            }
-            return valid;
-        }
-    }
-
-    class ModesRetriever implements Runnable {
-
-        boolean ready = false;
-        DisplayMode[] modes = null;
-        
-        ModesRetriever() {
-        }
-        
-        public void run() {
-            try {
-                modes  = Display.getAvailableDisplayModes();
-            } catch (LWJGLException e) {
-                logger.logp(Level.SEVERE, this.getClass().toString(),
-                        "LWJGLPropertiesDialog(GameSettings, URL)", "Exception", e);
-                return;
-            }
-            ready = true;
-        }
-        
-        public DisplayMode[] getModes() {
-            while (!this.ready) {
-                try {
-                    Thread.sleep(100);
-                } catch (Exception e) { }
-            }
-            return modes;
-        }
-    }
 }

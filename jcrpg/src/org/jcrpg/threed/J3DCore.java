@@ -120,6 +120,7 @@ import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.input.FirstPersonHandler;
 import com.jme.input.InputHandler;
+import com.jme.input.InputSystem;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.light.DirectionalLight;
@@ -793,6 +794,55 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		 scenarioLoader = new ScenarioLoader(this,"./scenario");
 	}
 
+	   /**
+     * The simplest main game loop possible: render and update as fast as
+     * possible.
+     */
+    public final void start2() {
+        logger.info("Application started.");
+        try {
+            getAttributes();
+            System.out.println("ATTRIBUTES OK");
+            if (!finished) {
+                initSystem();
+
+                assertDisplayCreated();
+
+                initGame();
+
+                // main loop
+                while (!finished && !display.isClosing()) {
+                    // handle input events prior to updating the scene
+                    // - some applications may want to put this into update of
+                    // the game state
+                    InputSystem.update();
+
+                    // update game state, do not use interpolation parameter
+                    update(-1.0f);
+
+                    // render, do not use interpolation parameter
+                    render(-1.0f);
+
+                    // swap buffers
+                    display.getRenderer().displayBackBuffer();
+
+                }
+            }
+        } catch (Throwable t) {
+            logger.logp(Level.SEVERE, this.getClass().toString(), "start()", "Exception in game loop", t);
+            if (throwableHandler != null) {
+				throwableHandler.handle(t);
+			}
+        }
+
+        cleanup();
+        logger.info( "Application ending.");
+
+        if (display != null)
+            display.reset();
+        quit();
+    }
+
 	public void initCore() {
 		try {
 			settingsDialogImageOverride = new File("./data/ui/settings.png").toURL();
@@ -802,7 +852,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		{
 			this.setConfigShowMode(ConfigShowMode.AlwaysShow);
 		}
-		this.start();
+		this.start2();
 	}
 
 	
@@ -814,9 +864,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
      * information from a GameSettings load, then a dialog depending on
      * the dialog behaviour.
      */
-    protected void getAttributes() {
+    public void getAttributes() {
         settings = getNewSettings();
-        if ((settings.isNew()
+        if (true || (settings.isNew()
                 && configShowMode == ConfigShowMode.ShowIfNoConfig)
                 || configShowMode == ConfigShowMode.AlwaysShow) {
             URL dialogImage = settingsDialogImageOverride;
@@ -837,11 +887,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
             }
 
             final URL dialogImageRef = dialogImage;
-        	final AtomicReference<LWJGLPropertiesDialog> dialogRef =
-                    new AtomicReference<LWJGLPropertiesDialog>();
-			final Stack<Runnable> mainThreadTasks = new Stack<Runnable>();
+			//final Stack<Runnable> mainThreadTasks = new Stack<Runnable>();
+			LWJGLPropertiesDialog dialogCheck = null;
 			try {
-				if (EventQueue.isDispatchThread()) {
+				dialogCheck = new LWJGLPropertiesDialog(settings,
+						dialogImageRef, null);//mainThreadTasks);
+				
+				while (true)
+				{
+					Thread.sleep(100);
+					if (dialogCheck.ready) break;
+				} 
+				
+				/*if (EventQueue.isDispatchThread()) {
 					dialogRef.set(new LWJGLPropertiesDialog(settings,
 							dialogImageRef, mainThreadTasks));
 				} else {
@@ -850,12 +908,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 									dialogImageRef, mainThreadTasks));
 						}
 					});
-				}
+				}*/
 			} catch (Exception e) {
 				logger.logp(Level.SEVERE, this.getClass().toString(),
 						"AbstractGame.getAttributes()", "Exception", e);
 				return;
 			}
+			/*
         	
             LWJGLPropertiesDialog dialogCheck = dialogRef.get();
 			while (dialogCheck == null || dialogCheck.isVisible()) {
@@ -877,8 +936,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
                 } catch (Throwable t){
                     t.printStackTrace();
                 }
+                System.out.println(".");
                 dialogCheck = dialogRef.get();
-            }
+            }*/
 
             if (dialogCheck != null && dialogCheck.isCancelled()) {
                 //System.exit(0);
