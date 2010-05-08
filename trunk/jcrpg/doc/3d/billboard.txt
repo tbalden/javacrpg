@@ -1,3 +1,0 @@
-JME and billboard model
-
-use SCREEN_ALIGNED billboardNodes with BillboardModel, and in blender turn it 90 degrees to make it correctly displayed with billboardnodes of JME!

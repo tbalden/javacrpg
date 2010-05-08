@@ -1,2 +1,0 @@
-act.png modified version of minorheal.png - from free SupraTux project
-behavior.png - eye part from Windstille project

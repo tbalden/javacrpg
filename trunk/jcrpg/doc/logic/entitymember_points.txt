@@ -1,9 +1,0 @@
-there'll be some bars of 
-
-Health Point, 
-Sanity Point, - afflicted by social skills, magic, rest and no combat /peace/ can increase it,
-Moral Point, - afflicted by social skills, magic, combat
-Stamina Point - afflicted by fight, food eating, rest 
-Magic Point - a sum of your magic abilities left till next rest
-
-They're Increased when receiving new level.

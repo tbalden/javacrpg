@@ -1,5 +1,0 @@
-12:09:57 AM) : use "Unwrap(smart projections)" if u want to have a very quick unwrap
-(12:10:10 AM) : (its the last entry in the unwrap list)
-(12:12:23 AM) : ah and before unwrapping select all faces in edit mode and press alt + j
-(12:13:04 AM) : converts triangles to quads -> gives nicer unwrap results
-(12:13:56 AM) : and if u want to have triangles just convert them back with ctrl + t and the uv coords stay the same 
